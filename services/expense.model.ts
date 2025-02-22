@@ -1,5 +1,5 @@
 import { Person } from './group.model'
-import { ResponseResultWithPagination } from './types'
+import { ResponseResult, ResponseResultWithPagination } from './types'
 
 export type Expense = {
   name: string
@@ -12,6 +12,19 @@ export type Expense = {
   icon: string
   iconBgColor: string
   createdByYou: boolean
+  id: string
 }
 
 export type ExpenseListResult = ResponseResultWithPagination<Expense[]>
+
+export type Timeline = {
+  createdAt: string
+  createdBy: Person
+  events: string
+}
+
+export type ExpenseDetailsMember = { ownedAmount: number } & Person
+
+export type ExpenseDetails = { timelines: Timeline[]; members: ExpenseDetailsMember[] } & Omit<Expense, 'members'>
+
+export type ExpenseDetailsResult = ResponseResult<ExpenseDetails>

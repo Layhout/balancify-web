@@ -12,7 +12,7 @@ export default function Settings() {
 
   return (
     <div className="container pb-4">
-      <div className="my-8 flex items-center justify-between md:mt-0">
+      <div className="my-8 md:mt-0">
         <h1 className="text-3xl font-bold">Settings</h1>
       </div>
       <div className="mb-8 flex flex-col gap-4 lg:flex-row">

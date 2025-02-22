@@ -60,7 +60,7 @@ export default function DesktopNav({
               <Link
                 href={link}
                 className={buttonVariants({
-                  variant: pathname === link ? 'default' : 'ghost',
+                  variant: pathname.startsWith(link) ? 'default' : 'ghost',
                   size: isCollapsed ? 'icon' : undefined,
                   className: 'gap-4 whitespace-nowrap',
                 })}

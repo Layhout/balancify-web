@@ -13,7 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <TooltipProvider delayDuration={0}>
-        <div className="flex max-h-dvh min-h-dvh w-full gap-6 overflow-hidden">
+        <div className="flex gap-6 overflow-hidden">
           <DesktopNav
             appLinks={appLinks}
             isCollapsed={isCollapsed}

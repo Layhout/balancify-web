@@ -1,10 +1,13 @@
 import AvatarStack from '@/components/AvatarStack'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { ROUTES } from '@/lib/constants'
 import { Expense } from '@/services/expense.model'
+import Link from 'next/link'
 import { useMemo } from 'react'
 
 export default function ExpenseCard({
+  id,
   name,
   createdAt,
   icon,
@@ -21,7 +24,7 @@ export default function ExpenseCard({
   )
 
   return (
-    <Card className="overflow-hidden shadow-none">
+    <Card className="overflow-hidden ">
       <CardHeader className="flex-row items-center gap-4 space-y-0 border-b p-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-lg" style={{ backgroundColor: iconBgColor }}>
           <img src={`/assets/svgs/icon-${icon}.svg`} className="h-6 w-6" alt="icon" />
@@ -50,8 +53,8 @@ export default function ExpenseCard({
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">
         <p className="text-sm text-muted-foreground">{createdAt}</p>
-        <Button variant="secondary" size="sm" className="shadow-none">
-          View Details
+        <Button variant="secondary" size="sm" asChild>
+          <Link href={`${ROUTES.APP.EXPENSES}/${id}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

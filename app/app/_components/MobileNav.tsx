@@ -20,17 +20,17 @@ export default function MobileNav({ appLinks, pathname }: MobileNavProps) {
                 variant="ghost"
                 asChild
                 className={cn('translate-y-2 transition-all duration-300 hover:bg-background', {
-                  'translate-y-0': link === pathname,
+                  'translate-y-0': pathname.startsWith(link),
                 })}
               >
                 <Link href={link}>
-                  <Icon className={cn('hidden h-4 w-4 flex-shrink-0', { block: link !== pathname })} />
-                  <SelectedIcon className={cn('hidden h-4 w-4 flex-shrink-0', { block: link === pathname })} />
+                  <Icon className={cn('hidden h-4 w-4 flex-shrink-0', { block: !pathname.startsWith(link) })} />
+                  <SelectedIcon className={cn('hidden h-4 w-4 flex-shrink-0', { block: pathname.startsWith(link) })} />
                 </Link>
               </Button>
               <span
                 className={cn('translate-y-full text-xs opacity-0 transition-all duration-300', {
-                  'translate-y-0 opacity-100': link === pathname,
+                  'translate-y-0 opacity-100': pathname.startsWith(link),
                 })}
               >
                 {title}

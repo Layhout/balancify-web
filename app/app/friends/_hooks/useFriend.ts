@@ -9,7 +9,7 @@ export default function useFriend() {
     queryFn: () => services.Friend.getFriends(),
   })
 
-  const friendData = useMemo(() => friendRes?.data.data || [], [friendRes?.data.data])
+  const friendData = useMemo(() => friendRes?.data || [], [friendRes?.data])
 
   return { isPending, friendData }
 }

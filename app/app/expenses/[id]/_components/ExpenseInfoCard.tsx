@@ -1,0 +1,73 @@
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import MemberListDrawer from './MemberListDrawer'
+import { ExpenseDetails } from '@/services/expense.model'
+import ExpenseInfoCardPlaceholder from './ExpenseInfoCardPlaceholder'
+import { useMemo } from 'react'
+
+type ExpenseInfoCardProps = {
+  loading: boolean
+  details?: ExpenseDetails
+}
+
+export default function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
+  const settledPercentage = useMemo(
+    () => (details ? Math.min(Math.round((details.totalOwe / details.totalCost) * 100), 100) : 0),
+    [details],
+  )
+
+  if (loading) return <ExpenseInfoCardPlaceholder />
+
+  return (
+    <Card
+      className="bg-none md:bg-gradient-to-l"
+      style={
+        {
+          '--tw-gradient-from': `${details?.iconBgColor} var(--tw-gradient-from-position)`,
+          '--tw-gradient-to': 'rgb(0 0 0 / 0) var(--tw-gradient-to-position)',
+          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)',
+        } as React.CSSProperties
+      }
+    >
+      <CardContent className="flex flex-col-reverse items-center gap-4 p-6 md:flex-row md:items-start">
+        <div className="flex-1 self-stretch">
+          <div className="text-center md:text-left">
+            <h1 className="text-xl font-bold capitalize">{details?.name}</h1>
+            <p className="text-xs text-muted-foreground">
+              Added by {details?.createdByYou ? 'You' : details?.createdBy}
+              {' - '}
+              {details?.createdAt}
+            </p>
+          </div>
+          <div className="mt-8 flex flex-col items-center gap-8 md:mt-10 md:flex-row md:items-start md:gap-0">
+            <div className="flex-1">
+              <h1 className="hidden text-sm text-muted-foreground md:block">Total</h1>
+              <h1 className="text-3xl font-bold md:text-xl">${details?.totalCost}</h1>
+            </div>
+            <div className="flex flex-[2] items-center justify-evenly self-stretch text-center md:justify-start md:text-left">
+              {details?.createdByYou ? null : (
+                <div className="flex-1">
+                  <h1 className="text-xs text-muted-foreground md:text-sm">You Owed</h1>
+                  <h1 className="text-xl font-bold">${details?.totalOwe}</h1>
+                </div>
+              )}
+              <div className="flex-1">
+                <h1 className="text-xs text-muted-foreground md:text-sm">Settled</h1>
+                <h1 className="text-xl font-bold">{settledPercentage}%</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-lg p-4 md:!bg-transparent md:p-0" style={{ backgroundColor: details?.iconBgColor }}>
+          <img src={`/assets/svgs/icon-${details?.icon}.svg`} className="h-16 w-16" alt="icon" />
+        </div>
+      </CardContent>
+      <CardFooter className="flex gap-2 md:hidden">
+        <div className="flex-1">
+          <MemberListDrawer loading={loading} members={details?.members} />
+        </div>
+        <Button className="flex-1">Settle up</Button>
+      </CardFooter>
+    </Card>
+  )
+}

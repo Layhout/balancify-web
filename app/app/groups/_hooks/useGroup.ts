@@ -11,7 +11,7 @@ export default function useGroup() {
     queryFn: () => services.Group.getGroups(),
   })
 
-  const groupData = useMemo(() => groupRes?.data.data || [], [groupRes?.data.data])
+  const groupData = useMemo(() => groupRes?.data || [], [groupRes?.data])
 
   return { isPending, groupData }
 }

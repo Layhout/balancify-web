@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function FriendCardPlaceholder() {
   return (
-    <Card className="shadow-none">
+    <Card>
       <CardContent className="flex items-center gap-2 p-4">
         <Skeleton className="h-10 w-10 rounded-full" />
         <div className="flex flex-1 flex-col gap-2">

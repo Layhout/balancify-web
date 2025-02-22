@@ -9,7 +9,7 @@ export default function useExpense() {
     queryFn: () => services.Expense.getExpenses(),
   })
 
-  const expenseData = useMemo(() => expenseRes?.data.data || [], [expenseRes?.data.data])
+  const expenseData = useMemo(() => expenseRes?.data || [], [expenseRes?.data])
 
   return { isPending, expenseData }
 }

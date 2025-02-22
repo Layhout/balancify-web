@@ -11,7 +11,7 @@ export default function BlogListItem({ children, date, title, version }: BlogLis
   return (
     <li className="group flex gap-8 pl-2 md:gap-14 md:pl-0">
       <div className="hidden w-20 pt-0.5 md:block">
-        <h1 className=" whitespace-nowrap text-right text-sm text-gray-400">
+        <h1 className="whitespace-nowrap text-right text-sm text-muted-foreground">
           {dayjs(date, 'DD/MM/YYYY').format('DD MMM YYYY')}
         </h1>
       </div>
@@ -22,8 +22,8 @@ export default function BlogListItem({ children, date, title, version }: BlogLis
       </div>
       <div className="flex-1 pb-12">
         <h1 className="font-bold">{title}</h1>
-        <p className="mb-6 mt-1 text-sm text-gray-400">
-          <span className="inline text-sm text-gray-400 md:hidden">{date} • </span>
+        <p className="mb-6 mt-1 text-sm text-muted-foreground">
+          <span className="inline text-sm text-muted-foreground md:hidden">{date} • </span>
           {version}
         </p>
         <p>What we did:</p>

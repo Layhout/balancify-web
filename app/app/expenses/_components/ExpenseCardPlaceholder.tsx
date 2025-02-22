@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function ExpenseCardPlaceholder() {
   return (
-    <Card className="overflow-hidden shadow-none">
+    <Card className="overflow-hidden ">
       <CardHeader className="flex-row items-center gap-4 space-y-0 border-b p-4">
         <Skeleton className="h-12 w-12" />
         <div className="flex flex-1 flex-col overflow-hidden">

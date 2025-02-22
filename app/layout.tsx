@@ -35,7 +35,11 @@ export default function RootLayout({
     <ClerkProvider>
       <AppProviders>
         <html lang="en">
-          <body className={cn('min-h-dvh font-sans antialiased', poppins.variable)}>{children}</body>
+          <body className={cn('font-sans antialiased', poppins.variable)}>
+            <div vaul-drawer-wrapper="">
+              <div className="relative min-h-svh bg-background">{children}</div>
+            </div>
+          </body>
         </html>
       </AppProviders>
     </ClerkProvider>
