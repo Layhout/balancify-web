@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 export default function useExpenseDetails(id: string) {
   const { isPending, data: expenseDetailsRes } = useQuery({
     queryKey: [QUERY_KEYS.EXPENSES, 'details', id],
-    queryFn: () => services.Expense.getExpense(),
+    queryFn: () => services.expense.getExpense(),
   })
 
   const expenseDetailsData = useMemo(() => expenseDetailsRes?.data, [expenseDetailsRes?.data])

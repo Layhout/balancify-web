@@ -27,6 +27,7 @@ export default class ExpenseService extends ApiService {
         totalCost: total,
         totalOwe: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),
         members: Array.from<number, Person>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
+          id: faker.string.uuid(),
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           imageUrl: faker.image.avatar(),
@@ -65,6 +66,7 @@ export default class ExpenseService extends ApiService {
     const timelines: Timeline[] = Array.from<number, Timeline>({ length: 5 }, () => ({
       createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
       createdBy: {
+        id: faker.string.uuid(),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         imageUrl: faker.image.avatar(),
@@ -82,6 +84,7 @@ export default class ExpenseService extends ApiService {
       totalCost: total,
       totalOwe: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),
       members: Array.from<number, ExpenseDetailsMember>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
+        id: faker.string.uuid(),
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         imageUrl: faker.image.avatar(),

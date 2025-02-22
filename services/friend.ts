@@ -7,6 +7,7 @@ import { BG_COLORS } from '@/lib/constants'
 export default class FriendService extends ApiService {
   async getFriends(): Promise<FriendResult> {
     const fakeData: Person[] = Array.from({ length: 10 }, () => ({
+      id: faker.string.uuid(),
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       imageUrl: faker.image.avatar(),

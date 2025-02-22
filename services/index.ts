@@ -3,9 +3,9 @@ import FriendService from './friend'
 import GroupService from './group'
 
 const services = {
-  Group: new GroupService(),
-  Expense: new ExpenseService(),
-  Friend: new FriendService(),
+  group: new GroupService(),
+  expense: new ExpenseService(),
+  friend: new FriendService(),
 }
 
 export default services

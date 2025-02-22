@@ -18,7 +18,7 @@ export default function TimelineItem({ createdBy, createdAt, events }: Timeline)
             </AvatarFallback>
           </Avatar>
           <h1>
-            {createdBy.firstName} {createdBy.lastName} - {dayjs(createdAt, 'DD/MM/YYYY').format('DD MMM YYYY, hh:mm A')}
+            {createdBy.firstName} {createdBy.lastName} • {dayjs(createdAt, 'DD/MM/YYYY').format('DD MMM YYYY, hh:mm A')}
           </h1>
         </div>
         <p className="mt-2">{events}</p>
