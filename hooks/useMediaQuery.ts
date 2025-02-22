@@ -1,22 +1,22 @@
-import { useLayoutEffect, useState } from 'react'
+import { isDesktopAtom } from '@/repositories/layout'
+import { useSetAtom } from 'jotai'
+import { useLayoutEffect } from 'react'
 
-export const useMediaQuery = (query: string) => {
-  const [isMatch, setIsMatch] = useState(false)
+export const useMediaQuery = () => {
+  const setIsDesktopAtom = useSetAtom(isDesktopAtom)
 
   useLayoutEffect(() => {
-    const media = window.matchMedia(query)
+    const desktopMedia = window.matchMedia('(min-width: 768px)')
 
     function handleChange() {
-      setIsMatch(media.matches)
+      setIsDesktopAtom(desktopMedia.matches)
     }
 
     handleChange()
 
-    media.addEventListener('change', handleChange)
-    return () => media.removeEventListener('change', handleChange)
+    desktopMedia.addEventListener('change', handleChange)
+    return () => desktopMedia.removeEventListener('change', handleChange)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  return isMatch
 }

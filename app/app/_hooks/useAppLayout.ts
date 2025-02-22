@@ -11,7 +11,6 @@ import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
-import useTheme from './useTheme'
 
 export type AppLinkType = {
   title: string
@@ -24,7 +23,6 @@ export default function useAppLayout() {
   const pathname = usePathname()
   const { user, isLoaded: userLoaded } = useUser()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
-  useTheme()
 
   const appLinks: AppLinkType[] = useMemo(
     () => [

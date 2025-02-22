@@ -1,13 +1,13 @@
 import { AppTheme, THEME } from '@/lib/constants'
 import { appThemeAtom, isDarkModeAtom } from '@/repositories/layout'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useLayoutEffect } from 'react'
 
 export default function useTheme() {
   const appTheme = useAtomValue(appThemeAtom)
-  const setIsDarkMode = useSetAtom(isDarkModeAtom)
+  const setIsDarkModeAtom = useSetAtom(isDarkModeAtom)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (appTheme === THEME.SYSTEM) {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
       handleChangeThemeClass(isDark ? THEME.DARK : THEME.DARK)
@@ -24,6 +24,7 @@ export default function useTheme() {
     return () => {
       window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', catchThemeChanges)
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appTheme])
 
@@ -32,8 +33,8 @@ export default function useTheme() {
       document.documentElement.classList.remove(THEME.DARK)
       document.documentElement.classList.remove(THEME.LIGHT)
       document.documentElement.classList.add(newTheme)
-      setIsDarkMode(newTheme === THEME.DARK)
+      setIsDarkModeAtom(newTheme === THEME.DARK)
     },
-    [setIsDarkMode],
+    [setIsDarkModeAtom],
   )
 }

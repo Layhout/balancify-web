@@ -11,6 +11,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 
 import AppProviders from '@/components/AppProviders'
+import ClientConfigProvider from '@/components/ClientConfigProvider'
 
 dayjs.extend(advancedFormat)
 dayjs.extend(customParseFormat)
@@ -36,9 +37,11 @@ export default function RootLayout({
       <AppProviders>
         <html lang="en">
           <body className={cn('font-sans antialiased', poppins.variable)}>
-            <div vaul-drawer-wrapper="">
-              <div className="relative min-h-svh bg-background">{children}</div>
-            </div>
+            <ClientConfigProvider>
+              <div vaul-drawer-wrapper="">
+                <div className="relative min-h-svh bg-background">{children}</div>
+              </div>
+            </ClientConfigProvider>
           </body>
         </html>
       </AppProviders>
