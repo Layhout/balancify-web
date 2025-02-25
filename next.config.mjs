@@ -7,7 +7,7 @@ const nextConfig = {
     version: packageJson.version,
   },
   experimental: {
-    swcPlugins: [['@swc-jotai/react-refresh', {}]],
+    // swcPlugins: [['@swc-jotai/react-refresh', {}]],
   },
   logging: {
     fetches: {
