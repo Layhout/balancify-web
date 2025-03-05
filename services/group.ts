@@ -1,11 +1,10 @@
 import dayjs from 'dayjs'
-import { ApiService } from './api'
 import { Group, GroupDetails, GroupDetailsResult, GroupListResult, Person } from './group.model'
 import { faker } from '@faker-js/faker'
 import { BG_COLORS, DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import services from '.'
 
-export default class GroupService extends ApiService {
+export default class GroupService {
   // async getGroups(params: GetGroupListParams): Promise<ResponseResult<GroupListResult>> {
   async getGroups(): Promise<GroupListResult> {
     const fakeData: Group[] = Array.from({ length: 10 }, () => ({

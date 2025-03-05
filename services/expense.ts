@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { ApiService } from './api'
 import {
   Expense,
   ExpenseDetails,
@@ -12,7 +11,7 @@ import dayjs from 'dayjs'
 import { Person } from './group.model'
 import { BG_COLORS, DEFAULT_DATE_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
 
-export default class ExpenseService extends ApiService {
+export default class ExpenseService {
   async getExpenses(): Promise<ExpenseListResult> {
     const icons = Object.values(EXPENSE_ICONS)
 

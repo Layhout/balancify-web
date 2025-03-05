@@ -8,22 +8,24 @@ export default function useTheme() {
   const setIsDarkModeAtom = useSetAtom(isDarkModeAtom)
 
   useLayoutEffect(() => {
+    const controller = new AbortController()
+
     if (appTheme === THEME.SYSTEM) {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
       handleChangeThemeClass(isDark ? THEME.DARK : THEME.DARK)
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', catchThemeChanges)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener(
+        'change',
+        (event: MediaQueryListEvent) => {
+          const newTheme = event.matches ? THEME.DARK : THEME.DARK
+          handleChangeThemeClass(newTheme)
+        },
+        { signal: controller.signal },
+      )
     } else {
       handleChangeThemeClass(appTheme)
     }
 
-    function catchThemeChanges(event: MediaQueryListEvent) {
-      const newTheme = event.matches ? THEME.DARK : THEME.DARK
-      handleChangeThemeClass(newTheme)
-    }
-
-    return () => {
-      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', catchThemeChanges)
-    }
+    return () => controller.abort()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appTheme])
