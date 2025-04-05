@@ -7,7 +7,7 @@ export default function SettleList() {
         <CardTitle>Settle Up!</CardTitle>
         <CardDescription>A list of who owned who...</CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>No data...</CardContent>
     </Card>
   )
 }

@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 
-import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-
 import { poppins } from '@/lib/font'
 
 import './globals.css'
@@ -12,9 +8,6 @@ import { cn } from '@/lib/utils'
 
 import AppProviders from '@/components/AppProviders'
 import ClientConfigProvider from '@/components/ClientConfigProvider'
-
-dayjs.extend(advancedFormat)
-dayjs.extend(customParseFormat)
 
 export const metadata: Metadata = {
   title: 'Balancify',

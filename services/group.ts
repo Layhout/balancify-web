@@ -1,8 +1,8 @@
-import dayjs from 'dayjs'
 import { Group, GroupDetails, GroupDetailsResult, GroupListResult, Person } from './group.model'
 import { faker } from '@faker-js/faker'
 import { BG_COLORS, DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import services from '.'
+import djs from '@/lib/dayjsExt'
 
 export default class GroupService {
   // async getGroups(params: GetGroupListParams): Promise<ResponseResult<GroupListResult>> {
@@ -10,7 +10,7 @@ export default class GroupService {
     const fakeData: Group[] = Array.from({ length: 10 }, () => ({
       id: faker.string.uuid(),
       name: faker.word.noun(),
-      createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+      createdAt: djs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
       members: Array.from<number, Person>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
         id: faker.string.uuid(),
         firstName: faker.person.firstName(),
@@ -45,7 +45,7 @@ export default class GroupService {
     const fakeData: GroupDetails = {
       id: faker.string.uuid(),
       name: faker.word.noun(),
-      createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+      createdAt: djs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
       members: Array.from<number, Person>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
         id: faker.string.uuid(),
         firstName: faker.person.firstName(),
