@@ -4,7 +4,7 @@ import ThemeDemo from './_components/ThemeDemo'
 import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import useSettings from './_hooks/useSettings'
+import { useSettings } from './_hooks/useSettings'
 import { AppTheme, THEME } from '@/lib/constants'
 
 export default function Settings() {

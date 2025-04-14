@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LuPlus } from 'react-icons/lu'
-import useExpense from './_hooks/useExpense'
+import { useExpense } from './_hooks/useExpense'
 import ExpenseWrapper from './_components/ExpenseWrapper'
 import ExpenseCard from './_components/ExpenseCard'
 

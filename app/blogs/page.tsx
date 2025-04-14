@@ -9,16 +9,16 @@ export default function Blogs() {
       </header>
       <article>
         <ul>
-          <BlogListItem date="06/12/2024" title="Development continued" version="v0.0.0-alpha-0">
+          <BlogListItem date="2024-12-06" title="Development continued" version="v0.0.0-alpha-0">
             <p>With personal matters resolved, the development process has resumed.</p>
           </BlogListItem>
-          <BlogListItem date="16/05/2024" title="Development put on hold" version="v0.0.0-alpha-0">
+          <BlogListItem date="2024-05-16" title="Development put on hold" version="v0.0.0-alpha-0">
             <p>
               Due to personal matters requiring immediate attention, the development process has been temporarily put on
               hold.
             </p>
           </BlogListItem>
-          <BlogListItem date="27/04/2024" title="Journey Started" version="v0.0.0-alpha-0">
+          <BlogListItem date="2024-04-27" title="Journey Started" version="v0.0.0-alpha-0">
             <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
               <li>Choose tech stacks.</li>
               <li>Planning app workflow.</li>

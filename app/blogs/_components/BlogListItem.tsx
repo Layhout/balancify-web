@@ -1,3 +1,4 @@
+import { DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import djs from '@/lib/dayjsExt'
 
 type BlogListItemProps = Readonly<{
@@ -12,7 +13,7 @@ export default function BlogListItem({ children, date, title, version }: BlogLis
     <li className="group flex gap-8 pl-2 md:gap-14 md:pl-0">
       <div className="hidden w-20 pt-0.5 md:block">
         <h1 className="whitespace-nowrap text-right text-sm text-muted-foreground">
-          {djs(date, 'DD/MM/YYYY').format('DD MMM YYYY')}
+          {djs(date).format(DEFAULT_DATE_FORMAT)}
         </h1>
       </div>
       <div className="relative w-0.5 translate-y-3 bg-border group-last:bg-transparent">

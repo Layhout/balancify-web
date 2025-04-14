@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LuPlus } from 'react-icons/lu'
-import useGroup from './_hooks/useGroup'
+import { useGroup } from './_hooks/useGroup'
 import GroupWrapper from './_components/GroupWrapper'
 import GroupRow from './_components/GroupRow'
 

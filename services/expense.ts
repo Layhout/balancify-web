@@ -8,7 +8,7 @@ import {
   Timeline,
 } from './expense.model'
 import { Person } from './group.model'
-import { BG_COLORS, DEFAULT_DATE_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
+import { BG_COLORS, DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
 import djs from '@/lib/dayjsExt'
 
 export default class ExpenseService {
@@ -63,7 +63,7 @@ export default class ExpenseService {
     const total = faker.number.float({ min: 5, max: 100, fractionDigits: 2 })
     const icons = Object.values(EXPENSE_ICONS)
     const timelines: Timeline[] = Array.from<number, Timeline>({ length: 5 }, () => ({
-      createdAt: djs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+      createdAt: djs(faker.date.recent()).format(DEFAULT_DATETIME_FORMAT),
       createdBy: {
         id: faker.string.uuid(),
         firstName: faker.person.firstName(),

@@ -3,8 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LuLayoutGrid } from 'react-icons/lu'
 import { VscGraph } from 'react-icons/vsc'
 import CalendarHeatMap from './CalendarHeatMap'
+import { SpendingHistory } from '@/services/dashboard.model'
 
-export default function SpendingGraph() {
+export default function SpendingGraph({ spendingHistory }: { spendingHistory?: SpendingHistory[] }) {
   return (
     <Card>
       <Tabs defaultValue="grid">
