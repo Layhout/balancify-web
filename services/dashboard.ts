@@ -11,8 +11,8 @@ export default class DashboardService {
       owed: faker.number.float({ min: 5, max: 100, fractionDigits: 2 }),
       spendingHistory: faker.date
         .betweens({
-          from: djs().toDate(),
-          to: djs().add(2, 'month').toDate(),
+          from: djs().add(-2, 'month').toDate(),
+          to: djs().toDate(),
           count: 60,
         })
         .map((date) => ({

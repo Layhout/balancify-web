@@ -5,7 +5,7 @@ import MemberListItemPlaceholder from './MemberListItemPlaceholder'
 
 export type MemberListProps = {
   loading: boolean
-  members?: ExpenseDetailsMember[]
+  members: ExpenseDetailsMember[]
 }
 
 export default function MemberList({ loading, members }: MemberListProps) {
@@ -18,7 +18,11 @@ export default function MemberList({ loading, members }: MemberListProps) {
         {loading ? (
           <MemberListItemPlaceholder />
         ) : (
-          <ul className="flex flex-col gap-4">{members?.map((member, i) => <MemberListItem key={i} {...member} />)}</ul>
+          <ul className="flex flex-col gap-4">
+            {members.map((member, i) => (
+              <MemberListItem key={i} {...member} />
+            ))}
+          </ul>
         )}
       </CardContent>
     </Card>

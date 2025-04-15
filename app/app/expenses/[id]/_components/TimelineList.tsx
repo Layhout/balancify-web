@@ -4,7 +4,7 @@ import TimelinePlaceholder from './TimelinePlaceholder'
 
 type TimelineProps = {
   loading: boolean
-  timelines?: Timeline[]
+  timelines: Timeline[]
 }
 
 export default function TimelineList({ loading, timelines }: TimelineProps) {
@@ -12,7 +12,7 @@ export default function TimelineList({ loading, timelines }: TimelineProps) {
     <div className="mt-4">
       <h1 className="text-lg font-bold">Timeline</h1>
       <ul className="mt-4 pl-4">
-        {loading ? <TimelinePlaceholder /> : timelines?.map((timeline, i) => <TimelineItem key={i} {...timeline} />)}
+        {loading ? <TimelinePlaceholder /> : timelines.map((timeline, i) => <TimelineItem key={i} {...timeline} />)}
       </ul>
     </div>
   )

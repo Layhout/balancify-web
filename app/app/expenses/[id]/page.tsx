@@ -28,10 +28,10 @@ export default function ExpenseDetails({ params: { id } }: ExpenseDetailsProps) 
       <div className="mt-6 flex items-start gap-4">
         <div className="flex-[2] shrink-0">
           <ExpenseInfoCard loading={isPending} details={expenseDetailsData} />
-          <TimelineList loading={isPending} timelines={expenseDetailsData?.timelines} />
+          <TimelineList loading={isPending} timelines={expenseDetailsData?.timelines || []} />
         </div>
-        <div className="hidden flex-1 overflow-hidden md:block">
-          <MemberList loading={isPending} members={expenseDetailsData?.members} />
+        <div className="hidden flex-1 md:block">
+          <MemberList loading={isPending} members={expenseDetailsData?.members || []} />
         </div>
       </div>
     </div>

@@ -55,7 +55,7 @@ export default function ExpenseInfoCard({ loading, details }: ExpenseInfoCardPro
       </CardContent>
       <CardFooter className="flex gap-2 md:hidden">
         <div className="flex-1">
-          <MemberListDrawer loading={loading} members={details?.members} />
+          <MemberListDrawer loading={loading} members={details?.members || []} />
         </div>
         <div className="flex-1">
           <Button className="w-full">Settle up</Button>

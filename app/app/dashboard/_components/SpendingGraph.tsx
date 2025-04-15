@@ -4,8 +4,9 @@ import { LuLayoutGrid } from 'react-icons/lu'
 import { VscGraph } from 'react-icons/vsc'
 import CalendarHeatMap from './CalendarHeatMap'
 import { SpendingHistory } from '@/services/dashboard.model'
+import SpendingBarChart from './SpendingBarChart'
 
-export default function SpendingGraph({ spendingHistory }: { spendingHistory?: SpendingHistory[] }) {
+export default function SpendingGraph({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   return (
     <Card>
       <Tabs defaultValue="grid">
@@ -22,11 +23,13 @@ export default function SpendingGraph({ spendingHistory }: { spendingHistory?: S
         </CardHeader>
         <TabsContent value="grid">
           <CardContent className="flex items-center justify-center">
-            <CalendarHeatMap />
+            <CalendarHeatMap spendingHistory={spendingHistory} />
           </CardContent>
         </TabsContent>
         <TabsContent value="graph">
-          <CardContent>graph</CardContent>
+          <CardContent>
+            <SpendingBarChart spendingHistory={spendingHistory} />
+          </CardContent>
         </TabsContent>
       </Tabs>
     </Card>
