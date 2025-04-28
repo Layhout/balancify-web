@@ -13,7 +13,7 @@ type AvatarStackItemProps = {
   bgColor?: string
 }
 
-export default function AvatarStack({ items, maxSize = 5, className }: AvatarStackProps) {
+export function AvatarStack({ items, maxSize = 5, className }: AvatarStackProps) {
   if (items.length === 0) return null
 
   return (

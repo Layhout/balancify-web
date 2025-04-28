@@ -1,4 +1,4 @@
-import AvatarStack from '@/components/AvatarStack'
+import { AvatarStack } from '@/components/AvatarStack'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ROUTES } from '@/lib/constants'

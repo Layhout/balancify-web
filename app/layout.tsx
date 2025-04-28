@@ -6,8 +6,8 @@ import { poppins } from '@/lib/font'
 import './globals.css'
 import { cn } from '@/lib/utils'
 
-import AppProviders from '@/components/AppProviders'
-import ClientConfigProvider from '@/components/ClientConfigProvider'
+import { JotaiProviders } from '@/components/AppProviders'
+import { ClientConfigProvider } from '@/components/ClientConfigProvider'
 
 export const metadata: Metadata = {
   title: 'Balancify',
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <AppProviders>
+      <JotaiProviders>
         <html lang="en">
           <body className={cn('font-sans antialiased', poppins.variable)}>
             <ClientConfigProvider>
@@ -37,7 +37,7 @@ export default function RootLayout({
             </ClientConfigProvider>
           </body>
         </html>
-      </AppProviders>
+      </JotaiProviders>
     </ClerkProvider>
   )
 }

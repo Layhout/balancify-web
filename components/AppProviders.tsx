@@ -22,7 +22,7 @@ export const queryClient = new QueryClient({
   }),
 })
 
-export default function JotaiProviders({
+export function JotaiProviders({
   children,
 }: Readonly<{
   children: React.ReactNode
