@@ -24,6 +24,7 @@ export const LOCALSTORAGE_KEYS = {
 }
 
 export const QUERY_KEYS = {
+  DASHBOARD: 'dashboard',
   GROUPS: 'groups',
   EXPENSES: 'expenses',
   FRIENDS: 'friends',
@@ -39,7 +40,9 @@ export const EXPENSE_ICONS = {
   BOOKMARK: 'bookmark',
 }
 
+export const STANDARD_DATE_FORMAT = 'YYYY-MM-DD'
 export const DEFAULT_DATE_FORMAT = 'DD MMM YYYY'
+export const DEFAULT_DATETIME_FORMAT = 'DD MMM YYYY, hh:mm A'
 
 export const BG_COLORS = [
   '#fca5a5',

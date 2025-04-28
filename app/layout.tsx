@@ -1,19 +1,13 @@
 import type { Metadata, Viewport } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 
-import dayjs from 'dayjs'
-import advancedFormat from 'dayjs/plugin/advancedFormat'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-
 import { poppins } from '@/lib/font'
 
 import './globals.css'
 import { cn } from '@/lib/utils'
 
 import AppProviders from '@/components/AppProviders'
-
-dayjs.extend(advancedFormat)
-dayjs.extend(customParseFormat)
+import ClientConfigProvider from '@/components/ClientConfigProvider'
 
 export const metadata: Metadata = {
   title: 'Balancify',
@@ -36,9 +30,11 @@ export default function RootLayout({
       <AppProviders>
         <html lang="en">
           <body className={cn('font-sans antialiased', poppins.variable)}>
-            <div vaul-drawer-wrapper="">
-              <div className="relative min-h-svh bg-background">{children}</div>
-            </div>
+            <ClientConfigProvider>
+              <div vaul-drawer-wrapper="">
+                <div className="relative min-h-svh bg-background">{children}</div>
+              </div>
+            </ClientConfigProvider>
           </body>
         </html>
       </AppProviders>

@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker'
-import { ApiService } from './api'
 import {
   Expense,
   ExpenseDetails,
@@ -8,11 +7,11 @@ import {
   ExpenseListResult,
   Timeline,
 } from './expense.model'
-import dayjs from 'dayjs'
 import { Person } from './group.model'
-import { BG_COLORS, DEFAULT_DATE_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
+import { BG_COLORS, DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
+import djs from '@/lib/dayjsExt'
 
-export default class ExpenseService extends ApiService {
+export default class ExpenseService {
   async getExpenses(): Promise<ExpenseListResult> {
     const icons = Object.values(EXPENSE_ICONS)
 
@@ -22,7 +21,7 @@ export default class ExpenseService extends ApiService {
       return {
         id: faker.string.uuid(),
         name: faker.word.noun(),
-        createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+        createdAt: djs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
         createdBy: faker.person.fullName(),
         totalCost: total,
         totalOwe: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),
@@ -64,7 +63,7 @@ export default class ExpenseService extends ApiService {
     const total = faker.number.float({ min: 5, max: 100, fractionDigits: 2 })
     const icons = Object.values(EXPENSE_ICONS)
     const timelines: Timeline[] = Array.from<number, Timeline>({ length: 5 }, () => ({
-      createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+      createdAt: djs(faker.date.recent()).format(DEFAULT_DATETIME_FORMAT),
       createdBy: {
         id: faker.string.uuid(),
         firstName: faker.person.firstName(),
@@ -79,7 +78,7 @@ export default class ExpenseService extends ApiService {
     const fakeData: ExpenseDetails = {
       id: faker.string.uuid(),
       name: faker.word.noun(),
-      createdAt: dayjs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
+      createdAt: djs(faker.date.recent()).format(DEFAULT_DATE_FORMAT),
       createdBy: faker.person.fullName(),
       totalCost: total,
       totalOwe: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),

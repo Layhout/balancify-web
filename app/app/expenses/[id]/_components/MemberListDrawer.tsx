@@ -3,10 +3,11 @@ import MemberListItem from './MemberListItem'
 import { MemberListProps } from './MemberList'
 import MemberListItemPlaceholder from './MemberListItemPlaceholder'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useAtomValue } from 'jotai'
+import { isDesktopAtom } from '@/repositories/layout'
 
 export default function MemberListDrawer({ loading, members }: MemberListProps) {
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isDesktop = useAtomValue(isDesktopAtom)
 
   if (isDesktop) return null
 

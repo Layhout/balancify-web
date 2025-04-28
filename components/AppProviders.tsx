@@ -11,6 +11,7 @@ export const queryClient = new QueryClient({
     },
     queries: {
       retry: false,
+      staleTime: Infinity,
     },
   },
   mutationCache: new MutationCache({

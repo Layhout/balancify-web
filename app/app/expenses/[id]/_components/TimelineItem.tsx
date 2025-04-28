@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Timeline } from '@/services/expense.model'
-import dayjs from 'dayjs'
 
 export default function TimelineItem({ createdBy, createdAt, events }: Timeline) {
   return (
@@ -18,7 +17,7 @@ export default function TimelineItem({ createdBy, createdAt, events }: Timeline)
             </AvatarFallback>
           </Avatar>
           <h1>
-            {createdBy.firstName} {createdBy.lastName} • {dayjs(createdAt, 'DD/MM/YYYY').format('DD MMM YYYY, hh:mm A')}
+            {createdBy.firstName} {createdBy.lastName} • {createdAt}
           </h1>
         </div>
         <p className="mt-2">{events}</p>

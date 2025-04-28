@@ -1,10 +1,9 @@
 import { faker } from '@faker-js/faker'
-import { ApiService } from './api'
 import { FriendResult } from './friend.model'
 import { Person } from './group.model'
 import { BG_COLORS } from '@/lib/constants'
 
-export default class FriendService extends ApiService {
+export default class FriendService {
   async getFriends(): Promise<FriendResult> {
     const fakeData: Person[] = Array.from({ length: 10 }, () => ({
       id: faker.string.uuid(),
