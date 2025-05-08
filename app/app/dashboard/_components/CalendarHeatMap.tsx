@@ -55,7 +55,7 @@ export default function CalendarHeatMap({ spendingHistory }: { spendingHistory: 
   return (
     <Calendar
       styles={{ cell: { minWidth: '32px' } }}
-      classNames={{ months: 'flex flex-row gap-4 flex-wrap justify-center items-center' }}
+      classNames={{ months: 'flex flex-row gap-4 flex-wrap justify-center items-start' }}
       showOutsideDays={false}
       disableNavigation
       numberOfMonths={3}

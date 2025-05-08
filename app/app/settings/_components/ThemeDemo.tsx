@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 type ThemeDemoProps = {
   theme?: AppTheme
-  className?: string
+  className?: React.ComponentProps<'div'>['className']
 }
 
 export default function ThemeDemo({ theme = THEME.LIGHT, className }: ThemeDemoProps) {

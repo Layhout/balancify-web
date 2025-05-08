@@ -9,6 +9,7 @@ export const ROUTES = {
     HOME: '/app',
     DASHBOARD: '/app/dashboard',
     EXPENSES: '/app/expenses',
+    EXPENSES_CREATE: '/app/expenses/create',
     GROUPS: '/app/groups',
     FRIENDS: '/app/friends',
     SETTINGS: '/app/settings',

@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 type AvatarStackProps = {
   items: AvatarStackItemProps[]
   maxSize?: number
-  className?: string
+  className?: React.ComponentProps<'div'>['className']
 }
 
 type AvatarStackItemProps = {
