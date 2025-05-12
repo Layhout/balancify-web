@@ -8,7 +8,7 @@ export default function CreateExpenses() {
   return (
     <div className="container pb-4">
       <PageHeader title="Create Expense" hasBackBtn />
-      <div className="mt-6 flex gap-6">
+      <div className="mt-6 flex flex-col gap-4 md:flex-row">
         <AvatarForm />
         <InfoForm />
       </div>

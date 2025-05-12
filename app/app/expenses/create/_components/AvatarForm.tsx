@@ -4,13 +4,15 @@ import { BG_COLORS, EXPENSE_ICONS } from '@/lib/constants'
 
 export default function AvatarForm() {
   return (
-    <div className="flex flex-[0.3] flex-col gap-6">
-      <ExpanseAvatar
-        icon={Object.values(EXPENSE_ICONS)[Math.floor(Math.random() * (Object.values(EXPENSE_ICONS).length - 1))]}
-        iconBgColor={BG_COLORS[Math.floor(Math.random() * (BG_COLORS.length - 1))]}
-        className="h-32 w-32 rounded-xl"
-        iconClassName="h-20 w-20"
-      />
+    <div className="flex flex-[0.3] flex-col gap-4">
+      <div className="flex justify-center md:justify-start">
+        <ExpanseAvatar
+          icon={Object.values(EXPENSE_ICONS)[Math.floor(Math.random() * (Object.values(EXPENSE_ICONS).length - 1))]}
+          iconBgColor={BG_COLORS[Math.floor(Math.random() * (BG_COLORS.length - 1))]}
+          className="h-32 w-32 rounded-xl"
+          iconClassName="h-20 w-20"
+        />
+      </div>
       <div className="flex-1">
         <Label>Icons</Label>
         <div className="mt-4 flex flex-wrap gap-4">

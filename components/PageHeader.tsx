@@ -18,7 +18,7 @@ export function PageHeader({ title, hasBackBtn = false, hasSearch = false, actio
 
   return (
     <>
-      <div className="mt-8 flex items-center justify-between md:mt-0">
+      <div className="mt-4 flex items-center justify-between md:mt-0">
         <div className="flex items-center gap-2">
           {hasBackBtn && (
             <Button variant="ghost" size="icon" className="md:hidden" onClick={router.back}>

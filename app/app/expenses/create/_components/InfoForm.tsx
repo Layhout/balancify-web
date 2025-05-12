@@ -8,8 +8,8 @@ import { BsCurrencyDollar } from 'react-icons/bs'
 
 export default function InfoForm() {
   return (
-    <div className="flex flex-[0.7] flex-col gap-6">
-      <div className="flex gap-6">
+    <div className="flex flex-[0.7] flex-col gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         <div className="flex-1">
           <Label>Name</Label>
           <Input />
@@ -19,7 +19,7 @@ export default function InfoForm() {
           <Input startIcon={BsCurrencyDollar} />
         </div>
       </div>
-      <div className="flex items-end gap-6">
+      <div className="flex items-end gap-4">
         <div className="flex-[0.8]">
           <Label>Search</Label>
           <Input placeholder="friends or group" />
@@ -33,7 +33,7 @@ export default function InfoForm() {
           <ToggleGroupItem value="3">Paid by them</ToggleGroupItem>
         </ToggleGroup>
       </div>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="flex flex-1 items-center gap-4">
             <Avatar>
