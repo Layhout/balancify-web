@@ -7,7 +7,7 @@ type ThemeDemoProps = {
   className?: React.ComponentProps<'div'>['className']
 }
 
-export default function ThemeDemo({ theme = THEME.LIGHT, className }: ThemeDemoProps) {
+export function ThemeDemo({ theme = THEME.LIGHT, className }: ThemeDemoProps) {
   const { bgColor, fgColor15, fgColor10 } = useMemo(() => {
     if (theme === THEME.LIGHT) {
       return {

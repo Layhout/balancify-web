@@ -1,12 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { LuTrash2 } from 'react-icons/lu'
 import { BsCurrencyDollar } from 'react-icons/bs'
+import { UserAvatar } from '@/components/UserAvatar'
 
-export default function InfoForm() {
+export function InfoForm() {
   return (
     <div className="flex flex-[0.7] flex-col gap-4">
       <div className="flex flex-col gap-4 md:flex-row">
@@ -36,12 +36,11 @@ export default function InfoForm() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {Array.from({ length: 5 }, (_, i) => (
           <div key={i} className="flex flex-1 items-center gap-4">
-            <Avatar>
-              <AvatarImage src={`https://picsum.photos/id/${i * 5}/1000/1000`} alt="" />
-              <AvatarFallback className="text-xs uppercase" style={{ backgroundColor: 'pink' }}>
-                AB
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              imageUrl={`https://picsum.photos/id/${i * 5}/1000/1000`}
+              fallbackText="AB"
+              profileBgColor="pink"
+            />
             <div className="flex-1">
               <h1 className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">Lorem ipsum</h1>
             </div>

@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/ui/button'
 import { HiOutlineCog6Tooth } from 'react-icons/hi2'
-import GroupInfo from './_components/GroupInfo'
-import ExpenseList from './_components/ExpenseList'
-import MemberList from './_components/MemberList'
-import useGroupDetails from './_hooks/useGroupDetails'
-import ActionButtons from './_components/ActionButtons'
+import { GroupInfo } from './_components/GroupInfo'
+import { ExpenseList } from './_components/ExpenseList'
+import { MemberList } from './_components/MemberList'
+import { useGroupDetails } from './_hooks/useGroupDetails'
+import { ActionButtons } from './_components/ActionButtons'
 
 type GroupDetailsProps = {
   params: {

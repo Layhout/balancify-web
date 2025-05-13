@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge'
-import ExpenseListCard from './ExpenseListCard'
+import { ExpenseListCard } from './ExpenseListCard'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import ExpenseListCardPlaceholder from './ExpenseListCardPlaceholder'
+import { ExpenseListCardPlaceholder } from './ExpenseListCardPlaceholder'
 import { Expense } from '@/services/expense.model'
 
 type ExpenseListProps = {
@@ -11,7 +11,7 @@ type ExpenseListProps = {
   expenses: Expense[]
 }
 
-export default function ExpenseList({ loading, expenses }: ExpenseListProps) {
+export function ExpenseList({ loading, expenses }: ExpenseListProps) {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between">

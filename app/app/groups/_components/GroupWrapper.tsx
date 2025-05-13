@@ -1,6 +1,6 @@
-import GroupRowPlaceholder from './GroupRowPlaceholder'
+import { GroupRowPlaceholder } from './GroupRowPlaceholder'
 
-export default function GroupWrapper({
+export function GroupWrapper({
   children,
   loading,
 }: Readonly<{

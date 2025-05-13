@@ -8,7 +8,7 @@ type GroupInfoProps = {
   loading: boolean
 }
 
-export default function GroupInfo({ description, name, loading }: GroupInfoProps) {
+export function GroupInfo({ description, name, loading }: GroupInfoProps) {
   return (
     <div className="mt-6 flex flex-col items-stretch gap-4 md:flex-row md:items-start">
       <div className="flex flex-1 items-center">

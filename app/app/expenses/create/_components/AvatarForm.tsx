@@ -2,7 +2,7 @@ import { ExpanseAvatar } from '@/components/ExpanseAvatar'
 import { Label } from '@/components/ui/label'
 import { BG_COLORS, EXPENSE_ICONS } from '@/lib/constants'
 
-export default function AvatarForm() {
+export function AvatarForm() {
   return (
     <div className="flex flex-[0.3] flex-col gap-4">
       <div className="flex justify-center md:justify-start">
@@ -15,7 +15,7 @@ export default function AvatarForm() {
       </div>
       <div className="flex-1">
         <Label>Icons</Label>
-        <div className="mt-4 flex flex-wrap gap-4">
+        <div className="mt-2 flex flex-wrap gap-4">
           {Object.values(EXPENSE_ICONS).map((e, i) => (
             <div
               key={i}
@@ -26,9 +26,9 @@ export default function AvatarForm() {
           ))}
         </div>
       </div>
-      <div className="flex-1">
+      <div className="mt-4 flex-1">
         <Label>Colors</Label>
-        <div className="mt-4 flex flex-wrap gap-4">
+        <div className="mt-2 flex flex-wrap gap-4">
           {BG_COLORS.map((c, i) => (
             <div
               key={i}

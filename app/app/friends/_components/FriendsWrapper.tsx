@@ -1,6 +1,6 @@
-import FriendCardPlaceholder from './FriendCardPlaceholder'
+import { FriendCardPlaceholder } from './FriendCardPlaceholder'
 
-export default function FriendsWrapper({
+export function FriendsWrapper({
   children,
   loading,
 }: Readonly<{

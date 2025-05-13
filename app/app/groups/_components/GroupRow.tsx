@@ -6,7 +6,7 @@ import { Group } from '@/services/group.model'
 import Link from 'next/link'
 import { LuChevronRight } from 'react-icons/lu'
 
-export default function GroupRow({ name, members, createdAt, totalSpent, id }: Group) {
+export function GroupRow({ name, members, createdAt, totalSpent, id }: Group) {
   return (
     <li>
       <Card>

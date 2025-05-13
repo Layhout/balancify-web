@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function ExpenseCardPlaceholder() {
+export function ExpenseCardPlaceholder() {
   return (
     <Card className="overflow-hidden ">
       <CardHeader className="flex-row items-center gap-4 space-y-0 border-b p-4">

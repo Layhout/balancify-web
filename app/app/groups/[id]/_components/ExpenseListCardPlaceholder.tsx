@@ -1,7 +1,7 @@
 import { Card, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function ExpenseListCardPlaceholder() {
+export function ExpenseListCardPlaceholder() {
   return (
     <Card>
       <CardHeader className="flex-row items-center gap-4 space-y-0 p-4">

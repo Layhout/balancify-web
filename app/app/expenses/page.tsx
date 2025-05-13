@@ -3,8 +3,8 @@
 import { Button } from '@/components/ui/button'
 import { LuPlus } from 'react-icons/lu'
 import { useExpense } from './_hooks/useExpense'
-import ExpenseWrapper from './_components/ExpenseWrapper'
-import ExpenseCard from './_components/ExpenseCard'
+import { ExpenseWrapper } from './_components/ExpenseWrapper'
+import { ExpenseCard } from './_components/ExpenseCard'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
 

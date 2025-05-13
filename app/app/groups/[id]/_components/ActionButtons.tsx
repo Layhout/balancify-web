@@ -3,7 +3,7 @@ import { HiOutlineUserPlus } from 'react-icons/hi2'
 import { LuPlus } from 'react-icons/lu'
 import { HiOutlineLogout } from 'react-icons/hi'
 
-export default function ActionButtons() {
+export function ActionButtons() {
   return (
     <div className="mt-6 flex gap-2 md:gap-4">
       <Button className="flex-1 gap-2 md:flex-none">

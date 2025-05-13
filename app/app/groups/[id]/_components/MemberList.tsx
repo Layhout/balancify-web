@@ -1,5 +1,5 @@
-import FriendCard from '@/app/app/friends/_components/FriendCard'
-import FriendCardPlaceholder from '@/app/app/friends/_components/FriendCardPlaceholder'
+import { FriendCard } from '@/app/app/friends/_components/FriendCard'
+import { FriendCardPlaceholder } from '@/app/app/friends/_components/FriendCardPlaceholder'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -10,7 +10,7 @@ type MemberListProps = {
   members: Person[]
 }
 
-export default function MemberList({ loading, members }: MemberListProps) {
+export function MemberList({ loading, members }: MemberListProps) {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between">

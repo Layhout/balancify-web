@@ -1,6 +1,6 @@
-import ExpenseCardPlaceholder from './ExpenseCardPlaceholder'
+import { ExpenseCardPlaceholder } from './ExpenseCardPlaceholder'
 
-export default function ExpenseWrapper({
+export function ExpenseWrapper({
   children,
   loading,
 }: Readonly<{

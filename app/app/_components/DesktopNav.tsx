@@ -30,14 +30,7 @@ const navVariants: Variants = {
   },
 }
 
-export default function DesktopNav({
-  isCollapsed,
-  appLinks,
-  pathname,
-  userLoaded,
-  user,
-  setIsCollapsed,
-}: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, appLinks, pathname, userLoaded, user, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
 
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import ThemeDemo from './_components/ThemeDemo'
+import { ThemeDemo } from './_components/ThemeDemo'
 import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'

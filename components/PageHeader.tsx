@@ -17,7 +17,7 @@ export function PageHeader({ title, hasBackBtn = false, hasSearch = false, actio
   const router = useRouter()
 
   return (
-    <>
+    <div className="mb-6">
       <div className="mt-4 flex items-center justify-between md:mt-0">
         <div className="flex items-center gap-2">
           {hasBackBtn && (
@@ -27,14 +27,14 @@ export function PageHeader({ title, hasBackBtn = false, hasSearch = false, actio
           )}
           <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
         </div>
-        <div className="md:hidden">{action}</div>
+        {action && <div className="md:hidden">{action}</div>}
       </div>
       {hasSearch && action && (
-        <div className="my-6 flex items-center justify-between gap-4">
+        <div className="mt-6 flex items-center justify-between gap-4">
           {hasSearch && <Input className="md:max-w-sm" placeholder="Search..." type="search" />}
           <div className="hidden md:flex">{action}</div>
         </div>
       )}
-    </>
+    </div>
   )
 }

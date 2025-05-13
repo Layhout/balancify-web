@@ -6,12 +6,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ROUTES } from '@/lib/constants'
 import { Fragment } from 'react'
 import { LuPlus } from 'react-icons/lu'
+
 type MobileNavProps = {
   appLinks: AppLinkType[]
   pathname: string
 }
 
-export default function MobileNav({ appLinks, pathname }: MobileNavProps) {
+export function MobileNav({ appLinks, pathname }: MobileNavProps) {
   return (
     <div className="md:hidden">
       <nav className="fixed bottom-0 left-0 right-0 block h-20">

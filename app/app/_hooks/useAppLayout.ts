@@ -19,7 +19,7 @@ export type AppLinkType = {
   SelectedIcon: IconType
 }
 
-export default function useAppLayout() {
+export function useAppLayout() {
   const pathname = usePathname()
   const { user, isLoaded: userLoaded } = useUser()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)

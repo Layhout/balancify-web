@@ -8,7 +8,7 @@ import { LuBell } from 'react-icons/lu'
 
 const BAR_HEIGHT = 'h-12'
 
-export default function NotificationBar() {
+export function NotificationBar() {
   const isDarkMode = useAtomValue(isDarkModeAtom)
 
   return (

@@ -7,7 +7,7 @@ import { Expense } from '@/services/expense.model'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
-export default function ExpenseCard({
+export function ExpenseCard({
   id,
   name,
   createdAt,

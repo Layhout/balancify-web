@@ -3,7 +3,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { Expense } from '@/services/expense.model'
 import { LuChevronRight } from 'react-icons/lu'
 
-export default function ExpenseListCard({ totalCost, createdAt, name, icon, iconBgColor }: Expense) {
+export function ExpenseListCard({ totalCost, createdAt, name, icon, iconBgColor }: Expense) {
   return (
     <Card>
       <CardHeader className="flex-row items-center gap-4 space-y-0 p-4">

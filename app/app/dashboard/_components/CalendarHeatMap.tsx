@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-export default function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   const { l1, l2, l3, l4 } = useMemo(() => getSpendingLevel(spendingHistory), [spendingHistory])
   const isMobileDevice = useMemo(isMobileBrowser, [])
 
