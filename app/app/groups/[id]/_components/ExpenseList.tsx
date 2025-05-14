@@ -20,7 +20,7 @@ export function ExpenseList({ loading, expenses }: ExpenseListProps) {
           {loading ? <Skeleton className="h-6 w-8" /> : <Badge variant="outline">{expenses.length}</Badge>}
         </div>
         <div className="flex items-center gap-2">
-          <span className="whitespace-nowrap text-sm">Sorted By</span>
+          <span className="hidden whitespace-nowrap text-sm md:inline">Sorted By</span>
           <Select defaultValue="last updated" disabled={loading}>
             <SelectTrigger>
               <SelectValue placeholder="Select sorted by" />

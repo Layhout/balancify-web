@@ -60,6 +60,14 @@ export function useAppLayout() {
     [],
   )
 
+  const shouldShowMobileNav = useMemo(
+    () =>
+      [ROUTES.APP.DASHBOARD, ROUTES.APP.EXPENSES, ROUTES.APP.GROUPS, ROUTES.APP.FRIENDS, ROUTES.APP.SETTINGS].includes(
+        pathname,
+      ),
+    [pathname],
+  )
+
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   useEffect(() => {
@@ -78,5 +86,6 @@ export function useAppLayout() {
     appLinks,
     isInitialLoading,
     pathname,
+    shouldShowMobileNav,
   }
 }

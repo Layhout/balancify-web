@@ -21,7 +21,7 @@ export function AvatarForm() {
               key={i}
               className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md bg-accent ring-2 ring-primary"
             >
-              <img src={`/assets/svgs/icon-${e}.svg`} className={'h-6 w-6'} alt="icon" />
+              <img src={`/assets/svgs/icon-${e}.svg`} className={'h-6 w-6 dark:invert'} alt="icon" />
             </div>
           ))}
         </div>

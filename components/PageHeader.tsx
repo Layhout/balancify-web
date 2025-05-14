@@ -29,10 +29,10 @@ export function PageHeader({ title, hasBackBtn = false, hasSearch = false, actio
         </div>
         {action && <div className="md:hidden">{action}</div>}
       </div>
-      {hasSearch && action && (
+      {(hasSearch || action) && (
         <div className="mt-6 flex items-center justify-between gap-4">
           {hasSearch && <Input className="md:max-w-sm" placeholder="Search..." type="search" />}
-          <div className="hidden md:flex">{action}</div>
+          {action && <div className="hidden md:flex">{action}</div>}
         </div>
       )}
     </div>

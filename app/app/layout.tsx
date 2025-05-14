@@ -7,7 +7,8 @@ import { NotificationBar } from './_components/NotificationBar'
 import { Splash } from './_components/Splash'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isCollapsed, appLinks, userLoaded, user, isInitialLoading, pathname, setIsCollapsed } = useAppLayout()
+  const { isCollapsed, appLinks, userLoaded, user, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav } =
+    useAppLayout()
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="relative flex-1 overflow-auto">
           <NotificationBar />
           {children}
-          <MobileNav appLinks={appLinks} pathname={pathname} />
+          {shouldShowMobileNav && <MobileNav appLinks={appLinks} pathname={pathname} />}
         </main>
       </div>
       <Splash show={isInitialLoading} />

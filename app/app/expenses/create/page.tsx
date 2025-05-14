@@ -1,8 +1,8 @@
 'use client'
 
 import { PageHeader } from '@/components/PageHeader'
-import AvatarForm from './_components/AvatarForm'
-import InfoForm from './_components/InfoForm'
+import { AvatarForm } from './_components/AvatarForm'
+import { InfoForm } from './_components/InfoForm'
 
 export default function CreateExpenses() {
   return (

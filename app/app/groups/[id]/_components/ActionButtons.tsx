@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { HiOutlineUserPlus } from 'react-icons/hi2'
+import { HiOutlineCog6Tooth } from 'react-icons/hi2'
 import { LuPlus } from 'react-icons/lu'
 import { HiOutlineLogout } from 'react-icons/hi'
 
@@ -11,8 +11,8 @@ export function ActionButtons() {
         Add Expense
       </Button>
       <Button variant="outline" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2">
-        <HiOutlineUserPlus className="h-4 w-4" />
-        <span className="hidden md:inline">Add Member</span>
+        <HiOutlineCog6Tooth className="h-4 w-4" />
+        <span className="hidden md:inline">Edit</span>
       </Button>
       <Button variant="destructive" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2">
         <HiOutlineLogout className="h-4 w-4" />
