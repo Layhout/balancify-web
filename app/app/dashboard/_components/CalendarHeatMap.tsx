@@ -17,10 +17,10 @@ export function CalendarHeatMap({ spendingHistory }: { spendingHistory: Spending
       if (Object.keys(activeModifiers).some((key) => ['l1', 'l2', 'l3', 'l4'].includes(key))) {
         const day = djs(date).format('D')
         const amount =
-          l1[djs(date).format(STANDARD_DATE_FORMAT)] ||
-          l2[djs(date).format(STANDARD_DATE_FORMAT)] ||
+          l4[djs(date).format(STANDARD_DATE_FORMAT)] ||
           l3[djs(date).format(STANDARD_DATE_FORMAT)] ||
-          l4[djs(date).format(STANDARD_DATE_FORMAT)]
+          l2[djs(date).format(STANDARD_DATE_FORMAT)] ||
+          l1[djs(date).format(STANDARD_DATE_FORMAT)]
 
         if (isMobileDevice) {
           return (
