@@ -1,7 +1,7 @@
 import { Group, GroupDetails, GroupDetailsResult, GroupListResult, Person } from './group.model'
 import { faker } from '@faker-js/faker'
 import { BG_COLORS, DEFAULT_DATE_FORMAT } from '@/lib/constants'
-import services from '.'
+import { services } from '@/services'
 import djs from '@/lib/dayjsExt'
 
 export default class GroupService {

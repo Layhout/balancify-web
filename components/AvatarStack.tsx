@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 type AvatarStackProps = {
   items: AvatarStackItemProps[]
   maxSize?: number
-  className?: string
+  className?: React.ComponentProps<'div'>['className']
 }
 
 type AvatarStackItemProps = {
@@ -13,7 +13,7 @@ type AvatarStackItemProps = {
   bgColor?: string
 }
 
-export default function AvatarStack({ items, maxSize = 5, className }: AvatarStackProps) {
+export function AvatarStack({ items, maxSize = 5, className }: AvatarStackProps) {
   if (items.length === 0) return null
 
   return (

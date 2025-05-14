@@ -4,7 +4,7 @@ import useTheme from '@/hooks/useTheme'
 import { AppProgressBar } from 'next-nprogress-bar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
-export default function ClientConfigProvider({
+export function ClientConfigProvider({
   children,
 }: Readonly<{
   children: React.ReactNode

@@ -4,6 +4,7 @@ import MemberListDrawer from './MemberListDrawer'
 import { ExpenseDetails } from '@/services/expense.model'
 import ExpenseInfoCardPlaceholder from './ExpenseInfoCardPlaceholder'
 import { useMemo } from 'react'
+import { ExpanseAvatar } from '@/components/ExpanseAvatar'
 
 type ExpenseInfoCardProps = {
   loading: boolean
@@ -49,9 +50,12 @@ export default function ExpenseInfoCard({ loading, details }: ExpenseInfoCardPro
             </div>
           </div>
         </div>
-        <div className="rounded-lg p-4" style={{ backgroundColor: details?.iconBgColor }}>
-          <img src={`/assets/svgs/icon-${details?.icon}.svg`} className="h-16 w-16" alt="icon" />
-        </div>
+        <ExpanseAvatar
+          iconBgColor={details?.iconBgColor || ''}
+          icon={details?.icon || ''}
+          className="h-24 w-24"
+          iconClassName="h-16 w-16"
+        />
       </CardContent>
       <CardFooter className="flex gap-2 md:hidden">
         <div className="flex-1">
