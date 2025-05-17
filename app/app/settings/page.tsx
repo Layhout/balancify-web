@@ -1,20 +1,19 @@
 'use client'
 
-import ThemeDemo from './_components/ThemeDemo'
+import { ThemeDemo } from './_components/ThemeDemo'
 import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { useSettings } from './_hooks/useSettings'
 import { AppTheme, THEME } from '@/lib/constants'
+import { PageHeader } from '@/components/PageHeader'
 
 export default function Settings() {
   const { appTheme, setAppTheme } = useSettings()
 
   return (
     <div className="container pb-4">
-      <div className="my-8 md:mt-0">
-        <h1 className="text-3xl font-bold">Settings</h1>
-      </div>
+      <PageHeader title="Settings" />
       <div className="mb-8 flex flex-col gap-4 lg:flex-row">
         <div className="flex-1 shrink-0">
           <h1 className="mb-1 font-bold">Notifications</h1>

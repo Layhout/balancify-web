@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
-import MemberListItem from './MemberListItem'
+import { MemberListItem } from './MemberListItem'
 import { MemberListProps } from './MemberList'
-import MemberListItemPlaceholder from './MemberListItemPlaceholder'
+import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { useAtomValue } from 'jotai'
 import { isDesktopAtom } from '@/repositories/layout'
 
-export default function MemberListDrawer({ loading, members }: MemberListProps) {
+export function MemberListDrawer({ loading, members }: MemberListProps) {
   const isDesktop = useAtomValue(isDesktopAtom)
 
   if (isDesktop) return null

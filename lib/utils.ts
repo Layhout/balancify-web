@@ -41,11 +41,11 @@ export function getSpendingLevel(spendingHistory: SpendingHistory[]) {
   const range = max - min
 
   for (const s of spendingHistory) {
-    if (s.amount <= min + range * 0.25) {
+    if (s.amount <= (min + range) * 0.25) {
       levels.l1[s.date] = s.amount
-    } else if (s.amount <= min + range * 0.5) {
+    } else if (s.amount <= (min + range) * 0.5) {
       levels.l2[s.date] = s.amount
-    } else if (s.amount <= min + range * 0.75) {
+    } else if (s.amount <= (min + range) * 0.75) {
       levels.l3[s.date] = s.amount
     } else {
       levels.l4[s.date] = s.amount

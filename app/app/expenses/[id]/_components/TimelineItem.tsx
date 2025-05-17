@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Timeline } from '@/services/expense.model'
 
-export default function TimelineItem({ createdBy, createdAt, events }: Timeline) {
+export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
   return (
     <li className="group flex gap-8">
       <div className="relative w-0.5 translate-y-3 bg-border group-last:bg-transparent">

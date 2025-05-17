@@ -1,9 +1,9 @@
 'use client'
 
-import ExpenseInfoCard from './_components/ExpenseInfoCard'
-import MemberList from './_components/MemberList'
-import TimelineList from './_components/TimelineList'
-import useExpenseDetails from './_hooks/useExpenseDetails'
+import { ExpenseInfoCard } from './_components/ExpenseInfoCard'
+import { MemberList } from './_components/MemberList'
+import { TimelineList } from './_components/TimelineList'
+import { useExpenseDetails } from './_hooks/useExpenseDetails'
 import { PageHeader } from '@/components/PageHeader'
 type ExpenseDetailsProps = {
   params: {

@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function SettleListItemPlaceholder() {
+export function SettleListItemPlaceholder() {
   return (
     <ul className="flex flex-col gap-4">
       {Array.from({ length: 3 }, (_, i) => (

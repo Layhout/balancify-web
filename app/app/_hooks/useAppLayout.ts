@@ -19,7 +19,7 @@ export type AppLinkType = {
   SelectedIcon: IconType
 }
 
-export default function useAppLayout() {
+export function useAppLayout() {
   const pathname = usePathname()
   const { user, isLoaded: userLoaded } = useUser()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
@@ -60,6 +60,14 @@ export default function useAppLayout() {
     [],
   )
 
+  const shouldShowMobileNav = useMemo(
+    () =>
+      [ROUTES.APP.DASHBOARD, ROUTES.APP.EXPENSES, ROUTES.APP.GROUPS, ROUTES.APP.FRIENDS, ROUTES.APP.SETTINGS].includes(
+        pathname,
+      ),
+    [pathname],
+  )
+
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   useEffect(() => {
@@ -78,5 +86,6 @@ export default function useAppLayout() {
     appLinks,
     isInitialLoading,
     pathname,
+    shouldShowMobileNav,
   }
 }

@@ -1,16 +1,16 @@
 'use client'
 
 import { PageHeader } from '@/components/PageHeader'
-import { AvatarForm } from './_components/AvatarForm'
 import { InfoForm } from './_components/InfoForm'
+import { MemberForm } from './_components/MemberForm'
 
-export default function CreateExpenses() {
+export default function CreateGroup() {
   return (
     <div className="container pb-4">
-      <PageHeader title="Create Expense" hasBackBtn />
+      <PageHeader title="Create Group" hasBackBtn />
       <div className="mt-6 flex flex-col gap-4 md:flex-row">
-        <AvatarForm />
         <InfoForm />
+        <MemberForm />
       </div>
     </div>
   )

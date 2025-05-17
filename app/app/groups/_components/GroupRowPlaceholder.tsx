@@ -2,7 +2,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function GroupRowPlaceholder() {
+export function GroupRowPlaceholder() {
   return (
     <li>
       <Card>

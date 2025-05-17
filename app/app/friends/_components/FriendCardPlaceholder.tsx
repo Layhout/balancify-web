@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function FriendCardPlaceholder() {
+export function FriendCardPlaceholder() {
   return (
     <Card>
       <CardContent className="flex items-center gap-2 p-4">

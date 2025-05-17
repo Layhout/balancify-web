@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function ExpenseInfoCardPlaceholder() {
+export function ExpenseInfoCardPlaceholder() {
   return (
     <Card>
       <CardContent className="flex flex-col-reverse items-center gap-4 p-6 md:flex-row md:items-start">

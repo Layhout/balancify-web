@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import MemberListDrawer from './MemberListDrawer'
+import { MemberListDrawer } from './MemberListDrawer'
 import { ExpenseDetails } from '@/services/expense.model'
-import ExpenseInfoCardPlaceholder from './ExpenseInfoCardPlaceholder'
+import { ExpenseInfoCardPlaceholder } from './ExpenseInfoCardPlaceholder'
 import { useMemo } from 'react'
 import { ExpanseAvatar } from '@/components/ExpanseAvatar'
 
@@ -11,7 +11,7 @@ type ExpenseInfoCardProps = {
   details?: ExpenseDetails
 }
 
-export default function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
+export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
   const settledPercentage = useMemo(
     () => (details ? Math.min(Math.round((details.totalOwe / details.totalCost) * 100), 100) : 0),
     [details],

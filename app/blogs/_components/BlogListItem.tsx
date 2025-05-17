@@ -8,7 +8,7 @@ type BlogListItemProps = Readonly<{
   version: string
 }>
 
-export default function BlogListItem({ children, date, title, version }: BlogListItemProps) {
+export function BlogListItem({ children, date, title, version }: BlogListItemProps) {
   return (
     <li className="group flex gap-8 pl-2 md:gap-14 md:pl-0">
       <div className="hidden w-20 pt-0.5 md:block">

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TbArrowDownLeft, TbArrowUpRight } from 'react-icons/tb'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function Summary({ getBack, owed, loading }: { getBack: number; owed: number; loading: boolean }) {
+export function Summary({ getBack, owed, loading }: { getBack: number; owed: number; loading: boolean }) {
   return (
     <div className="flex gap-4">
       <Card className="flex-1">

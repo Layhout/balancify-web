@@ -1,9 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Expense } from '@/services/expense.model'
-import SettleListItemPlaceholder from './SettleListItemPlaceholder'
-import SettleListItem from './SettleListItem'
+import { SettleListItemPlaceholder } from './SettleListItemPlaceholder'
+import { SettleListItem } from './SettleListItem'
 
-export default function SettleList({ toBeSettled, loading }: { toBeSettled: Expense[]; loading: boolean }) {
+export function SettleList({ toBeSettled, loading }: { toBeSettled: Expense[]; loading: boolean }) {
   return (
     <Card>
       <CardHeader>

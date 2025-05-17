@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-export default function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   const { l1, l2, l3, l4 } = useMemo(() => getSpendingLevel(spendingHistory), [spendingHistory])
   const isMobileDevice = useMemo(isMobileBrowser, [])
 
@@ -17,10 +17,10 @@ export default function CalendarHeatMap({ spendingHistory }: { spendingHistory: 
       if (Object.keys(activeModifiers).some((key) => ['l1', 'l2', 'l3', 'l4'].includes(key))) {
         const day = djs(date).format('D')
         const amount =
-          l1[djs(date).format(STANDARD_DATE_FORMAT)] ||
-          l2[djs(date).format(STANDARD_DATE_FORMAT)] ||
+          l4[djs(date).format(STANDARD_DATE_FORMAT)] ||
           l3[djs(date).format(STANDARD_DATE_FORMAT)] ||
-          l4[djs(date).format(STANDARD_DATE_FORMAT)]
+          l2[djs(date).format(STANDARD_DATE_FORMAT)] ||
+          l1[djs(date).format(STANDARD_DATE_FORMAT)]
 
         if (isMobileDevice) {
           return (

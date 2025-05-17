@@ -1,10 +1,11 @@
 'use client'
 
-import Summary from './_components/Summary'
-import SettleList from './_components/SettleList'
-import SpendingGraph from './_components/SpendingGraph'
+import { Summary } from './_components/Summary'
+import { SettleList } from './_components/SettleList'
+import { SpendingGraph } from './_components/SpendingGraph'
 import { useDashboard } from './_hooks/useDashboard'
 import { PageHeader } from '@/components/PageHeader'
+
 export default function Dashboard() {
   const { isPending, dashboardData } = useDashboard()
 

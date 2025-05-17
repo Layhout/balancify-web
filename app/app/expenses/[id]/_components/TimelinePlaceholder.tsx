@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function TimelinePlaceholder() {
+export function TimelinePlaceholder() {
   return (
     <ul className="mt-4 pl-4">
       {Array.from({ length: 3 }, (_, i) => (

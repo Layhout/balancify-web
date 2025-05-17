@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge'
-import ExpenseListCard from './ExpenseListCard'
+import { ExpenseListCard } from './ExpenseListCard'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import ExpenseListCardPlaceholder from './ExpenseListCardPlaceholder'
+import { ExpenseListCardPlaceholder } from './ExpenseListCardPlaceholder'
 import { Expense } from '@/services/expense.model'
 
 type ExpenseListProps = {
@@ -11,7 +11,7 @@ type ExpenseListProps = {
   expenses: Expense[]
 }
 
-export default function ExpenseList({ loading, expenses }: ExpenseListProps) {
+export function ExpenseList({ loading, expenses }: ExpenseListProps) {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between">
@@ -20,7 +20,7 @@ export default function ExpenseList({ loading, expenses }: ExpenseListProps) {
           {loading ? <Skeleton className="h-6 w-8" /> : <Badge variant="outline">{expenses.length}</Badge>}
         </div>
         <div className="flex items-center gap-2">
-          <span className="whitespace-nowrap text-sm">Sorted By</span>
+          <span className="hidden whitespace-nowrap text-sm md:inline">Sorted By</span>
           <Select defaultValue="last updated" disabled={loading}>
             <SelectTrigger>
               <SelectValue placeholder="Select sorted by" />

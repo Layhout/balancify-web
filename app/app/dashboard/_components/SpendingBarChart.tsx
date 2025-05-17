@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { useMemo } from 'react'
 import { getSpendingPerMonth } from '@/lib/utils'
 
-export default function SpendingBarChart({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function SpendingBarChart({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   const data = useMemo(() => getSpendingPerMonth(spendingHistory), [spendingHistory])
 
   return (

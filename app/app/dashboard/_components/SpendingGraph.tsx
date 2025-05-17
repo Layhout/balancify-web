@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LuLayoutGrid } from 'react-icons/lu'
 import { VscGraph } from 'react-icons/vsc'
-import CalendarHeatMap from './CalendarHeatMap'
+import { CalendarHeatMap } from './CalendarHeatMap'
 import { SpendingHistory } from '@/services/dashboard.model'
-import SpendingBarChart from './SpendingBarChart'
+import { SpendingBarChart } from './SpendingBarChart'
 
-export default function SpendingGraph({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function SpendingGraph({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   return (
     <Card>
       <Tabs defaultValue="grid">
