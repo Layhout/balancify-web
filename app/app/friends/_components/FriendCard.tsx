@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { Person } from '@/services/group.model'
-import { LuMoreVertical } from 'react-icons/lu'
+import { LuEllipsisVertical } from 'react-icons/lu'
 
 export function FriendCard({ imageUrl, firstName, lastName, email, profileBgColor }: Person) {
   return (
@@ -18,7 +18,7 @@ export function FriendCard({ imageUrl, firstName, lastName, email, profileBgColo
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">{email}</p>
         </div>
         <Button variant="ghost" size="icon">
-          <LuMoreVertical className="h-4 w-4" />
+          <LuEllipsisVertical className="h-4 w-4" />
         </Button>
       </CardContent>
     </Card>
