@@ -9,9 +9,9 @@ import {
 } from './expense.model'
 import { Person } from './group.model'
 import { BG_COLORS, DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
-import djs from '@/lib/dayjsExt'
+import { djs } from '@/lib/dayjsExt'
 
-export default class ExpenseService {
+export class ExpenseService {
   async getExpenses(): Promise<ExpenseListResult> {
     const icons = Object.values(EXPENSE_ICONS)
 

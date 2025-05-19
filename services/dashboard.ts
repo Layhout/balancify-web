@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker'
 import { Dashboard, DashboardResult } from './dashboard.model'
 import { services } from './index'
-import djs from '@/lib/dayjsExt'
+import { djs } from '@/lib/dayjsExt'
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
 
-export default class DashboardService {
+export class DashboardService {
   async getDashboard(): Promise<DashboardResult> {
     const fakeData: Dashboard = {
       getBack: faker.number.float({ min: 5, max: 100, fractionDigits: 2 }),

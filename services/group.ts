@@ -2,9 +2,9 @@ import { Group, GroupDetails, GroupDetailsResult, GroupListResult, Person } from
 import { faker } from '@faker-js/faker'
 import { BG_COLORS, DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import { services } from '@/services'
-import djs from '@/lib/dayjsExt'
+import { djs } from '@/lib/dayjsExt'
 
-export default class GroupService {
+export class GroupService {
   // async getGroups(params: GetGroupListParams): Promise<ResponseResult<GroupListResult>> {
   async getGroups(): Promise<GroupListResult> {
     const fakeData: Group[] = Array.from({ length: 10 }, () => ({

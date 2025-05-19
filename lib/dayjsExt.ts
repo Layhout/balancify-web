@@ -6,4 +6,4 @@ const djs = dayjs
 dayjs.extend(advancedFormat)
 dayjs.extend(customParseFormat)
 
-export default djs
+export { djs }
