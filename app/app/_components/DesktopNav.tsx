@@ -11,6 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { dark } from '@clerk/themes'
 import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
+import { ROUTES } from '@/lib/constants'
+import { LuExternalLink } from 'react-icons/lu'
 
 type DesktopNavProps = {
   isCollapsed: boolean
@@ -35,14 +37,20 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
 
   return (
     <motion.nav
-      className="relative hidden flex-shrink-0 flex-col justify-between border-r p-4 md:flex"
+      className="relative z-50 hidden flex-shrink-0 flex-col justify-between border-r p-4 md:flex"
       variants={navVariants}
       initial={false}
       animate={isCollapsed ? 'close' : 'open'}
     >
       <div>
         <h1 className={cn('overflow-hidden whitespace-nowrap text-lg font-bold', { hidden: isCollapsed })}>
-          Balancify <span className=" text-xs font-normal text-muted-foreground">v{process.env.version}</span>
+          Balancify{' '}
+          <Link
+            href={ROUTES.LANDING.BLOGS}
+            className="inline-flex cursor-pointer items-center gap-1 text-xs font-normal text-muted-foreground"
+          >
+            v{process.env.version} <LuExternalLink />
+          </Link>
         </h1>
         <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
       </div>
