@@ -12,7 +12,7 @@ import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
 
-export type AppLinkType = {
+export type AppNavLink = {
   title: string
   link: string
   Icon: IconType
@@ -24,7 +24,7 @@ export function useAppLayout() {
   const { user, isLoaded: userLoaded } = useUser()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
 
-  const appLinks: AppLinkType[] = useMemo(
+  const DesktopNavLinks: AppNavLink[] = useMemo(
     () => [
       {
         title: 'Dashboard',
@@ -60,12 +60,39 @@ export function useAppLayout() {
     [],
   )
 
+  const MobileNavLinks: AppNavLink[] = useMemo(
+    () => [
+      {
+        title: 'Dashboard',
+        link: ROUTES.APP.DASHBOARD,
+        Icon: RiDashboardLine,
+        SelectedIcon: RiDashboardFill,
+      },
+      {
+        title: 'Expenses',
+        link: ROUTES.APP.EXPENSES,
+        Icon: AiOutlinePieChart,
+        SelectedIcon: AiFillPieChart,
+      },
+      {
+        title: 'Groups',
+        link: ROUTES.APP.GROUPS,
+        Icon: HiOutlineUsers,
+        SelectedIcon: HiUsers,
+      },
+      {
+        title: 'Profile',
+        link: ROUTES.APP.PROFILE,
+        Icon: HiOutlineUser,
+        SelectedIcon: HiUser,
+      },
+    ],
+    [],
+  )
+
   const shouldShowMobileNav = useMemo(
-    () =>
-      [ROUTES.APP.DASHBOARD, ROUTES.APP.EXPENSES, ROUTES.APP.GROUPS, ROUTES.APP.FRIENDS, ROUTES.APP.SETTINGS].includes(
-        pathname,
-      ),
-    [pathname],
+    () => MobileNavLinks.map((m) => m.link).includes(pathname),
+    [MobileNavLinks, pathname],
   )
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
@@ -83,9 +110,10 @@ export function useAppLayout() {
     setIsCollapsed,
     user,
     userLoaded,
-    appLinks,
+    DesktopNavLinks,
     isInitialLoading,
     pathname,
     shouldShowMobileNav,
+    MobileNavLinks,
   }
 }

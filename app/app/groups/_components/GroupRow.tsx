@@ -31,7 +31,7 @@ export function GroupRow({ name, members, createdAt, totalSpent, id }: Group) {
             <p>{totalSpent}</p>
             <Button variant="ghost" size="icon" asChild>
               <Link href={`${ROUTES.APP.GROUPS}/${id}`}>
-                <LuChevronRight className="h-4 w-4" />
+                <LuChevronRight className="size-4" />
               </Link>
             </Button>
           </div>

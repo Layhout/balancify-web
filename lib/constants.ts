@@ -14,6 +14,7 @@ export const ROUTES = {
     GROUPS_CREATE: '/app/groups/create',
     FRIENDS: '/app/friends',
     SETTINGS: '/app/settings',
+    PROFILE: '/app/profile',
   },
   PORTAL: {
     HOME: '/portal',

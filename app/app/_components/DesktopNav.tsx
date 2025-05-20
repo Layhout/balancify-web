@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { AppLinkType } from '../_hooks/useAppLayout'
+import { AppNavLink } from '../_hooks/useAppLayout'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
@@ -14,7 +14,7 @@ import { isDarkModeAtom } from '@/repositories/layout'
 
 type DesktopNavProps = {
   isCollapsed: boolean
-  appLinks: AppLinkType[]
+  appNavLinks: AppNavLink[]
   pathname: string
   userLoaded: boolean
   user: UserResource | null | undefined
@@ -30,7 +30,7 @@ const navVariants: Variants = {
   },
 }
 
-export function DesktopNav({ isCollapsed, appLinks, pathname, userLoaded, user, setIsCollapsed }: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, user, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
 
   return (
@@ -47,7 +47,7 @@ export function DesktopNav({ isCollapsed, appLinks, pathname, userLoaded, user, 
         <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
       </div>
       <div className={cn('flex flex-col gap-2 overflow-hidden', { 'items-center': isCollapsed })}>
-        {appLinks.map(({ Icon, link, title }) => (
+        {appNavLinks.map(({ Icon, link, title }) => (
           <Tooltip key={title} open={isCollapsed ? undefined : false}>
             <TooltipTrigger asChild>
               <Link

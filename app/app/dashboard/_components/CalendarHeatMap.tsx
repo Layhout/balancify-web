@@ -1,5 +1,5 @@
 import { Calendar } from '@/components/ui/calendar'
-import djs from '@/lib/dayjsExt'
+import { djs } from '@/lib/dayjsExt'
 import { SpendingHistory } from '@/services/dashboard.model'
 import { DayContentProps } from 'react-day-picker'
 import { useCallback, useMemo } from 'react'

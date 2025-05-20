@@ -1,5 +1,5 @@
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants'
-import djs from '@/lib/dayjsExt'
+import { djs } from '@/lib/dayjsExt'
 
 type BlogListItemProps = Readonly<{
   children: React.ReactNode

@@ -1,7 +1,7 @@
 import { SpendingHistory } from '@/services/dashboard.model'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import djs from './dayjsExt'
+import { djs } from './dayjsExt'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
