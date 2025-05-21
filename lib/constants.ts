@@ -74,3 +74,5 @@ export const THEME = {
 } as const
 
 export type AppTheme = (typeof THEME)[keyof typeof THEME]
+
+export const NOTIFICATION_BAR_HEIGHT = 'h-12'
