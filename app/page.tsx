@@ -1,31 +1,44 @@
-import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
-
 import { Button } from '@/components/ui/button'
+import { NOTIFICATION_BAR_HEIGHT, ROUTES } from '@/lib/constants'
+import { GitHubLogoIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
   const { userId } = auth()
 
-  return (
-    <main className="flex h-screen flex-col items-center justify-center">
-      <div className="flex items-center">
-        <h1 className="border-r-[1px] border-gray-400 p-2  px-4">Under Construction</h1>
-        <h1 className="p-2 px-4">Landing page</h1>
-      </div>
+  if (userId) {
+    redirect('/app/dashboard')
+  }
 
-      {userId ? (
-        <UserButton afterSignOutUrl="/" />
-      ) : (
-        <div className="flex gap-2">
-          <Button asChild className="mt-6">
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
-          <Button asChild className="mt-6" variant="secondary">
-            <Link href="/sign-up">Sign Up</Link>
+  return (
+    <main className="container flex h-screen flex-col justify-between">
+      <div className={`${NOTIFICATION_BAR_HEIGHT} flex items-center justify-between`}>
+        <h1 className="font-bold">Balancify</h1>
+        <Button size="icon" asChild variant="ghost">
+          <Link href="https://github.com/balancify-app/web" target="_blank">
+            <GitHubLogoIcon className="size-4" />
+          </Link>
+        </Button>
+      </div>
+      <div className=" flex flex-1 flex-col items-center justify-center gap-10 md:flex-row md:justify-between md:gap-0">
+        <div className="text-center md:text-left">
+          <h1 className="text-5xl font-bold">Simplify Group Spending.</h1>
+          <p className="mt-6">
+            A clean, no-fuss way to manage shared expenses with anyone, anywhere. Because fairness shouldn’t be
+            complicated.
+          </p>
+          <Button size="lg" className="mt-10" asChild>
+            <Link href={ROUTES.LANDING.SIGN_UP}>Try for free</Link>
           </Button>
         </div>
-      )}
+        <div className="relative flex w-full max-w-[700px] items-center justify-start">
+          <div className="max-size-[300px] absolute left-1/2 top-1/2 size-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/20 blur-3xl" />
+          <img src="/assets/images/mock-desktop.png" className="relative w-[90%]" alt="mock desktop" />
+          <img src="/assets/images/mock-mobile.png" className="absolute bottom-0 right-0 w-[30%]" alt="mock mobile" />
+        </div>
+      </div>
     </main>
   )
 }

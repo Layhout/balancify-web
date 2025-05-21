@@ -1,42 +1,43 @@
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import type { Metadata, Viewport } from 'next'
+import { ClerkProvider } from '@clerk/nextjs'
 
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+import { poppins } from '@/lib/font'
 
-import "./globals.css";
-import { cn } from "@/lib/utils";
+import './globals.css'
+import { cn } from '@/lib/utils'
 
-dayjs.extend(advancedFormat);
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import { JotaiProviders } from '@/components/AppProviders'
+import { ClientConfigProvider } from '@/components/ClientConfigProvider'
 
 export const metadata: Metadata = {
-  title: "Balancify",
-  description: "Balancify is a simple way to split bills with friends.",
-};
+  title: 'Balancify',
+  description: 'Balancify is a simple way to split bills with friends.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
-          )}
-        >
-          {children}
-        </body>
-      </html>
+      <JotaiProviders>
+        <html lang="en">
+          <body className={cn('font-sans antialiased', poppins.variable)}>
+            <ClientConfigProvider>
+              <div vaul-drawer-wrapper="">
+                <div className="relative min-h-svh bg-background">{children}</div>
+              </div>
+            </ClientConfigProvider>
+          </body>
+        </html>
+      </JotaiProviders>
     </ClerkProvider>
-  );
+  )
 }

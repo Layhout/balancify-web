@@ -1,15 +1,28 @@
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+'use client'
+
+import { Summary } from './_components/Summary'
+import { SettleList } from './_components/SettleList'
+import { SpendingGraph } from './_components/SpendingGraph'
+import { useDashboard } from './_hooks/useDashboard'
+import { PageHeader } from '@/components/PageHeader'
 
 export default function Dashboard() {
+  const { isPending, dashboardData } = useDashboard()
+
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
-      <div className="flex items-center">
-        <h1 className="border-r-[1px] border-gray-400 p-2 px-4">Under Construction</h1>
-        <h1 className="p-2 px-4">Dashboard page</h1>
-        <Button>
-          <Link href="/">Home</Link>
-        </Button>
+    <div className="container pb-4">
+      <PageHeader title="Dashboard" />
+      <div className="mt-8 flex items-start gap-4">
+        <div className="flex flex-[2] flex-col gap-4">
+          <Summary getBack={dashboardData?.getBack || 0} owed={dashboardData?.owed || 0} loading={isPending} />
+          <SpendingGraph spendingHistory={dashboardData?.spendingHistory || []} />
+          <div className="block md:hidden">
+            <SettleList toBeSettled={dashboardData?.toBeSettled || []} loading={isPending} />
+          </div>
+        </div>
+        <div className="hidden flex-1 md:block">
+          <SettleList toBeSettled={dashboardData?.toBeSettled || []} loading={isPending} />
+        </div>
       </div>
     </div>
   )
