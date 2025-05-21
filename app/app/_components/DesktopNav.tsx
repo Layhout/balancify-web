@@ -13,6 +13,7 @@ import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
 import { ROUTES } from '@/lib/constants'
 import { LuExternalLink } from 'react-icons/lu'
+import { APP_V } from '@/lib/version'
 
 type DesktopNavProps = {
   isCollapsed: boolean
@@ -49,7 +50,7 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
             href={ROUTES.LANDING.BLOGS}
             className="inline-flex cursor-pointer items-center gap-1 text-xs font-normal text-muted-foreground"
           >
-            v{process.env.version} <LuExternalLink />
+            v{APP_V} <LuExternalLink />
           </Link>
         </h1>
         <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
