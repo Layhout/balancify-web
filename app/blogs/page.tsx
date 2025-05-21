@@ -6,7 +6,7 @@ export default function Blogs() {
     <main className="container sm:max-w-4xl">
       <header className="py-16 text-center">
         <h1 className="mb-4 text-2xl font-bold">Dev Blogs</h1>
-        <p className="text-gray-700">New updated, improvements and fixes to Balancify.</p>
+        <p className="text-muted-foreground">New updated, improvements and fixes to Balancify.</p>
       </header>
       <article>
         <ul>
