@@ -24,14 +24,19 @@ export default function Home() {
       </div>
       <div className=" flex flex-1 flex-col items-center justify-center gap-10 md:flex-row md:justify-between md:gap-0">
         <div className="text-center md:text-left">
-          <h1 className="text-5xl font-bold">Simplify Group Spending.</h1>
-          <p className="mt-6">
+          <h1 className="text-3xl font-bold md:text-5xl">Simplify Group Spending.</h1>
+          <p className="mt-6 text-sm sm:text-base">
             A clean, no-fuss way to manage shared expenses with anyone, anywhere. Because fairness shouldn’t be
             complicated.
           </p>
-          <Button size="lg" className="mt-10" asChild>
-            <Link href={ROUTES.LANDING.SIGN_UP}>Try for free</Link>
-          </Button>
+          <div className="flex items-center justify-center gap-4 md:justify-start">
+            <Button size="lg" className="mt-10" asChild>
+              <Link href={ROUTES.LANDING.SIGN_UP}>Try for free</Link>
+            </Button>
+            <Button size="lg" className="mt-10" asChild>
+              <Link href={ROUTES.LANDING.SIGN_IN}>Sign In</Link>
+            </Button>
+          </div>
         </div>
         <div className="relative flex w-full max-w-[700px] items-center justify-start">
           <div className="max-size-[300px] absolute left-1/2 top-1/2 size-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/20 blur-3xl" />

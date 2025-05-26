@@ -10,8 +10,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const {
     isCollapsed,
     DesktopNavLinks,
-    userLoaded,
-    user,
     isInitialLoading,
     pathname,
     setIsCollapsed,
@@ -27,8 +25,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           isCollapsed={isCollapsed}
           pathname={pathname}
           setIsCollapsed={setIsCollapsed}
-          user={user}
-          userLoaded={userLoaded}
         />
         <main className="relative flex-1 overflow-auto">
           <NotificationBar />

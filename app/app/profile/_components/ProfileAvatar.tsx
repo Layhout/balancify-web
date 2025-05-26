@@ -1,12 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/UserAvatar'
-import { UserResource } from '@clerk/types'
+import { useUser } from '@clerk/nextjs'
 
-type ProfileAvatarProps = {
-  user: UserResource | null | undefined
-}
+type ProfileAvatarProps = {}
 
-export function ProfileAvatar({ user }: ProfileAvatarProps) {
+export function ProfileAvatar({}: ProfileAvatarProps) {
+  const { user } = useUser()
+
   return (
     <div className="flex flex-col items-center">
       <UserAvatar
