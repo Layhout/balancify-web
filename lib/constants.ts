@@ -76,3 +76,17 @@ export const THEME = {
 export type AppTheme = (typeof THEME)[keyof typeof THEME]
 
 export const NOTIFICATION_BAR_HEIGHT = 'h-12'
+
+export const isDevEnv = process.env.NODE_ENV === 'development'
+
+export type FirebaseWhereFilterOp =
+  | '<'
+  | '<='
+  | '=='
+  | '!='
+  | '>='
+  | '>'
+  | 'array-contains'
+  | 'in'
+  | 'array-contains-any'
+  | 'not-in'

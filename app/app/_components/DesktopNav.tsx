@@ -3,8 +3,7 @@ import { AppNavLink } from '../_hooks/useAppLayout'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
-import { UserButton } from '@clerk/nextjs'
-import { UserResource } from '@clerk/types'
+import { UserButton, useUser } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
 import { motion, Variants } from 'motion/react'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,8 +18,6 @@ type DesktopNavProps = {
   isCollapsed: boolean
   appNavLinks: AppNavLink[]
   pathname: string
-  userLoaded: boolean
-  user: UserResource | null | undefined
   setIsCollapsed: Dispatch<SetStateAction<boolean>>
 }
 
@@ -33,8 +30,9 @@ const navVariants: Variants = {
   },
 }
 
-export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, user, setIsCollapsed }: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, appNavLinks, pathname, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
+  const { user, isLoaded: userLoaded } = useUser()
 
   return (
     <motion.nav
@@ -82,6 +80,10 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
           <>
             <UserButton
               appearance={{ elements: { avatarBox: 'h-9 w-9 border' }, baseTheme: isDarkMode ? dark : undefined }}
+              afterSignOutUrl={ROUTES.LANDING.HOME}
+              afterSwitchSessionUrl={ROUTES.APP.DASHBOARD}
+              afterMultiSessionSingleSignOutUrl={ROUTES.LANDING.HOME}
+              userProfileProps={{ appearance: { baseTheme: isDarkMode ? dark : undefined } }}
             />
             <div
               className={cn('flex flex-col overflow-hidden', {

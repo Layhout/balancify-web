@@ -1,7 +1,6 @@
 'use client'
 
 import { ROUTES } from '@/lib/constants'
-import { useUser } from '@clerk/nextjs'
 import { useEffect, useMemo, useState } from 'react'
 import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
 import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
@@ -11,6 +10,9 @@ import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
+import { useAuth } from '@clerk/nextjs'
+import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 export type AppNavLink = {
   title: string
@@ -21,8 +23,8 @@ export type AppNavLink = {
 
 export function useAppLayout() {
   const pathname = usePathname()
-  const { user, isLoaded: userLoaded } = useUser()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
+  const { getToken, userId } = useAuth()
 
   const DesktopNavLinks: AppNavLink[] = useMemo(
     () => [
@@ -98,9 +100,23 @@ export function useAppLayout() {
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   useEffect(() => {
-    const timerId = setTimeout(() => setIsInitialLoading(false), 300)
+    let timerId: NodeJS.Timeout
+    let unSubscribe: () => void
 
-    return () => clearTimeout(timerId)
+    unSubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user && userId) {
+        const token = await getToken({ template: 'integration_firebase' })
+
+        await signInWithCustomToken(auth, token || '')
+      }
+
+      timerId = setTimeout(() => setIsInitialLoading(false), 300)
+    })
+
+    return () => {
+      unSubscribe()
+      clearTimeout(timerId)
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -108,8 +124,6 @@ export function useAppLayout() {
   return {
     isCollapsed,
     setIsCollapsed,
-    user,
-    userLoaded,
     DesktopNavLinks,
     isInitialLoading,
     pathname,

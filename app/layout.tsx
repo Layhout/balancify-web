@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils'
 
 import { JotaiProviders } from '@/components/AppProviders'
 import { ClientConfigProvider } from '@/components/ClientConfigProvider'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 export const metadata: Metadata = {
   title: 'Balancify',
@@ -35,6 +37,8 @@ export default function RootLayout({
                 <div className="relative min-h-svh bg-background">{children}</div>
               </div>
             </ClientConfigProvider>
+            <Analytics />
+            <SpeedInsights />
           </body>
         </html>
       </JotaiProviders>
