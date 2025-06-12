@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/UserAvatar'
 import { Timeline } from '@/services/expense.model'
 
 export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
@@ -9,13 +9,12 @@ export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
       </div>
       <div className="flex-1 pb-10">
         <div className="flex items-start gap-2">
-          <Avatar className="mt-0.5 h-5 w-5 border">
-            <AvatarImage src={createdBy.imageUrl} alt={`${createdBy.firstName}${createdBy.lastName}`} />
-            <AvatarFallback className="text-xs">
-              {createdBy.firstName[0]}
-              {createdBy.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar
+            className="mt-0.5 h-5 w-5 border"
+            fallbackText={`${createdBy.firstName[0]} ${createdBy.lastName[0]}`}
+            imageUrl={createdBy.imageUrl || ''}
+            profileBgColor={createdBy.profileBgColor}
+          />
           <h1>
             {createdBy.firstName} {createdBy.lastName} • {createdAt}
           </h1>

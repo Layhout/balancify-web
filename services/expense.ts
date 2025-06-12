@@ -7,9 +7,9 @@ import {
   ExpenseListResult,
   Timeline,
 } from './expense.model'
-import { Person } from './group.model'
 import { BG_COLORS, DEFAULT_DATE_FORMAT, DEFAULT_DATETIME_FORMAT, EXPENSE_ICONS } from '@/lib/constants'
 import { djs } from '@/lib/dayjsExt'
+import { User } from '@/types/common'
 
 export class ExpenseService {
   async getExpenses(): Promise<ExpenseListResult> {
@@ -25,13 +25,14 @@ export class ExpenseService {
         createdBy: faker.person.fullName(),
         totalCost: total,
         totalOwe: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),
-        members: Array.from<number, Person>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
+        members: Array.from<number, User>({ length: faker.number.int({ min: 3, max: 10 }) }, () => ({
           id: faker.string.uuid(),
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           imageUrl: faker.image.avatar(),
           profileBgColor: BG_COLORS[faker.number.int({ min: 0, max: BG_COLORS.length - 1 })],
           email: faker.internet.email(),
+          fullName: '',
         })),
         hasSettled: faker.datatype.boolean(),
         icon: icons[faker.number.int({ min: 0, max: icons.length - 1 })],
@@ -71,6 +72,7 @@ export class ExpenseService {
         imageUrl: faker.image.avatar(),
         profileBgColor: BG_COLORS[faker.number.int({ min: 0, max: BG_COLORS.length - 1 })],
         email: faker.internet.email(),
+        fullName: '',
       },
       events: faker.finance.transactionDescription(),
     }))
@@ -90,6 +92,8 @@ export class ExpenseService {
         profileBgColor: BG_COLORS[faker.number.int({ min: 0, max: BG_COLORS.length - 1 })],
         email: faker.internet.email(),
         ownedAmount: faker.number.float({ min: 5, max: total, fractionDigits: 2 }),
+        fullName: '',
+        oneSignalId: '',
       })),
       hasSettled: faker.datatype.boolean(),
       icon: icons[faker.number.int({ min: 0, max: icons.length - 1 })],

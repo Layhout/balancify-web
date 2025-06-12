@@ -1,3 +1,8 @@
+import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
+import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
+import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
+import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
+
 export const ROUTES = {
   LANDING: {
     HOME: '/',
@@ -21,9 +26,70 @@ export const ROUTES = {
   },
 }
 
+export const DESKTOP_NAV_LINKS = [
+  {
+    title: 'Dashboard',
+    link: ROUTES.APP.DASHBOARD,
+    Icon: RiDashboardLine,
+    SelectedIcon: RiDashboardFill,
+  },
+  {
+    title: 'Expenses',
+    link: ROUTES.APP.EXPENSES,
+    Icon: AiOutlinePieChart,
+    SelectedIcon: AiFillPieChart,
+  },
+  {
+    title: 'Groups',
+    link: ROUTES.APP.GROUPS,
+    Icon: HiOutlineUsers,
+    SelectedIcon: HiUsers,
+  },
+  {
+    title: 'Friends',
+    link: ROUTES.APP.FRIENDS,
+    Icon: HiOutlineUser,
+    SelectedIcon: HiUser,
+  },
+  {
+    title: 'Settings',
+    link: ROUTES.APP.SETTINGS,
+    Icon: IoSettingsOutline,
+    SelectedIcon: IoSettings,
+  },
+]
+
+export const MOBILE_NAV_LINKS = [
+  {
+    title: 'Dashboard',
+    link: ROUTES.APP.DASHBOARD,
+    Icon: RiDashboardLine,
+    SelectedIcon: RiDashboardFill,
+  },
+  {
+    title: 'Expenses',
+    link: ROUTES.APP.EXPENSES,
+    Icon: AiOutlinePieChart,
+    SelectedIcon: AiFillPieChart,
+  },
+  {
+    title: 'Groups',
+    link: ROUTES.APP.GROUPS,
+    Icon: HiOutlineUsers,
+    SelectedIcon: HiUsers,
+  },
+  {
+    title: 'Profile',
+    link: ROUTES.APP.PROFILE,
+    Icon: HiOutlineUser,
+    SelectedIcon: HiUser,
+  },
+]
+
 export const LOCALSTORAGE_KEYS = {
   DESKTOP_NAV_TOGGLE: 'desktop_nav_toggle',
   APP_THEME: 'app_theme',
+  USER: 'user',
 }
 
 export const QUERY_KEYS = {
@@ -48,23 +114,23 @@ export const DEFAULT_DATE_FORMAT = 'DD MMM YYYY'
 export const DEFAULT_DATETIME_FORMAT = 'DD MMM YYYY, hh:mm A'
 
 export const BG_COLORS = [
-  '#ef4444',
-  '#f97316',
-  '#f59e0b',
-  '#eab308',
-  '#84cc16',
-  '#22c55e',
-  '#10b981',
-  '#14b8a6',
-  '#06b6d4',
-  '#0ea5e9',
-  '#3b82f6',
-  '#6366f1',
-  '#8b5cf6',
-  '#a855f7',
-  '#d946ef',
-  '#ec4899',
-  '#f43f5e',
+  '#ef4444cc',
+  '#f97316cc',
+  '#f59e0bcc',
+  '#eab308cc',
+  '#84cc16cc',
+  '#22c55ecc',
+  '#10b981cc',
+  '#14b8a6cc',
+  '#06b6d4cc',
+  '#0ea5e9cc',
+  '#3b82f6cc',
+  '#6366f1cc',
+  '#8b5cf6cc',
+  '#a855f7cc',
+  '#d946efcc',
+  '#ec4899cc',
+  '#f43f5ecc',
 ]
 
 export const THEME = {
@@ -77,16 +143,8 @@ export type AppTheme = (typeof THEME)[keyof typeof THEME]
 
 export const NOTIFICATION_BAR_HEIGHT = 'h-12'
 
-export const isDevEnv = process.env.NODE_ENV === 'development'
+export const IS_DEV_ENV = process.env.NODE_ENV === 'development'
 
-export type FirebaseWhereFilterOp =
-  | '<'
-  | '<='
-  | '=='
-  | '!='
-  | '>='
-  | '>'
-  | 'array-contains'
-  | 'in'
-  | 'array-contains-any'
-  | 'not-in'
+export const FIREBASE_COLLTION_NAME = {
+  USERS: 'users',
+}

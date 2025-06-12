@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils'
-import { AppNavLink } from '../_hooks/useAppLayout'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
@@ -10,13 +9,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { dark } from '@clerk/themes'
 import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
-import { ROUTES } from '@/lib/constants'
+import { DESKTOP_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { LuExternalLink } from 'react-icons/lu'
 import { APP_V } from '@/lib/version'
 
 type DesktopNavProps = {
   isCollapsed: boolean
-  appNavLinks: AppNavLink[]
   pathname: string
   setIsCollapsed: Dispatch<SetStateAction<boolean>>
 }
@@ -30,7 +28,7 @@ const navVariants: Variants = {
   },
 }
 
-export function DesktopNav({ isCollapsed, appNavLinks, pathname, setIsCollapsed }: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
   const { user, isLoaded: userLoaded } = useUser()
 
@@ -54,7 +52,7 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, setIsCollapsed 
         <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
       </div>
       <div className={cn('flex flex-col gap-2 overflow-hidden', { 'items-center': isCollapsed })}>
-        {appNavLinks.map(({ Icon, link, title }) => (
+        {DESKTOP_NAV_LINKS.map(({ Icon, link, title }) => (
           <Tooltip key={title} open={isCollapsed ? undefined : false}>
             <TooltipTrigger asChild>
               <Link

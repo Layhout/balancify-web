@@ -1,15 +1,12 @@
 import { QUERY_KEYS } from '@/lib/constants'
-import { services } from '@/services'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { friend } from '@/features'
 
 export function useFriend() {
-  const { isPending, data: friendRes } = useQuery({
+  const { isPending, data: friends } = useQuery({
     queryKey: [QUERY_KEYS.FRIENDS, 'list'],
-    queryFn: services.friend.getFriends,
+    queryFn: friend.getFriends,
   })
 
-  const friendData = useMemo(() => friendRes?.data || [], [friendRes?.data])
-
-  return { isPending, friendData }
+  return { isPending, friends }
 }

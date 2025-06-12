@@ -1,4 +1,4 @@
-import { Person } from './group.model'
+import { User } from '@/types/common'
 import { ResponseResult, ResponseResultWithPagination } from './types'
 
 export type Expense = {
@@ -6,7 +6,7 @@ export type Expense = {
   createdAt: string
   totalCost: number
   totalOwe: number
-  members: Person[]
+  members: User[]
   hasSettled: boolean
   createdBy: string
   icon: string
@@ -19,11 +19,11 @@ export type ExpenseListResult = ResponseResultWithPagination<Expense[]>
 
 export type Timeline = {
   createdAt: string
-  createdBy: Person
+  createdBy: User
   events: string
 }
 
-export type ExpenseDetailsMember = { ownedAmount: number } & Person
+export type ExpenseDetailsMember = { ownedAmount: number } & User
 
 export type ExpenseDetails = { timelines: Timeline[]; members: ExpenseDetailsMember[] } & Omit<Expense, 'members'>
 

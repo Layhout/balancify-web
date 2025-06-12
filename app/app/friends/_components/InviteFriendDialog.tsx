@@ -29,24 +29,29 @@ export function InviteFriendDialog() {
   const isDesktop = useAtomValue(isDesktopAtom)
   const [open, setOpen] = useState(false)
 
+  const dialogTitle = 'Add a Friend'
+  const dialogDescription = 'Enter your friend’s email to add them.'
+  const dialogBtn = 'Send Invite'
+  const inputPlaceholder = 'Enter an email address'
+
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button className="gap-2">
-            <LuPlus className="h-4 w-4" /> Add Friend
+            <LuPlus className="h-4 w-4" /> {dialogTitle}
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Invite a Friend</DialogTitle>
-            <DialogDescription>Send an invitation to your friend via email.</DialogDescription>
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           <div>
-            <Input placeholder="Enter an email address" />
+            <Input placeholder={inputPlaceholder} />
           </div>
           <DialogFooter>
-            <Button>Send Invite</Button>
+            <Button>{dialogBtn}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -56,20 +61,20 @@ export function InviteFriendDialog() {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button className="gap-2">
-          <LuPlus className="h-4 w-4" /> Add Friend
+          <LuPlus className="h-4 w-4" /> {dialogTitle}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Invite a Friend</DrawerTitle>
-          <DrawerDescription>Send an invitation to your friend via email.</DrawerDescription>
+          <DrawerTitle>{dialogTitle}</DrawerTitle>
+          <DrawerDescription>{dialogDescription}</DrawerDescription>
         </DrawerHeader>
         <div className="p-4">
-          <Input placeholder="Enter an email address" />
+          <Input placeholder={inputPlaceholder} />
         </div>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button>Send Invite</Button>
+            <Button>{dialogBtn}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

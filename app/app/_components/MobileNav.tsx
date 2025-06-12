@@ -1,24 +1,22 @@
 import { Button } from '@/components/ui/button'
-import { AppNavLink } from '../_hooks/useAppLayout'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
-import { ROUTES } from '@/lib/constants'
+import { MOBILE_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { Fragment } from 'react'
 import { LuPlus } from 'react-icons/lu'
 
 type MobileNavProps = {
-  appNavLinks: AppNavLink[]
   pathname: string
 }
 
-export function MobileNav({ appNavLinks, pathname }: MobileNavProps) {
+export function MobileNav({ pathname }: MobileNavProps) {
   return (
     <div className="md:hidden">
       <nav className="fixed bottom-0 left-0 right-0 block h-20">
         <Card className="relative h-full w-full rounded-b-none">
           <CardContent className="grid h-full w-full grid-cols-5 overflow-hidden p-0">
-            {appNavLinks.map(({ Icon, SelectedIcon, link, title }, index) => (
+            {MOBILE_NAV_LINKS.map(({ Icon, SelectedIcon, link, title }, index) => (
               <Fragment key={title}>
                 {index === 2 && (
                   <div className="flex items-center justify-center">

@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
-import { Person } from '@/services/group.model'
+import { User } from '@/types/common'
 import { LuEllipsisVertical } from 'react-icons/lu'
 
-export function FriendCard({ imageUrl, firstName, lastName, email, profileBgColor }: Person) {
+export function FriendCard({ imageUrl, firstName, lastName, email, profileBgColor }: User) {
   return (
     <Card className="overflow-hidden ">
       <CardContent className="flex items-center gap-4 p-4">

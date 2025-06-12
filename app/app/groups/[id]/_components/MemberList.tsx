@@ -3,11 +3,11 @@ import { FriendCardPlaceholder } from '@/app/app/friends/_components/FriendCardP
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Person } from '@/services/group.model'
+import { User } from '@/services/group.model'
 
 type MemberListProps = {
   loading: boolean
-  members: Person[]
+  members: User[]
 }
 
 export function MemberList({ loading, members }: MemberListProps) {

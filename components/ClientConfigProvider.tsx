@@ -3,6 +3,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import useTheme from '@/hooks/useTheme'
 import { ProgressProvider } from '@bprogress/next/app'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { Toaster } from './ui/sonner'
 
 export function ClientConfigProvider({
   children,
@@ -16,7 +17,8 @@ export function ClientConfigProvider({
     <TooltipProvider delayDuration={0}>
       <ProgressProvider height="4px" color="hsl(var(--primary, black))" options={{ showSpinner: false }} shallowRouting>
         {children}
-      </ProgressProvider>
+      </ProgressProvider>{' '}
+      <Toaster />
     </TooltipProvider>
   )
 }

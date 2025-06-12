@@ -1,18 +1,19 @@
 'use client'
 
-import { ROUTES } from '@/lib/constants'
+import { BG_COLORS, FIREBASE_COLLTION_NAME, MOBILE_NAV_LINKS } from '@/lib/constants'
 import { useEffect, useMemo, useState } from 'react'
-import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
-import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
-import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
-import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
 import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
-import { useAuth } from '@clerk/nextjs'
+import { useAuth, useUser } from '@clerk/nextjs'
 import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import OneSignal from 'react-onesignal'
+import { userAtom } from '@/repositories/user'
+import { User } from '@/types/common'
+import { isEqual, omit } from 'lodash'
+import { firestore } from '@/lib/firestore'
 
 export type AppNavLink = {
   title: string
@@ -25,81 +26,16 @@ export function useAppLayout() {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
   const { getToken, userId } = useAuth()
+  const { user: clerkUser, isLoaded } = useUser()
+  const [lcoalUser, setLocalUser] = useAtom(userAtom)
 
-  const DesktopNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Friends',
-        link: ROUTES.APP.FRIENDS,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-      {
-        title: 'Settings',
-        link: ROUTES.APP.SETTINGS,
-        Icon: IoSettingsOutline,
-        SelectedIcon: IoSettings,
-      },
-    ],
-    [],
-  )
-
-  const MobileNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Profile',
-        link: ROUTES.APP.PROFILE,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-    ],
-    [],
-  )
-
-  const shouldShowMobileNav = useMemo(
-    () => MobileNavLinks.map((m) => m.link).includes(pathname),
-    [MobileNavLinks, pathname],
-  )
+  const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   useEffect(() => {
+    if (!isLoaded || !userId) return
+
     let timerId: NodeJS.Timeout
     let unSubscribe: () => void
 
@@ -108,6 +44,33 @@ export function useAppLayout() {
         const token = await getToken({ template: 'integration_firebase' })
 
         await signInWithCustomToken(auth, token || '')
+      }
+
+      if (process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID)
+        await OneSignal.init({
+          appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+          // You can add other initialization options here
+          // notifyButton: {
+          //   enable: true,
+          // },
+          // Uncomment the below line to run on localhost. See: https://documentation.onesignal.com/docs/local-testing
+          allowLocalhostAsSecureOrigin: true,
+        })
+
+      const newUserData: User = {
+        email: clerkUser?.primaryEmailAddress?.emailAddress || '',
+        firstName: clerkUser?.firstName || '',
+        fullName: clerkUser?.fullName || '',
+        lastName: clerkUser?.lastName || '',
+        id: userId || '',
+        imageUrl: clerkUser?.imageUrl,
+        oneSignalId: OneSignal.User.onesignalId || '',
+      }
+
+      if (!isEqual(omit(lcoalUser, 'profileBgColor'), newUserData)) {
+        newUserData.profileBgColor = BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)]
+        setLocalUser(newUserData)
+        firestore.setData(FIREBASE_COLLTION_NAME.USERS, userId!, newUserData)
       }
 
       timerId = setTimeout(() => setIsInitialLoading(false), 300)
@@ -119,15 +82,13 @@ export function useAppLayout() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isLoaded])
 
   return {
     isCollapsed,
     setIsCollapsed,
-    DesktopNavLinks,
     isInitialLoading,
     pathname,
     shouldShowMobileNav,
-    MobileNavLinks,
   }
 }

@@ -1,21 +1,13 @@
+import { User } from '@/types/common'
 import { Expense } from './expense.model'
 import { GetListParams, ResponseResult, ResponseResultWithPagination } from './types'
 
 export type Group = {
   id: string
   name: string
-  members: Person[]
+  members: User[]
   totalSpent: string
   createdAt: string
-}
-
-export type Person = {
-  id: string
-  firstName: string
-  lastName: string
-  imageUrl?: string
-  profileBgColor?: string
-  email: string
 }
 
 export type GroupListParams = {
