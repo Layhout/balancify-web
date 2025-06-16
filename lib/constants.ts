@@ -97,6 +97,7 @@ export const QUERY_KEYS = {
   GROUPS: 'groups',
   EXPENSES: 'expenses',
   FRIENDS: 'friends',
+  USER: 'user',
 }
 
 export const EXPENSE_ICONS = {
@@ -147,4 +148,5 @@ export const IS_DEV_ENV = process.env.NODE_ENV === 'development'
 
 export const FIREBASE_COLLTION_NAME = {
   USERS: 'users',
+  FRIENDS: 'friends',
 }

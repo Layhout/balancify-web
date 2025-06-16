@@ -17,7 +17,7 @@ export function ClientConfigProvider({
     <TooltipProvider delayDuration={0}>
       <ProgressProvider height="4px" color="hsl(var(--primary, black))" options={{ showSpinner: false }} shallowRouting>
         {children}
-      </ProgressProvider>{' '}
+      </ProgressProvider>
       <Toaster />
     </TooltipProvider>
   )

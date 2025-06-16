@@ -1,6 +1,6 @@
 'use client'
 
-import { BG_COLORS, FIREBASE_COLLTION_NAME, MOBILE_NAV_LINKS } from '@/lib/constants'
+import { BG_COLORS, MOBILE_NAV_LINKS } from '@/lib/constants'
 import { useEffect, useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
@@ -13,7 +13,9 @@ import OneSignal from 'react-onesignal'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { isEqual, omit } from 'lodash'
-import { firestore } from '@/lib/firestore'
+import { useMutation } from '@tanstack/react-query'
+import feature from '@/features'
+import shortid from 'shortid'
 
 export type AppNavLink = {
   title: string
@@ -32,6 +34,10 @@ export function useAppLayout() {
   const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
+
+  const mutation = useMutation({
+    mutationFn: feature.user.saveUser,
+  })
 
   useEffect(() => {
     if (!isLoaded || !userId) return
@@ -59,18 +65,17 @@ export function useAppLayout() {
 
       const newUserData: User = {
         email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        firstName: clerkUser?.firstName || '',
-        fullName: clerkUser?.fullName || '',
-        lastName: clerkUser?.lastName || '',
+        name: clerkUser?.fullName || '',
         id: userId || '',
         imageUrl: clerkUser?.imageUrl,
         oneSignalId: OneSignal.User.onesignalId || '',
       }
 
-      if (!isEqual(omit(lcoalUser, 'profileBgColor'), newUserData)) {
+      if (!isEqual(omit(lcoalUser, 'profileBgColor', 'referalCode'), newUserData)) {
         newUserData.profileBgColor = BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)]
+        newUserData.referalCode = shortid.generate()
         setLocalUser(newUserData)
-        firestore.setData(FIREBASE_COLLTION_NAME.USERS, userId!, newUserData)
+        mutation.mutate(newUserData)
       }
 
       timerId = setTimeout(() => setIsInitialLoading(false), 300)

@@ -77,7 +77,6 @@
     --chart-5: 340 75% 55%;
   }
 } */
-
 :root {
   --background: 0 0% 100%;
   --foreground: 0 0% 14.902%;
@@ -86,7 +85,7 @@
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 14.902%;
   --primary: 37.6923 92.126% 50.1961%;
-  --primary-foreground: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 220 14.2857% 95.8824%;
   --secondary-foreground: 215 13.7931% 34.1176%;
   --muted: 210 20% 98.0392%;

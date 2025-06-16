@@ -1,82 +1,73 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { isDesktopAtom } from '@/repositories/layout'
+import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { useState } from 'react'
-import { LuPlus } from 'react-icons/lu'
+import { LuCheck, LuCopy } from 'react-icons/lu'
 
-export function InviteFriendDialog() {
+type InviteFriendDialogProps = {
+  open: boolean
+  // eslint-disable-next-line no-unused-vars
+  setOpen: (open: boolean) => void
+}
+
+export function InviteFriendDialog({ open, setOpen }: InviteFriendDialogProps) {
   const isDesktop = useAtomValue(isDesktopAtom)
-  const [open, setOpen] = useState(false)
+  const localUser = useAtomValue(userAtom)
 
-  const dialogTitle = 'Add a Friend'
-  const dialogDescription = 'Enter your friend’s email to add them.'
-  const dialogBtn = 'Send Invite'
-  const inputPlaceholder = 'Enter an email address'
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/invite/${localUser?.referalCode}`)
+    setCopied(true)
+    setTimeout(() => {
+      setCopied(false)
+    }, 3000)
+  }
+
+  if (typeof window === 'undefined') return null
+
+  const content = (
+    <div className="flex flex-col gap-4 md:flex-row md:items-center">
+      <div className="flex justify-center">
+        <img src="/assets/svgs/add-person.svg" className="h-24 w-24" alt="Add person" />
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Share this link to invite your friend to join Balancify.</p>
+        <div className="mt-4 flex flex-1 items-center justify-between gap-2 rounded-lg bg-muted-foreground/20 p-2">
+          <p className="text-xs">
+            {window.location.origin}/invite/{localUser?.referalCode}
+          </p>
+          {copied ? <LuCheck /> : <LuCopy className="cursor-pointer" onClick={handleCopyLink} />}
+        </div>
+      </div>
+      <Button className="md:hidden" onClick={handleCopyLink}>
+        Copy Link
+      </Button>
+    </div>
+  )
 
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <LuPlus className="h-4 w-4" /> {dialogTitle}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
-            <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogDescription>{dialogDescription}</DialogDescription>
+            <DialogTitle>Invite Friends</DialogTitle>
           </DialogHeader>
-          <div>
-            <Input placeholder={inputPlaceholder} />
-          </div>
-          <DialogFooter>
-            <Button>{dialogBtn}</Button>
-          </DialogFooter>
+          {content}
         </DialogContent>
       </Dialog>
     )
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button className="gap-2">
-          <LuPlus className="h-4 w-4" /> {dialogTitle}
-        </Button>
-      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>{dialogTitle}</DrawerTitle>
-          <DrawerDescription>{dialogDescription}</DrawerDescription>
+          <DrawerTitle>Invite Friends</DrawerTitle>
         </DrawerHeader>
-        <div className="p-4">
-          <Input placeholder={inputPlaceholder} />
-        </div>
-        <DrawerFooter className="pt-2">
-          <DrawerClose asChild>
-            <Button>{dialogBtn}</Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <div className="p-4">{content}</div>
       </DrawerContent>
     </Drawer>
   )

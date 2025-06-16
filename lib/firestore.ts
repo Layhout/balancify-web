@@ -1,21 +1,31 @@
-import { doc, DocumentData, getDoc, setDoc, WithFieldValue } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  query,
+  QueryConstraint,
+  setDoc,
+  WithFieldValue,
+} from 'firebase/firestore'
 import { fdb } from './firebase'
 import { IS_DEV_ENV } from './constants'
 
-const buildCollectionPath = (collection: string) => `${IS_DEV_ENV ? 'test/dev/' : ''}${collection}`
+const buildCollectionPath = (collectionName: string) => `${IS_DEV_ENV ? 'test/dev/' : ''}${collectionName}`
 
-const setData = async (collection: string, id: string, data: WithFieldValue<DocumentData>): Promise<void> => {
+const setData = async (collectionName: string, id: string, data: WithFieldValue<DocumentData>): Promise<void> => {
   try {
-    const docRef = doc(fdb, buildCollectionPath(collection), id)
+    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
     await setDoc(docRef, data, { merge: true })
   } catch (error) {
     console.error(error)
   }
 }
 
-const getData = async <T>(collection: string, id: string): Promise<T | null> => {
+const getData = async <T>(collectionName: string, id: string): Promise<T | null> => {
   try {
-    const docRef = doc(fdb, buildCollectionPath(collection), id)
+    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
@@ -29,9 +39,29 @@ const getData = async <T>(collection: string, id: string): Promise<T | null> => 
   }
 }
 
+const getQueryData = async <T>(
+  collectionName: string,
+  constraints: QueryConstraint[] = [],
+): Promise<(T & { id: string })[]> => {
+  try {
+    const colRef = collection(fdb, buildCollectionPath(collectionName))
+    const q = query(colRef, ...constraints)
+    const querySnapshot = await getDocs(q)
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as T),
+    }))
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
+
 const firestore = {
   setData,
   getData,
+  getQueryData,
 }
 
 export { firestore }
