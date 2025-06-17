@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 
-export function Splash({ show }: { show: boolean }) {
+export function Splash({ show = true }: { show?: boolean }) {
   return (
     <AnimatePresence>
       {show ? (

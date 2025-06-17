@@ -3,8 +3,12 @@ import { firestore } from '@/lib/firestore'
 import { User } from '@/types/common'
 import { limit, where } from 'firebase/firestore'
 
-const saveUser = (user: User) => {
+const createUser = (user: User) => {
   return firestore.setData(FIREBASE_COLLTION_NAME.USERS, user.id, user)
+}
+
+const updateUser = ({ id, user }: { id: string; user: Partial<User> }) => {
+  return firestore.updateData(FIREBASE_COLLTION_NAME.USERS, id, user)
 }
 
 const findUserByEmail = async (email: string): Promise<User | null> => {
@@ -16,6 +20,12 @@ const findUserByEmail = async (email: string): Promise<User | null> => {
   return foundUser || null
 }
 
-const user = { saveUser, findUserByEmail }
+const findUserById = async (id: string): Promise<User | null> => {
+  const foundUser: User | null = await firestore.getData(FIREBASE_COLLTION_NAME.USERS, id)
+
+  return foundUser || null
+}
+
+const user = { createUser, findUserByEmail, updateUser, findUserById }
 
 export { user }

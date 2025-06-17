@@ -12,6 +12,7 @@ export const ROUTES = {
   },
   APP: {
     HOME: '/app',
+    AUTHORIZATION: '/app/authorization',
     DASHBOARD: '/app/dashboard',
     EXPENSES: '/app/expenses',
     EXPENSES_CREATE: '/app/expenses/create',

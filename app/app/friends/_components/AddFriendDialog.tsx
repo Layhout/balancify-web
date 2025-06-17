@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Drawer,
@@ -16,13 +15,12 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Input } from '@/components/ui/input'
 import { isDesktopAtom } from '@/repositories/layout'
 import { useAtomValue } from 'jotai'
 import { UseFormReturn } from 'react-hook-form'
-import { LuLoaderCircle, LuPlus } from 'react-icons/lu'
+import { LuLoaderCircle } from 'react-icons/lu'
 import { AddFriendFromType } from '../_hooks/useFriend'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
@@ -73,11 +71,6 @@ export function AddFriendDialog({ open, setOpen, form, onSubmit, isAddingFriend 
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="gap-2">
-            <LuPlus className="h-4 w-4" /> {dialogTitle}
-          </Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
@@ -91,11 +84,6 @@ export function AddFriendDialog({ open, setOpen, form, onSubmit, isAddingFriend 
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button className="gap-2">
-          <LuPlus className="h-4 w-4" /> {dialogTitle}
-        </Button>
-      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>{dialogTitle}</DrawerTitle>

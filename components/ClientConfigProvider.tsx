@@ -1,6 +1,7 @@
 'use client'
+
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import useTheme from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/useTheme'
 import { ProgressProvider } from '@bprogress/next/app'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from './ui/sonner'

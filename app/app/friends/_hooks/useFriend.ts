@@ -3,10 +3,9 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAtomValue } from 'jotai'
-import { userAtom } from '@/repositories/user'
 import feature from '@/features'
 import { useState } from 'react'
+import { useClientAuth } from '@/hooks/useClientAuth'
 
 const addFriendFormSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
@@ -15,7 +14,7 @@ const addFriendFormSchema = z.object({
 export type AddFriendFromType = z.infer<typeof addFriendFormSchema>
 
 export function useFriend() {
-  const localUser = useAtomValue(userAtom)
+  const { localUser } = useClientAuth()
 
   const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false)
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)

@@ -1,4 +1,5 @@
 import {
+  AddPrefixToKeys,
   collection,
   doc,
   DocumentData,
@@ -7,6 +8,7 @@ import {
   query,
   QueryConstraint,
   setDoc,
+  updateDoc,
   WithFieldValue,
 } from 'firebase/firestore'
 import { fdb } from './firebase'
@@ -18,6 +20,19 @@ const setData = async (collectionName: string, id: string, data: WithFieldValue<
   try {
     const docRef = doc(fdb, buildCollectionPath(collectionName), id)
     await setDoc(docRef, data, { merge: true })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const updateData = async (
+  collectionName: string,
+  id: string,
+  data: { [x: string]: any } & AddPrefixToKeys<string, any>,
+): Promise<void> => {
+  try {
+    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+    await updateDoc(docRef, data)
   } catch (error) {
     console.error(error)
   }
@@ -62,6 +77,7 @@ const firestore = {
   setData,
   getData,
   getQueryData,
+  updateData,
 }
 
 export { firestore }

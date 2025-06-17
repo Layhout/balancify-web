@@ -1,6 +1,6 @@
 'use client'
 
-import { BG_COLORS, MOBILE_NAV_LINKS } from '@/lib/constants'
+import { MOBILE_NAV_LINKS } from '@/lib/constants'
 import { useEffect, useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
@@ -10,12 +10,9 @@ import { useAuth, useUser } from '@clerk/nextjs'
 import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import OneSignal from 'react-onesignal'
-import { userAtom } from '@/repositories/user'
+import { useClientAuth } from '@/hooks/useClientAuth'
 import { User } from '@/types/common'
-import { isEqual, omit } from 'lodash'
-import { useMutation } from '@tanstack/react-query'
-import feature from '@/features'
-import shortid from 'shortid'
+import { isEmpty } from 'lodash'
 
 export type AppNavLink = {
   title: string
@@ -29,24 +26,23 @@ export function useAppLayout() {
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
   const { getToken, userId } = useAuth()
   const { user: clerkUser, isLoaded } = useUser()
-  const [lcoalUser, setLocalUser] = useAtom(userAtom)
+  const { updateDBUser, loadDBUser, localUser } = useClientAuth()
 
   const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  const mutation = useMutation({
-    mutationFn: feature.user.saveUser,
-  })
-
   useEffect(() => {
     if (!isLoaded || !userId) return
 
-    let timerId: NodeJS.Timeout
-    let unSubscribe: () => void
+    loadDBUser(userId)
 
-    unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user && userId) {
+    if (!localUser) return
+
+    let timerId: NodeJS.Timeout
+
+    const unSubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user || user.uid !== userId) {
         const token = await getToken({ template: 'integration_firebase' })
 
         await signInWithCustomToken(auth, token || '')
@@ -63,19 +59,16 @@ export function useAppLayout() {
           allowLocalhostAsSecureOrigin: true,
         })
 
-      const newUserData: User = {
-        email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-        name: clerkUser?.fullName || '',
-        id: userId || '',
-        imageUrl: clerkUser?.imageUrl,
-        oneSignalId: OneSignal.User.onesignalId || '',
-      }
+      const newUserData: Partial<User> = {}
 
-      if (!isEqual(omit(lcoalUser, 'profileBgColor', 'referalCode'), newUserData)) {
-        newUserData.profileBgColor = BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)]
-        newUserData.referalCode = shortid.generate()
-        setLocalUser(newUserData)
-        mutation.mutate(newUserData)
+      if (OneSignal.User.onesignalId !== localUser.oneSignalId) {
+        newUserData.oneSignalId = OneSignal.User.onesignalId
+      }
+      if (localUser.imageUrl !== clerkUser?.imageUrl) {
+        newUserData.imageUrl = clerkUser?.imageUrl
+      }
+      if (!isEmpty(newUserData)) {
+        updateDBUser(userId, newUserData)
       }
 
       timerId = setTimeout(() => setIsInitialLoading(false), 300)
@@ -87,7 +80,7 @@ export function useAppLayout() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded])
+  }, [isLoaded, localUser, userId])
 
   return {
     isCollapsed,
