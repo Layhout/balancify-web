@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { useClientAuth } from '@/hooks/useClientAuth'
 import { isDesktopAtom } from '@/repositories/layout'
+import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { useState } from 'react'
 import { LuCheck, LuCopy } from 'react-icons/lu'
@@ -16,7 +16,7 @@ type InviteFriendDialogProps = {
 
 export function InviteFriendDialog({ open, setOpen }: InviteFriendDialogProps) {
   const isDesktop = useAtomValue(isDesktopAtom)
-  const { localUser } = useClientAuth()
+  const localUser = useAtomValue(userAtom)
 
   const [copied, setCopied] = useState(false)
 

@@ -43,11 +43,7 @@ const getData = async <T>(collectionName: string, id: string): Promise<T | null>
     const docRef = doc(fdb, buildCollectionPath(collectionName), id)
     const docSnap = await getDoc(docRef)
 
-    if (docSnap.exists()) {
-      return docSnap.data() as T
-    }
-
-    return null
+    return docSnap.data() as T
   } catch (error) {
     console.error(error)
     return null

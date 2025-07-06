@@ -26,6 +26,15 @@ const findUserById = async (id: string): Promise<User | null> => {
   return foundUser || null
 }
 
-const user = { createUser, findUserByEmail, updateUser, findUserById }
+const findUserByReferalCode = async (code: string): Promise<User | null> => {
+  const [foundUser]: User[] = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
+    where('referalCode', '==', code),
+    limit(1),
+  ])
+
+  return foundUser || null
+}
+
+const user = { createUser, findUserByEmail, updateUser, findUserById, findUserByReferalCode }
 
 export { user }

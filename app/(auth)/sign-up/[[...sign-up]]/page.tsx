@@ -1,20 +1,21 @@
 'use client'
 
-import { useClientAuth } from '@/hooks/useClientAuth'
 import { ROUTES } from '@/lib/constants'
 import { isDarkModeAtom } from '@/repositories/layout'
+import { userAtom } from '@/repositories/user'
 import { SignUp } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { RESET } from 'jotai/utils'
 import { useEffect } from 'react'
 
 export default function Page() {
   const isDarkMode = useAtomValue(isDarkModeAtom)
-
-  const { clearClientUser } = useClientAuth()
+  const setLocalUser = useSetAtom(userAtom)
 
   useEffect(() => {
-    clearClientUser()
+    setLocalUser(RESET)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -22,7 +23,7 @@ export default function Page() {
     <SignUp
       path={ROUTES.LANDING.SIGN_UP}
       afterSignInUrl={ROUTES.APP.DASHBOARD}
-      afterSignUpUrl={ROUTES.APP.AUTHORIZATION}
+      afterSignUpUrl={ROUTES.APP.DASHBOARD}
       appearance={{ baseTheme: isDarkMode ? dark : undefined }}
     />
   )

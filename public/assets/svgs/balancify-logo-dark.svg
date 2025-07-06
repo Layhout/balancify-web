@@ -1,0 +1,18 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+	<title>balancify-logo</title>
+	<style>
+		.s0 {
+			fill: #e5e5e5
+		}
+
+		.s1 {
+			fill: #ff6600
+		}
+	</style>
+	<g id="Layer 1">
+		<path id="Shape 1" fill-rule="evenodd" class="s0"
+			d="m206.6 0h411.6c129.9 0 235.2 105.3 235.2 235.2 0 129.9-105.3 235.2-235.2 235.2h-411.6c-64.9 0-117.6-52.6-117.6-117.6v-235.2c0-64.9 52.7-117.6 117.6-117.6z" />
+		<path id="Shape 1 copy" fill-rule="evenodd" class="s1"
+			d="m206.5 529.9h470.1c129.8 0 235.1 105.2 235.1 235.1 0 129.8-105.3 235-235.1 235h-470.1c-64.9 0-117.5-52.6-117.5-117.5v-235.1c0-64.9 52.6-117.5 117.5-117.5z" />
+	</g>
+</svg>

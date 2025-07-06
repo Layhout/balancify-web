@@ -127,15 +127,15 @@
   .dark {
     --background: 0 0% 9.0196%;
     --foreground: 0 0% 89.8039%;
-    --card: 0 0% 14.902%;
+    --card: 0 0% 11%;
     --card-foreground: 0 0% 89.8039%;
-    --popover: 0 0% 14.902%;
+    --popover: 0 0% 11%;
     --popover-foreground: 0 0% 89.8039%;
     --primary: 24 100% 50%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 14.902%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 89.8039%;
-    --muted: 0 0% 14.902%;
+    --muted: 0 0% 16%;
     --muted-foreground: 0 0% 63.9216%;
     --accent: 22.7273 82.5% 31.3725%;
     --accent-foreground: 48 96.6387% 76.6667%;
@@ -178,6 +178,6 @@
   }
 
   body {
-    @apply !bg-background !text-foreground;
+    @apply bg-background text-foreground;
   }
 }

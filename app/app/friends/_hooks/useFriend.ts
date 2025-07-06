@@ -5,7 +5,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import feature from '@/features'
 import { useState } from 'react'
-import { useClientAuth } from '@/hooks/useClientAuth'
+import { useAtomValue } from 'jotai'
+import { userAtom } from '@/repositories/user'
+import { toast } from 'sonner'
 
 const addFriendFormSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
@@ -14,7 +16,7 @@ const addFriendFormSchema = z.object({
 export type AddFriendFromType = z.infer<typeof addFriendFormSchema>
 
 export function useFriend() {
-  const { localUser } = useClientAuth()
+  const localUser = useAtomValue(userAtom)
 
   const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false)
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
@@ -28,6 +30,9 @@ export function useFriend() {
 
   const mutation = useMutation({
     mutationFn: feature.friend.addFriendToUserByEmail,
+    onSuccess: () => {
+      toast('A friend request was sent.')
+    },
     onError: () => {
       setOpenAddFriendDialog(false)
       setOpenInvitionDialog(true)
@@ -47,7 +52,7 @@ export function useFriend() {
       return
     }
 
-    mutation.mutate({ userId: localUser!.id, friendEmail: values.email })
+    mutation.mutate({ userId: localUser!.id, friendEmail: values.email, username: localUser?.name || '' })
   }
 
   return {
