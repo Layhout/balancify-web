@@ -21,7 +21,7 @@ export function InviteFriendDialog({ open, setOpen }: InviteFriendDialogProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/invite/${localUser?.referalCode}`)
+    navigator.clipboard.writeText(`${window.location.origin}/app/invite/${localUser?.referalCode}`)
     setCopied(true)
     setTimeout(() => {
       setCopied(false)
@@ -41,7 +41,7 @@ export function InviteFriendDialog({ open, setOpen }: InviteFriendDialogProps) {
           <TooltipTrigger asChild>
             <div className="mt-4 flex flex-1 items-center justify-between gap-2 rounded-lg bg-muted-foreground/20 p-2">
               <p className="text-xs">
-                {window.location.origin}/invite/{localUser?.referalCode}
+                {window.location.origin}/app/invite/{localUser?.referalCode}
               </p>
               <div>{copied ? <LuCheck /> : <LuCopy className="cursor-pointer" onClick={handleCopyLink} />}</div>
             </div>

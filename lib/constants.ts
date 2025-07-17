@@ -21,6 +21,7 @@ export const ROUTES = {
     FRIENDS: '/app/friends',
     SETTINGS: '/app/settings',
     PROFILE: '/app/profile',
+    INVITE: '/app/invite',
   },
   PORTAL: {
     HOME: '/portal',
@@ -99,6 +100,7 @@ export const QUERY_KEYS = {
   EXPENSES: 'expenses',
   FRIENDS: 'friends',
   USER: 'user',
+  NOTI: 'noti',
 }
 
 export const EXPENSE_ICONS = {
@@ -150,5 +152,32 @@ export const IS_DEV_ENV = process.env.NODE_ENV === 'development'
 export const FIREBASE_COLLTION_NAME = {
   USERS: 'users',
   FRIENDS: 'friends',
-  NOTIFICATION: 'notification',
+  NOTIS: 'notis',
 }
+
+export const USER_404_MSG = [
+  'Uh-oh! We couldn’t find that user. Are they hiding? 🕵️‍♂️',
+  'Nope, no such user in this universe. 🌌',
+  'That user must’ve vanished into the digital void. 💨',
+  'We looked everywhere… but no user was found. 🧐',
+  '404: Friend not found. Maybe check the spelling? 🔍',
+]
+
+export const YOURSELF_AS_FRIEND_MSG = [
+  'Nice try! You can’t be your own friend. 😉',
+  "You're already your biggest fan! No need to add yourself. 😄",
+  "Self-love is great, but you can't friend yourself here. 💖",
+  'Whoa there! You’re already on your own friend list. 😎',
+  'Trying to friend yourself? Bold move! But nope. 🚫',
+]
+
+export const FRIEND_REQUEST_MSG = [
+  'Your friendship rocket is on its way! 🚀',
+  'Friend request launched—fingers crossed! 🤞',
+  'You’ve made the first move. Let’s see what happens! 😏',
+  'Your friend request is out there, spreading good vibes. ✨',
+  'Boom! Friend request sent. Now we wait... ⏳',
+  'Your friendship invitation is flying through cyberspace! 📬',
+]
+
+export const countPerPage = 10

@@ -1,20 +1,7 @@
 'use client'
 
-import { useUser } from '@clerk/nextjs'
-import { useEffect } from 'react'
+import { Splash } from '../../_components/Splash'
 
-type InviteProps = {
-  params: {
-    id: string
-  }
-}
-
-export default function Invite({ params: { id } }: InviteProps) {
-  const { isLoaded, user } = useUser()
-
-  useEffect(() => {
-    if (!isLoaded) return
-  }, [isLoaded, user])
-
-  return <div>{id}</div>
+export default function Invite() {
+  return <Splash />
 }

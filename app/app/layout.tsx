@@ -7,14 +7,23 @@ import { NotificationBar } from './_components/NotificationBar'
 import { Splash } from './_components/Splash'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isCollapsed, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav } = useAppLayout()
+  const {
+    isCollapsed,
+    isInitialLoading,
+    pathname,
+    setIsCollapsed,
+    shouldShowMobileNav,
+    notis,
+    hasUnreadNoti,
+    onNotiOpen,
+  } = useAppLayout()
 
   return (
     <>
       <div className="flex h-svh max-h-svh gap-6 overflow-hidden">
         <DesktopNav isCollapsed={isCollapsed} pathname={pathname} setIsCollapsed={setIsCollapsed} />
         <main className="relative flex-1 overflow-auto">
-          <NotificationBar />
+          <NotificationBar notis={notis} hasUnreadNoti={hasUnreadNoti} onNotiOpen={onNotiOpen} />
           {children}
           {shouldShowMobileNav && <MobileNav pathname={pathname} />}
         </main>

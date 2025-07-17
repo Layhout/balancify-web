@@ -1,5 +1,7 @@
 import { FIREBASE_COLLTION_NAME } from '@/lib/constants'
 import { firestore } from '@/lib/firestore'
+import { store } from '@/repositories'
+import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { limit, where } from 'firebase/firestore'
 
@@ -7,8 +9,12 @@ const createUser = (user: User) => {
   return firestore.setData(FIREBASE_COLLTION_NAME.USERS, user.id, user)
 }
 
-const updateUser = ({ id, user }: { id: string; user: Partial<User> }) => {
-  return firestore.updateData(FIREBASE_COLLTION_NAME.USERS, id, user)
+const updateUser = ({ user }: { user: Partial<User> }) => {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) throw new Error()
+
+  return firestore.updateData(FIREBASE_COLLTION_NAME.USERS, userId, user)
 }
 
 const findUserByEmail = async (email: string): Promise<User | null> => {

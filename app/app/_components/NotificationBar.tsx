@@ -1,9 +1,21 @@
 import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { NOTIFICATION_BAR_HEIGHT } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { LuBell } from 'react-icons/lu'
+import { NotificationList } from './NotificationList'
+import { Noti } from '@/types/common'
+import { PulsingDot } from '@/components/PulsingDot'
 
-export function NotificationBar() {
+export function NotificationBar({
+  notis,
+  hasUnreadNoti,
+  onNotiOpen,
+}: {
+  notis: Noti[]
+  hasUnreadNoti: boolean
+  onNotiOpen: (open: boolean) => void
+}) {
   return (
     <>
       <div
@@ -12,9 +24,17 @@ export function NotificationBar() {
           NOTIFICATION_BAR_HEIGHT,
         )}
       >
-        <Button variant="ghost" size="icon">
-          <LuBell className="size-4 flex-shrink-0" />
-        </Button>
+        <Popover onOpenChange={onNotiOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative">
+              <LuBell className="size-4 flex-shrink-0" />
+              {hasUnreadNoti && <PulsingDot className="absolute right-2.5 top-1.5" />}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" side="bottom" className="w-96 p-0">
+            <NotificationList notis={notis} />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className={NOTIFICATION_BAR_HEIGHT} />
     </>

@@ -18,7 +18,7 @@ export function UserAvatar({
 }: UserAvatarProps) {
   return (
     <Avatar className={cn('bg-background', className)}>
-      <AvatarImage src={imageUrl} alt={fallbackText} className="size-full" />
+      <AvatarImage src={imageUrl} alt={fallbackText} className="size-full object-cover" />
       <AvatarFallback
         className={cn(
           'relative size-full overflow-hidden bg-background text-xs uppercase after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-[var(--profile-bg-color)]',
