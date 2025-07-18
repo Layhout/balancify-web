@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Avatar, AvatarFallback } from './ui/avatar'
+import { UserAvatar } from './UserAvatar'
 
 type AvatarStackProps = {
   items: AvatarStackItemProps[]
@@ -19,12 +20,13 @@ export function AvatarStack({ items, maxSize = 5, className }: AvatarStackProps)
   return (
     <div className="flex items-center">
       {items.slice(0, maxSize).map((item, i) => (
-        <Avatar key={i} className={cn('-ml-2 h-8 w-8 shadow first:ml-0', className)}>
-          <AvatarImage src={item.imageSrc} alt={item.initial} />
-          <AvatarFallback className="text-xs uppercase" style={{ backgroundColor: item.bgColor }}>
-            {item.initial}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar
+          className={cn('-ml-2 h-8 w-8 shadow first:ml-0', className)}
+          key={i}
+          fallbackText={item.initial}
+          imageUrl={item.imageSrc || ''}
+          profileBgColor={item.bgColor}
+        />
       ))}
       {items.length > maxSize ? (
         <Avatar className={cn('-ml-2 h-8 w-8 shadow', className)}>

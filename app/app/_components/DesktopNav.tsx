@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils'
-import { AppNavLink } from '../_hooks/useAppLayout'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
@@ -10,13 +9,12 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { dark } from '@clerk/themes'
 import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
-import { ROUTES } from '@/lib/constants'
-import { LuExternalLink } from 'react-icons/lu'
+import { DESKTOP_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { APP_V } from '@/lib/version'
+import { TbArrowUpRight } from 'react-icons/tb'
 
 type DesktopNavProps = {
   isCollapsed: boolean
-  appNavLinks: AppNavLink[]
   pathname: string
   setIsCollapsed: Dispatch<SetStateAction<boolean>>
 }
@@ -30,7 +28,7 @@ const navVariants: Variants = {
   },
 }
 
-export function DesktopNav({ isCollapsed, appNavLinks, pathname, setIsCollapsed }: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
   const { user, isLoaded: userLoaded } = useUser()
 
@@ -41,20 +39,29 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, setIsCollapsed 
       initial={false}
       animate={isCollapsed ? 'close' : 'open'}
     >
-      <div>
+      <div className="flex items-baseline justify-center">
+        <img
+          src={`/assets/svgs/balancify-logo${isDarkMode ? '-dark' : ''}.svg`}
+          className={cn('h-[18px] shrink-0 object-contain', { hidden: isCollapsed })}
+          alt="logo"
+        />
         <h1 className={cn('overflow-hidden whitespace-nowrap text-lg font-bold', { hidden: isCollapsed })}>
-          Balancify{' '}
+          alancify{' '}
           <Link
             href={ROUTES.LANDING.BLOGS}
             className="inline-flex cursor-pointer items-center gap-1 text-xs font-normal text-muted-foreground"
           >
-            v{APP_V} <LuExternalLink />
+            v{APP_V} <TbArrowUpRight />
           </Link>
         </h1>
-        <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
+        <img
+          src={`/assets/svgs/balancify-logo${isDarkMode ? '-dark' : ''}.svg`}
+          className={cn('hidden h-6 shrink-0 object-contain', { block: isCollapsed })}
+          alt="logo"
+        />
       </div>
       <div className={cn('flex flex-col gap-2 overflow-hidden', { 'items-center': isCollapsed })}>
-        {appNavLinks.map(({ Icon, link, title }) => (
+        {DESKTOP_NAV_LINKS.map(({ Icon, link, title }) => (
           <Tooltip key={title} open={isCollapsed ? undefined : false}>
             <TooltipTrigger asChild>
               <Link

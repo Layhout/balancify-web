@@ -17,13 +17,16 @@ export function UserAvatar({
   fallbackTextclassName,
 }: UserAvatarProps) {
   return (
-    <Avatar className={className}>
-      <AvatarImage src={imageUrl} alt={fallbackText} className="size-full" />
+    <Avatar className={cn('bg-background', className)}>
+      <AvatarImage src={imageUrl} alt={fallbackText} className="size-full object-cover" />
       <AvatarFallback
-        className={cn('size-full text-xs uppercase', fallbackTextclassName)}
-        style={{ backgroundColor: profileBgColor }}
+        className={cn(
+          'relative size-full overflow-hidden bg-background text-xs uppercase after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-[var(--profile-bg-color)]',
+          fallbackTextclassName,
+        )}
+        style={{ '--profile-bg-color': profileBgColor } as React.CSSProperties}
       >
-        {fallbackText ? `${fallbackText[0] + fallbackText[1]}` : ''}
+        <span className="relative z-10">{fallbackText ? `${fallbackText[0] + fallbackText[1]}` : ''}</span>
       </AvatarFallback>
     </Avatar>
   )

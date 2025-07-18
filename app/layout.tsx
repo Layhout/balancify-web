@@ -33,9 +33,7 @@ export default function RootLayout({
         <html lang="en">
           <body className={cn('font-sans antialiased', poppins.variable)}>
             <ClientConfigProvider>
-              <div vaul-drawer-wrapper="">
-                <div className="relative min-h-svh bg-background">{children}</div>
-              </div>
+              <main className="relative min-h-svh bg-background">{children}</main>
             </ClientConfigProvider>
             <Analytics />
             <SpeedInsights />

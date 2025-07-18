@@ -5,15 +5,25 @@ import { Button } from './ui/button'
 import { LuArrowLeft } from 'react-icons/lu'
 import { Input } from './ui/input'
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 type PageHeaderProps = {
   title: string
   hasBackBtn?: boolean
   hasSearch?: boolean
   action?: ReactNode
+  searchPlaceholder?: string
+  onSearch?: (value: string) => void
 }
 
-export function PageHeader({ title, hasBackBtn = false, hasSearch = false, action }: PageHeaderProps) {
+export function PageHeader({
+  title,
+  hasBackBtn = false,
+  hasSearch = false,
+  action,
+  searchPlaceholder,
+  onSearch,
+}: PageHeaderProps) {
   const router = useRouter()
 
   return (
@@ -27,11 +37,25 @@ export function PageHeader({ title, hasBackBtn = false, hasSearch = false, actio
           )}
           <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
         </div>
-        {action && <div className="md:hidden">{action}</div>}
+        {action && <div className={cn('md:hidden', { 'md:block': !hasSearch })}>{action}</div>}
       </div>
-      {(hasSearch || action) && (
+      {hasSearch && action && (
         <div className="mt-6 flex items-center justify-between gap-4">
-          {hasSearch && <Input className="md:max-w-sm" placeholder="Search..." type="search" />}
+          {hasSearch && (
+            <Input
+              className="md:max-w-sm"
+              placeholder={searchPlaceholder || 'Search...'}
+              onKeyDown={(e) => {
+                const ele = e.target as HTMLInputElement
+
+                if (e.key === 'Enter') onSearch?.(ele.value)
+              }}
+              onChange={(e) => {
+                if (!e.target.value) onSearch?.(e.target.value)
+              }}
+              type="search"
+            />
+          )}
           {action && <div className="hidden md:flex">{action}</div>}
         </div>
       )}

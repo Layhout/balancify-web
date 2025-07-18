@@ -1,18 +1,15 @@
 'use client'
 
-import { ROUTES } from '@/lib/constants'
-import { useEffect, useMemo, useState } from 'react'
-import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
-import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
-import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
-import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
+import { MOBILE_NAV_LINKS, QUERY_KEYS } from '@/lib/constants'
+import { useMemo, useState } from 'react'
 import { useAtom } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
-import { useAuth } from '@clerk/nextjs'
-import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
+import { useClientAuth } from '@/hooks/useClientAuth'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import feature from '@/features'
+import { Noti } from '@/types/common'
 
 export type AppNavLink = {
   title: string
@@ -23,111 +20,49 @@ export type AppNavLink = {
 
 export function useAppLayout() {
   const pathname = usePathname()
+  const queryClient = useQueryClient()
+
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
-  const { getToken, userId } = useAuth()
 
-  const DesktopNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Friends',
-        link: ROUTES.APP.FRIENDS,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-      {
-        title: 'Settings',
-        link: ROUTES.APP.SETTINGS,
-        Icon: IoSettingsOutline,
-        SelectedIcon: IoSettings,
-      },
-    ],
-    [],
-  )
-
-  const MobileNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Profile',
-        link: ROUTES.APP.PROFILE,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-    ],
-    [],
-  )
-
-  const shouldShowMobileNav = useMemo(
-    () => MobileNavLinks.map((m) => m.link).includes(pathname),
-    [MobileNavLinks, pathname],
-  )
+  const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  useEffect(() => {
-    let timerId: NodeJS.Timeout
-    let unSubscribe: () => void
+  useClientAuth(() => setIsInitialLoading(false))
 
-    unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user && userId) {
-        const token = await getToken({ template: 'integration_firebase' })
+  const notiQuery = useQuery({
+    queryKey: [QUERY_KEYS.NOTI, 'list'],
+    queryFn: feature.noti.getNotis,
+  })
 
-        await signInWithCustomToken(auth, token || '')
-      }
+  const readNotiMutation = useMutation({
+    mutationFn: feature.noti.readNoti,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        [QUERY_KEYS.NOTI, 'list'],
+        notis.map((n) => ({ ...n, read: true })),
+      )
+    },
+  })
 
-      timerId = setTimeout(() => setIsInitialLoading(false), 300)
-    })
+  const notis = useMemo(() => (notiQuery.data || []) as Noti[], [notiQuery.data])
 
-    return () => {
-      unSubscribe()
-      clearTimeout(timerId)
-    }
+  const hasUnreadNoti = useMemo(() => notis.some((n) => !n.read), [notis])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const onNotiOpen = (v: boolean) => {
+    if (!v || !hasUnreadNoti) return
+
+    readNotiMutation.mutate({ notis })
+  }
 
   return {
     isCollapsed,
     setIsCollapsed,
-    DesktopNavLinks,
     isInitialLoading,
     pathname,
     shouldShowMobileNav,
-    MobileNavLinks,
+    notis,
+    hasUnreadNoti,
+    onNotiOpen,
   }
 }

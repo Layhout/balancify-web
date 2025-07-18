@@ -9,7 +9,7 @@ export default function Home() {
   const { userId } = auth()
 
   if (userId) {
-    redirect('/app/dashboard')
+    redirect(ROUTES.APP.DASHBOARD)
   }
 
   return (
