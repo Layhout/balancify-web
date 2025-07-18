@@ -22,6 +22,7 @@ export interface Friend {
   name: string
   status: FriendStatusEnum
   createdAt: FieldValue
+  nameTrigrams: string[]
 }
 
 export type FriendResponse = User & Friend

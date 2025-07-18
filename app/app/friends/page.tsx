@@ -37,6 +37,7 @@ export default function Friends() {
     setOpenInvitionDialog,
     goNextPage,
     goPrevPage,
+    setSearch,
   } = useFriend()
 
   const isDesktop = useAtomValue(isDesktopAtom)
@@ -46,6 +47,8 @@ export default function Friends() {
       <PageHeader
         title="Friends"
         hasBackBtn={!isDesktop}
+        hasSearch
+        onSearch={setSearch}
         action={
           <Button className="gap-2" onClick={() => setOpenAddFriendDialog(true)}>
             <LuPlus className="h-4 w-4" /> Add a Friend

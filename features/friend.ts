@@ -5,7 +5,7 @@ import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES, USER_404_MSG, YOURSELF_AS
 import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { noti } from './noti'
-import { randomNumBetween } from '@/lib/utils'
+import { generateTrigrams, randomNumBetween } from '@/lib/utils'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 
@@ -27,6 +27,7 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
     name: foundUser.name,
     status: FriendStatusEnum.Pending,
     createdAt: curServerTimestamp,
+    nameTrigrams: generateTrigrams(foundUser.name),
   }
 
   const youAsfriend: Friend = {
@@ -34,6 +35,7 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
     name: user.name,
     status: FriendStatusEnum.Requesting,
     createdAt: curServerTimestamp,
+    nameTrigrams: generateTrigrams(user.name),
   }
 
   const notification: Noti = {
@@ -73,6 +75,7 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
     name: foundFriend.name,
     status: FriendStatusEnum.Accepted,
     createdAt: curServerTimestamp,
+    nameTrigrams: generateTrigrams(foundFriend.name),
   }
 
   const youAsfriend: Friend = {
@@ -80,6 +83,7 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
     name: user.name,
     status: FriendStatusEnum.Accepted,
     createdAt: curServerTimestamp,
+    nameTrigrams: generateTrigrams(user.name),
   }
 
   firestore.setData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`, friend.id, friend)
@@ -108,8 +112,10 @@ const rejectFriendRequest = async ({ friendId }: { friendId: string }) => {
 
 const getFriends = async ({
   lastDocCreatedAt = null,
+  search,
 }: {
   lastDocCreatedAt: Friend['createdAt'] | null
+  search: string
 }): Promise<PaginatedResponse<FriendResponse>> => {
   const userId = store.get(userAtom)?.id
 
@@ -125,6 +131,8 @@ const getFriends = async ({
 
   if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt), limit(countPerPage))
   else query.push(limit(countPerPage))
+
+  if (search) query.unshift(where('nameTrigrams', 'array-contains-any', generateTrigrams(search)))
 
   const friends: Friend[] | null = await firestore.getQueryData(collectionPath, query)
 

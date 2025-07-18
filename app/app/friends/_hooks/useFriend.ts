@@ -25,12 +25,13 @@ export function useFriend() {
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
   const [page, setPage] = useState(0)
   const [lastFriendDocCreatedAt, setLastFriendDocCreatedAt] = useState<Friend['createdAt'] | null>(null)
+  const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, page]
+  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, page, search]
 
   const friendQuery = useQuery({
     queryKey,
-    queryFn: () => feature.friend.getFriends({ lastDocCreatedAt: lastFriendDocCreatedAt }),
+    queryFn: () => feature.friend.getFriends({ lastDocCreatedAt: lastFriendDocCreatedAt, search }),
     placeholderData: keepPreviousData,
   })
 
@@ -78,8 +79,8 @@ export function useFriend() {
     },
   })
 
-  const onSubmitFriendForm = async (values: AddFriendFromType) => {
-    if (localUser?.email === values.email) {
+  const onSubmitFriendForm = async (value: AddFriendFromType) => {
+    if (localUser?.email === value.email) {
       addFriendForm.setError(
         'email',
         { message: YOURSELF_AS_FRIEND_MSG[randomNumBetween(0, YOURSELF_AS_FRIEND_MSG.length - 1)] },
@@ -88,7 +89,7 @@ export function useFriend() {
       return
     }
 
-    addFriendMutation.mutate({ friendEmail: values.email })
+    addFriendMutation.mutate({ friendEmail: value.email })
     setOpenAddFriendDialog(false)
   }
 
@@ -143,5 +144,6 @@ export function useFriend() {
     setOpenInvitionDialog,
     goNextPage,
     goPrevPage,
+    setSearch,
   }
 }
