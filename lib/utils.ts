@@ -90,3 +90,19 @@ export function isMobileBrowser() {
 
   return false
 }
+
+export function generateTrigrams(str: string): string[] {
+  str = str.toLowerCase()
+
+  if (str.length < 3) {
+    return [str]
+  }
+
+  const result: string[] = []
+
+  for (let i = 0; i <= str.length - 3; i++) {
+    result.push(str.substring(i, i + 3))
+  }
+
+  return result
+}
