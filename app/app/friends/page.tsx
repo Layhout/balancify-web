@@ -12,35 +12,25 @@ import { FriendResponse } from '@/types/common'
 import { InviteFriendDialog } from './_components/InviteFriendDialog'
 import { Button } from '@/components/ui/button'
 import { LuPlus } from 'react-icons/lu'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
-import { cn } from '@/lib/utils'
 
 export default function Friends() {
   const {
     friendQuery,
+    friendData,
     addFriendForm,
     openAddFriendDialog,
     isAddingFriend,
     openInvitionDialog,
     acceptFriendMutation,
     rejectFriendMutation,
-    page,
-    totalPage,
     setOpenAddFriendDialog,
     onSubmitFriendForm,
     setOpenInvitionDialog,
-    goNextPage,
-    goPrevPage,
     setSearch,
   } = useFriend()
 
   const isDesktop = useAtomValue(isDesktopAtom)
+  console.log('data', friendQuery.data)
 
   return (
     <div className="container pb-4">
@@ -55,10 +45,10 @@ export default function Friends() {
           </Button>
         }
       />
-      {friendQuery.isFetching || friendQuery.data?.count ? (
+      {friendQuery.isFetching || friendData.length ? (
         <>
           <FriendsWrapper loading={friendQuery.isFetching}>
-            {friendQuery.data?.data.map((friend, i) => (
+            {friendData.map((friend, i) => (
               <FriendCard
                 key={i}
                 {...(friend as FriendResponse)}
@@ -67,25 +57,13 @@ export default function Friends() {
               />
             ))}
           </FriendsWrapper>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={cn('cursor-pointer', { 'cursor-not-allowed': page === 0, 'opacity-50': page === 0 })}
-                  onClick={goPrevPage}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext
-                  className={cn('cursor-pointer', {
-                    'cursor-not-allowed': page === totalPage - 1,
-                    'opacity-50': page === totalPage - 1,
-                  })}
-                  onClick={goNextPage}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          {friendQuery.hasNextPage && (
+            <div className="mt-4 flex justify-center">
+              <Button onClick={() => friendQuery.fetchNextPage()} variant="secondary">
+                Load More
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <Empty />
