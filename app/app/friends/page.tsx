@@ -30,7 +30,6 @@ export default function Friends() {
   } = useFriend()
 
   const isDesktop = useAtomValue(isDesktopAtom)
-  console.log('data', friendQuery.data)
 
   return (
     <div className="container pb-4">
