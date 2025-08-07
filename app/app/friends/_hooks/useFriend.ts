@@ -25,13 +25,13 @@ export function useFriend() {
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
   const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, search]
+  const queryKey = [QUERY_KEYS.FRIENDS, 'list', search]
 
   const friendQuery = useInfiniteQuery({
     queryKey,
     getNextPageParam: (lastPage: PaginatedResponse<FriendResponse>, allPages: PaginatedResponse<FriendResponse>[]) => {
       const count = lastPage.count
-      const totalCount = allPages.flatMap(page => page.data).length
+      const totalCount = allPages.flatMap((page) => page.data).length
 
       if (totalCount >= count) {
         return null
@@ -59,20 +59,20 @@ export function useFriend() {
   const acceptFriendMutation = useMutation({
     mutationFn: feature.friend.acceptFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendId, FriendStatusEnum.Accepted)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Accepted)
     },
   })
 
   const rejectFriendMutation = useMutation({
     mutationFn: feature.friend.rejectFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendId, FriendStatusEnum.Rejected)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Rejected)
     },
   })
 
-  const updateLocalFriendList = (friendId: string, status: FriendStatusEnum) => {
-    const pageIndex = friendQuery.data?.pages.findIndex((page) => page.data.some((f) => f.id === friendId))
-    const friendIndexInPage = friendQuery.data?.pages[pageIndex!].data.findIndex((f) => f.id === friendId)
+  const updateLocalFriendList = (friendUserId: string, status: FriendStatusEnum) => {
+    const pageIndex = friendQuery.data?.pages.findIndex((page) => page.data.some((f) => f.userId === friendUserId))
+    const friendIndexInPage = friendQuery.data?.pages[pageIndex!].data.findIndex((f) => f.userId === friendUserId)
     const friend = friendQuery.data?.pages[pageIndex!].data[friendIndexInPage!]
 
     friend!.status = status
@@ -88,7 +88,6 @@ export function useFriend() {
         }
         return page
       }),
-
     })
   }
 
@@ -99,7 +98,7 @@ export function useFriend() {
     },
   })
 
-  const onSubmitFriendForm = async (value: AddFriendFromType) => {
+  const onSubmitFriendForm = (value: AddFriendFromType) => {
     if (localUser?.email === value.email) {
       addFriendForm.setError(
         'email',

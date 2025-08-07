@@ -4,7 +4,6 @@ import { firestore } from '@/lib/firestore'
 import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES, USER_404_MSG, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
 import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
-import { noti } from './noti'
 import { generateTrigrams, randomNumBetween } from '@/lib/utils'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
@@ -23,7 +22,7 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
   const curServerTimestamp = serverTimestamp()
 
   const friend: Friend = {
-    id: foundUser.id,
+    userId: foundUser.id,
     name: foundUser.name,
     status: FriendStatusEnum.Pending,
     createdAt: curServerTimestamp,
@@ -31,7 +30,7 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
   }
 
   const youAsfriend: Friend = {
-    id: user.id,
+    userId: user.id,
     name: user.name,
     status: FriendStatusEnum.Requesting,
     createdAt: curServerTimestamp,
@@ -48,9 +47,23 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
     createdAt: curServerTimestamp,
   }
 
-  firestore.setData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`, friend.id, friend)
-  firestore.setData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${friend.id}/data`, user.id, youAsfriend)
-  noti.sendNotiToUser({ noti: notification, receiverId: friend.id })
+  firestore.setMultipleData([
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
+      id: friend.userId,
+      data: friend,
+    },
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friend.userId}/data`,
+      id: user.id,
+      data: youAsfriend,
+    },
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.NOTIS}/${friend.userId}/data`,
+      id: notification.id,
+      data: notification,
+    },
+  ])
 }
 
 const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) => {
@@ -71,7 +84,7 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
   const curServerTimestamp = serverTimestamp()
 
   const friend: Friend = {
-    id: foundFriend.id,
+    userId: foundFriend.id,
     name: foundFriend.name,
     status: FriendStatusEnum.Accepted,
     createdAt: curServerTimestamp,
@@ -79,33 +92,43 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
   }
 
   const youAsfriend: Friend = {
-    id: user.id,
+    userId: user.id,
     name: user.name,
     status: FriendStatusEnum.Accepted,
     createdAt: curServerTimestamp,
     nameTrigrams: generateTrigrams(user.name),
   }
 
-  firestore.setData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`, friend.id, friend)
-  firestore.setData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${foundFriend.id}/data`, user.id, youAsfriend)
+  firestore.setMultipleData([
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
+      id: friend.userId,
+      data: friend,
+    },
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${foundFriend.id}/data`,
+      id: user.id,
+      data: youAsfriend,
+    },
+  ])
 }
 
-const acceptFriendRequest = async ({ friendId }: { friendId: string }) => {
+const acceptFriendRequest = async ({ friendUserId }: { friendUserId: string }) => {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
 
-  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendId, <Partial<Friend>>{
+  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Accepted,
   })
 }
 
-const rejectFriendRequest = async ({ friendId }: { friendId: string }) => {
+const rejectFriendRequest = async ({ friendUserId }: { friendUserId: string }) => {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
 
-  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendId, <Partial<Friend>>{
+  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Rejected,
   })
 }
@@ -123,10 +146,6 @@ const getFriends = async ({
 
   const collectionPath = `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`
 
-  const count = await firestore.getTotalCount(collectionPath)
-
-  if (!count) return { data: [], count: 0 }
-
   const query: QueryConstraint[] = [where('status', '!=', FriendStatusEnum.Rejected), orderBy('createdAt', 'desc')]
 
   if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt), limit(countPerPage))
@@ -134,19 +153,18 @@ const getFriends = async ({
 
   if (search) query.unshift(where('nameTrigrams', 'array-contains-any', generateTrigrams(search)))
 
+  const count = await firestore.getTotalCount(collectionPath, query)
+  if (!count) return { data: [], count: 0 }
+
   const friends: Friend[] | null = await firestore.getQueryData(collectionPath, query)
-
-  if (!friends.length) return { data: [], count: 0 }
-
   const users: User[] | null = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
     where(
       documentId(),
       'in',
-      (friends || []).map((f) => f.id),
+      (friends || []).map((f) => f.userId),
     ),
   ])
-
-  const result = friends.map((f) => ({ ...users.find((u) => u.id === f.id), ...f })) as FriendResponse[]
+  const result = friends.map((f) => ({ ...users.find((u) => u.id === f.userId), ...f })) as FriendResponse[]
 
   return { data: result || [], count }
 }

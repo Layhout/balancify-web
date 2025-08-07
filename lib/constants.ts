@@ -153,6 +153,7 @@ export const FIREBASE_COLLTION_NAME = {
   USERS: 'users',
   FRIENDS: 'friends',
   NOTIS: 'notis',
+  GROUPS: 'groups',
 }
 
 export const USER_404_MSG = [

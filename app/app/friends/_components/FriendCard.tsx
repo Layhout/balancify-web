@@ -18,7 +18,7 @@ export function FriendCard({
   status,
   onAcceptRequest,
   onRejectRequest,
-  id,
+  userId,
 }: FriendCardProps) {
   return (
     <Card className="overflow-hidden ">
@@ -35,10 +35,10 @@ export function FriendCard({
         )}
         {status === FriendStatusEnum.Requesting && (
           <div className="flex items-center">
-            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => onRejectRequest?.(id)}>
+            <Button variant="ghost" size="icon" className="text-destructive" onClick={() => onRejectRequest?.(userId)}>
               <LuX />
             </Button>
-            <Button variant="ghost" size="icon" className="text-green-500" onClick={() => onAcceptRequest?.(id)}>
+            <Button variant="ghost" size="icon" className="text-green-500" onClick={() => onAcceptRequest?.(userId)}>
               <LuCheck />
             </Button>
           </div>

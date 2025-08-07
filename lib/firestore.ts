@@ -65,10 +65,11 @@ const getQueryData = async <T>(collectionName: string, constraints: QueryConstra
   }
 }
 
-const getTotalCount = async (collectionName: string): Promise<number> => {
+const getTotalCount = async (collectionName: string, constraints: QueryConstraint[] = []): Promise<number> => {
   try {
     const colRef = collection(fdb, buildCollectionPath(collectionName))
-    const countSnapshot = await getCountFromServer(colRef)
+    const q = query(colRef, ...constraints)
+    const countSnapshot = await getCountFromServer(q)
 
     return countSnapshot.data().count
   } catch (error) {
@@ -78,17 +79,34 @@ const getTotalCount = async (collectionName: string): Promise<number> => {
 }
 
 const updateMultipleData = async (
-  collectionName: string,
-  datas: { id: string; data: { [x: string]: any } & AddPrefixToKeys<string, any> }[],
+  datas: { collectionName: string; id: string; data: { [x: string]: any } & AddPrefixToKeys<string, any> }[],
 ) => {
   if (!datas.length) return
 
   try {
     const batch = writeBatch(fdb)
 
-    datas.forEach(({ id, data }) => {
+    datas.forEach(({ collectionName, id, data }) => {
       const docRef = doc(fdb, buildCollectionPath(collectionName), id)
       batch.update(docRef, data)
+    })
+
+    await batch.commit()
+  } catch (error) {
+    console.error('firestore: updateMultipleData', error)
+    return
+  }
+}
+
+const setMultipleData = async (datas: { collectionName: string; id: string; data: WithFieldValue<DocumentData> }[]) => {
+  if (!datas.length) return
+
+  try {
+    const batch = writeBatch(fdb)
+
+    datas.forEach(({ collectionName, id, data }) => {
+      const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+      batch.set(docRef, data, { merge: true })
     })
 
     await batch.commit()
@@ -105,6 +123,7 @@ const firestore = {
   updateData,
   getTotalCount,
   updateMultipleData,
+  setMultipleData,
 }
 
 export { firestore }

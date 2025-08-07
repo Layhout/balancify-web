@@ -3,11 +3,11 @@ import { FieldValue } from 'firebase/firestore'
 export interface User {
   id: string
   imageUrl?: string
-  profileBgColor?: string
+  profileBgColor: string
   email: string
   name: string
   oneSignalId?: string
-  referalCode?: string
+  referalCode: string
 }
 
 export enum FriendStatusEnum {
@@ -18,7 +18,7 @@ export enum FriendStatusEnum {
 }
 
 export interface Friend {
-  id: string
+  userId: string
   name: string
   status: FriendStatusEnum
   createdAt: FieldValue
@@ -45,4 +45,27 @@ export interface Noti {
 export interface PaginatedResponse<T> {
   count: number
   data: T[]
+}
+
+export interface GroupMember {
+  userId: string
+  name: string
+  imageUrl?: string
+  profileBgColor: string
+}
+
+export interface GroupExpense {
+  expenseId: string
+  name: string
+}
+
+export interface Group {
+  id: string
+  name: string
+  description?: string
+  nameTrigrams: string[]
+  createdAt: FieldValue
+  members: GroupMember[]
+  totalExpenses: number
+  expenses: GroupExpense[]
 }

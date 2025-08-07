@@ -11,7 +11,7 @@ import { Empty } from '@/components/Empty'
 import { FriendResponse } from '@/types/common'
 import { InviteFriendDialog } from './_components/InviteFriendDialog'
 import { Button } from '@/components/ui/button'
-import { LuPlus } from 'react-icons/lu'
+import { LuPlus, LuLoaderCircle } from 'react-icons/lu'
 
 export default function Friends() {
   const {
@@ -51,14 +51,15 @@ export default function Friends() {
               <FriendCard
                 key={i}
                 {...(friend as FriendResponse)}
-                onAcceptRequest={(id) => acceptFriendMutation.mutate({ friendId: id })}
-                onRejectRequest={(id) => rejectFriendMutation.mutate({ friendId: id })}
+                onAcceptRequest={(id) => acceptFriendMutation.mutate({ friendUserId: id })}
+                onRejectRequest={(id) => rejectFriendMutation.mutate({ friendUserId: id })}
               />
             ))}
           </FriendsWrapper>
           {friendQuery.hasNextPage && (
             <div className="mt-4 flex justify-center">
               <Button onClick={() => friendQuery.fetchNextPage()} variant="secondary">
+              {friendQuery.isFetchingNextPage &&  <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                 Load More
               </Button>
             </div>

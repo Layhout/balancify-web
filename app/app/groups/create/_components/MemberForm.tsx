@@ -12,7 +12,7 @@ export function MemberForm() {
           <Label>Search</Label>
           <Input placeholder="friends or group" />
         </div>
-        <Button className="flex-[0.2]">Add</Button>
+        <Button className="flex-[0.2]">Search</Button>
       </div>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {Array.from({ length: 5 }, (_, i) => (

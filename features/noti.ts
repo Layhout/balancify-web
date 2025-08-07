@@ -15,8 +15,8 @@ const readNoti = async ({ notis }: { notis: Noti[] }) => {
   if (!userId) return
 
   firestore.updateMultipleData(
-    `${FIREBASE_COLLTION_NAME.NOTIS}/${userId}/data`,
     notis.map((n) => ({
+      collectionName: `${FIREBASE_COLLTION_NAME.NOTIS}/${userId}/data`,
       id: n.id,
       data: <Partial<Noti>>{ read: true },
     })),
