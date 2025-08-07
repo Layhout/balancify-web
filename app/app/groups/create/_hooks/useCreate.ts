@@ -2,21 +2,20 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+const memberFormSchema = z.object({
+  userId: z.string(),
+  name: z.string(),
+  imageUrl: z.string().optional(),
+  profileBgColor: z.string(),
+})
+
 const createGroupFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  members: z
-    .array(
-      z.object({
-        userId: z.string(),
-        name: z.string(),
-        imageUrl: z.string().optional(),
-        profileBgColor: z.string(),
-      }),
-    )
-    .min(1, 'Member is required'),
+  members: z.array(memberFormSchema).min(1, 'Member is required'),
 })
 
+export type MemberFormType = z.infer<typeof memberFormSchema>
 export type CreateGroupFormType = z.infer<typeof createGroupFormSchema>
 
 export function useCreate() {

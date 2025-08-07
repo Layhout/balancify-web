@@ -6,9 +6,11 @@ import { useCreate } from './_hooks/useCreate'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { MemberPicker } from './_components/MemberPicker'
 
 export default function CreateGroup() {
   const { createGroupForm, onSubmitCreateGroupForm } = useCreate()
+
   return (
     <div className="container pb-4">
       <PageHeader title="Create Group" hasBackBtn />
@@ -45,6 +47,20 @@ export default function CreateGroup() {
                       <Textarea placeholder="Enter group description" {...field} />
                     </FormControl>
                     <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={createGroupForm.control}
+              name="members"
+              render={({ field }) => (
+                <FormItem className="flex space-y-0">
+                  <div className="flex-[0.2]">
+                    <FormLabel>Members</FormLabel>
+                  </div>
+                  <div className="flex-[0.8]">
+                    <MemberPicker onChange={field.onChange} />
                   </div>
                 </FormItem>
               )}
