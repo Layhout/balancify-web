@@ -21,7 +21,7 @@ export function FriendCard({
   userId,
 }: FriendCardProps) {
   return (
-    <Card className="overflow-hidden ">
+    <Card className="overflow-hidden">
       <CardContent className="flex items-center gap-4 p-4">
         <UserAvatar imageUrl={imageUrl || ''} fallbackText={name} profileBgColor={profileBgColor || ''} />
         <div className="flex-1 overflow-hidden">

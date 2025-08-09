@@ -1,34 +1,19 @@
-import { useForm } from 'react-hook-form'
-import z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import { MemberFormType } from './useCreate'
+import { QUERY_KEYS } from '@/lib/constants'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import feature from '@/features'
 
-const findMemberFormSchema = z.object({
-  email: z.string().email(),
-})
+export function useMemberPicker() {
+  const [searchFriend, setSearchFriend] = useState('')
 
-type FindMemberFormType = z.infer<typeof findMemberFormSchema>
+  const queryKey = [QUERY_KEYS.FRIENDS, 'list', searchFriend]
 
-export function useMemberPicker(onChange?: (member: MemberFormType[]) => void) {
-  const [pickedMember, setPickedMember] = useState<MemberFormType[]>([])
-
-  const findMemberForm = useForm<FindMemberFormType>({
-    resolver: zodResolver(findMemberFormSchema),
-    defaultValues: {
-      email: '',
-    },
+  const friendQuery = useQuery({
+    queryKey,
+    queryFn: () => feature.friend.getFriends({ lastDocCreatedAt: null, search: searchFriend }),
+    enabled: !!searchFriend,
+    placeholderData: keepPreviousData,
   })
 
-  const onSubmitFindMemberForm = (value: FindMemberFormType) => {
-    console.log(value)
-  }
-
-  useEffect(() => {
-    onChange?.(pickedMember)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickedMember])
-
-  return { findMemberForm, onSubmitFindMemberForm, pickedMember, setPickedMember }
+  return { setSearchFriend, friendQuery }
 }

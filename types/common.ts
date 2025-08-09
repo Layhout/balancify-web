@@ -50,8 +50,6 @@ export interface PaginatedResponse<T> {
 export interface GroupMember {
   userId: string
   name: string
-  imageUrl?: string
-  profileBgColor: string
 }
 
 export interface GroupExpense {

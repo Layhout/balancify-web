@@ -32,7 +32,7 @@ const createGroup = async ({
     expenses: [],
   }
 
-  firestore.setData(`${FIREBASE_COLLTION_NAME.GROUPS}/${user.id}/data`, group.id, group)
+  await firestore.setData(`${FIREBASE_COLLTION_NAME.GROUPS}/${user.id}/data`, group.id, group)
 }
 
 const group = { createGroup }
