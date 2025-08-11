@@ -47,21 +47,16 @@ export interface PaginatedResponse<T> {
   data: T[]
 }
 
-export interface GroupMember {
-  userId: string
-  name: string
-  imageUrl?: string
-  profileBgColor: string
-}
-
 export interface Group {
   id: string
   name: string
   description?: string
   nameTrigrams: string[]
   createdAt: FieldValue
-  members: GroupMember[]
+  createdBy: string
+  members: User[]
   totalExpenses: number
+  expenses?: Record<string, any>[]
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'

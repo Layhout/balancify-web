@@ -1,13 +1,12 @@
-import { FriendCard } from '@/app/app/friends/_components/FriendCard'
-import { FriendCardPlaceholder } from '@/app/app/friends/_components/FriendCardPlaceholder'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { FriendResponse } from '@/types/common'
+import { User } from '@/types/common'
+import { MemberCardPlaceholder } from './MemberCardPlaceholder'
+import { MemberCard } from './MemberCard'
 
 type MemberListProps = {
   loading: boolean
-  members: FriendResponse[]
+  members: User[]
 }
 
 export function MemberList({ loading, members }: MemberListProps) {
@@ -21,14 +20,9 @@ export function MemberList({ loading, members }: MemberListProps) {
       </div>
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {loading
-          ? Array.from({ length: 3 }, (_, i) => <FriendCardPlaceholder key={i} />)
-          : members.slice(0, 6).map((member, i) => <FriendCard key={i} {...member} />)}
+          ? Array.from({ length: 3 }, (_, i) => <MemberCardPlaceholder key={i} />)
+          : members.slice(0, 6).map((member, i) => <MemberCard key={i} {...member} />)}
       </div>
-      {members.length > 6 ? (
-        <div className="mt-6 flex justify-center">
-          <Button variant="secondary">View All</Button>
-        </div>
-      ) : null}
     </div>
   )
 }

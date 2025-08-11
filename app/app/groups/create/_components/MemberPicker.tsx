@@ -30,9 +30,12 @@ export function MemberPicker({
 
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 1000)
+  const [isDebouncing, setIsDebouncing] = useState(false)
 
   useEffect(() => {
     setSearchFriend(debouncedSearch)
+    setIsDebouncing(false)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch])
 
@@ -48,15 +51,23 @@ export function MemberPicker({
 
   const foundFriendList = (
     <Command shouldFilter={false}>
-      <CommandInput placeholder="Search friends..." value={search} onValueChange={setSearch} />
+      <CommandInput
+        placeholder="Search friends..."
+        value={search}
+        onValueChange={(v) => {
+          setSearch(v)
+          setIsDebouncing(true)
+        }}
+      />
       <CommandList>
         <ScrollArea className="h-[300px]">
-          {!friendQuery.isFetching && <CommandEmpty>Find someone</CommandEmpty>}
-          {friendQuery.isFetching && (
-            <CommandLoading className="mt-2 flex justify-center">
-              <LuLoaderCircle className="size-8 animate-spin" />
-            </CommandLoading>
-          )}
+          {!friendQuery.isFetching && <CommandEmpty className="h-full">Find someone</CommandEmpty>}
+          {friendQuery.isFetching ||
+            (isDebouncing && (
+              <CommandLoading className="mt-2 flex justify-center">
+                <LuLoaderCircle className="size-8 animate-spin" />
+              </CommandLoading>
+            ))}
           <CommandGroup>
             {(friendQuery.data?.data || [])?.map((friend) => (
               <CommandItem
@@ -68,11 +79,13 @@ export function MemberPicker({
                   setOpen(false)
                   setSearch('')
                   onAddMember({
-                    userId: friend.userId,
+                    id: friend.userId,
                     name: friend.name,
                     imageUrl: friend.imageUrl,
                     profileBgColor: friend.profileBgColor,
                     email: friend.email,
+                    oneSignalId: friend.oneSignalId,
+                    referalCode: friend.referalCode,
                   })
                 }}
               >

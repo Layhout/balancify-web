@@ -1,15 +1,15 @@
+import feature from '@/features'
 import { QUERY_KEYS } from '@/lib/constants'
-import { services } from '@/services'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import { useParams } from 'next/navigation'
 
-export function useGroupDetails(id: string) {
-  const { isPending, data: groupDetailsRes } = useQuery({
+export function useGroupDetails() {
+  const { id } = useParams<{ id: string }>()
+
+  const groupDetailsQuery = useQuery({
     queryKey: [QUERY_KEYS.GROUPS, 'details', id],
-    queryFn: services.group.getGroup,
+    queryFn: () => feature.group.getGroupDetail(id),
   })
 
-  const groupDetailsData = useMemo(() => groupDetailsRes?.data, [groupDetailsRes?.data])
-
-  return { isPending, groupDetailsData }
+  return { groupDetailsQuery }
 }

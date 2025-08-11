@@ -1,22 +1,14 @@
-import { GroupMember, PaginatedResponse } from '@/types/common'
+import { PaginatedResponse, User } from '@/types/common'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
+import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams } from '@/lib/utils'
 import { countPerPage, FIREBASE_COLLTION_NAME } from '@/lib/constants'
 import { firestore } from '@/lib/firestore'
 import { Group } from '@/types/common'
 
-const createGroup = async ({
-  name,
-  description,
-  members,
-}: {
-  name: string
-  description?: string
-  members: GroupMember[]
-}) => {
+const createGroup = async ({ name, description, members }: { name: string; description?: string; members: User[] }) => {
   const user = store.get(userAtom)
 
   if (!user) return
@@ -27,6 +19,7 @@ const createGroup = async ({
     description,
     nameTrigrams: generateTrigrams(name),
     createdAt: serverTimestamp(),
+    createdBy: user.id,
     members: members,
     totalExpenses: 0,
   }
@@ -62,6 +55,32 @@ const getGroups = async ({
   return { data: groups || [], count }
 }
 
-const group = { createGroup, getGroups }
+const getGroupDetail = async (id: string): Promise<Group | null> => {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return null
+
+  const collectionPath = `${FIREBASE_COLLTION_NAME.GROUPS}/${userId}/data`
+
+  const group: Group | null = await firestore.getData(collectionPath, id)
+
+  if (!group) return null
+
+  const users: User[] | null = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
+    where(
+      documentId(),
+      'in',
+      (group?.members || []).map((m) => m.id),
+    ),
+  ])
+
+  return {
+    ...group,
+    members: users || [],
+    expenses: [],
+  }
+}
+
+const group = { createGroup, getGroups, getGroupDetail }
 
 export { group }

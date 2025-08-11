@@ -6,17 +6,22 @@ import feature from '@/features'
 import { useRouter } from 'next/navigation'
 
 const memberFormSchema = z.object({
-  userId: z.string(),
-  name: z.string(),
+  id: z.string(),
   imageUrl: z.string().optional(),
   profileBgColor: z.string(),
   email: z.string(),
+  name: z.string(),
+  oneSignalId: z.string().optional(),
+  referalCode: z.string(),
 })
 
 const createGroupFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  members: z.array(memberFormSchema).min(1, 'Member is required'),
+  members: z
+    .array(memberFormSchema)
+    .min(1, 'You need to add at least one member.')
+    .max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
 })
 
 export type MemberFormType = z.infer<typeof memberFormSchema>
@@ -46,10 +51,13 @@ export function useCreate() {
       name: value.name,
       description: value.description,
       members: value.members.map((member) => ({
-        userId: member.userId,
+        id: member.id,
         name: member.name,
         profileBgColor: member.profileBgColor,
         imageUrl: member.imageUrl,
+        email: member.email,
+        oneSignalId: member.oneSignalId,
+        referalCode: member.referalCode,
       })),
     })
   }

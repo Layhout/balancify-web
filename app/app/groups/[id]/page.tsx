@@ -7,26 +7,20 @@ import { useGroupDetails } from './_hooks/useGroupDetails'
 import { ActionButtons } from './_components/ActionButtons'
 import { PageHeader } from '@/components/PageHeader'
 
-type GroupDetailsProps = {
-  params: {
-    id: string
-  }
-}
-
-export default function GroupDetails({ params: { id } }: GroupDetailsProps) {
-  const { groupDetailsData, isPending } = useGroupDetails(id)
+export default function GroupDetails() {
+  const { groupDetailsQuery } = useGroupDetails()
 
   return (
     <div className="container pb-4">
       <PageHeader title="Group Details" hasBackBtn />
       <GroupInfo
-        name={groupDetailsData?.name || ''}
-        description={groupDetailsData?.description || ''}
-        loading={isPending}
+        name={groupDetailsQuery.data?.name || ''}
+        description={groupDetailsQuery.data?.description || ''}
+        loading={groupDetailsQuery.isFetching}
       />
       <ActionButtons />
-      <ExpenseList loading={isPending} expenses={groupDetailsData?.expenses || []} />
-      <MemberList loading={isPending} members={groupDetailsData?.members || []} />
+      <ExpenseList loading={groupDetailsQuery.isFetching} expenses={[]} />
+      <MemberList loading={groupDetailsQuery.isFetching} members={groupDetailsQuery.data?.members || []} />
     </div>
   )
 }
