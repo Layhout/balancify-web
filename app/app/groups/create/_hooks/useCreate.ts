@@ -48,6 +48,8 @@ export function useCreate() {
       members: value.members.map((member) => ({
         userId: member.userId,
         name: member.name,
+        profileBgColor: member.profileBgColor,
+        imageUrl: member.imageUrl,
       })),
     })
   }

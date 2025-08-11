@@ -47,7 +47,7 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
     createdAt: curServerTimestamp,
   }
 
-  firestore.setMultipleData([
+  await firestore.setMultipleData([
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
       id: friend.userId,
@@ -99,7 +99,7 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
     nameTrigrams: generateTrigrams(user.name),
   }
 
-  firestore.setMultipleData([
+  await firestore.setMultipleData([
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
       id: friend.userId,
@@ -118,7 +118,7 @@ const acceptFriendRequest = async ({ friendUserId }: { friendUserId: string }) =
 
   if (!userId) return
 
-  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
+  await firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Accepted,
   })
 }
@@ -128,7 +128,7 @@ const rejectFriendRequest = async ({ friendUserId }: { friendUserId: string }) =
 
   if (!userId) return
 
-  firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
+  await firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Rejected,
   })
 }

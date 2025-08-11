@@ -2,6 +2,7 @@ import { SpendingHistory } from '@/services/dashboard.model'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { djs } from './dayjsExt'
+import { CurrencyCodes } from '@/types/common'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -105,4 +106,11 @@ export function generateTrigrams(str: string): string[] {
   }
 
   return result
+}
+
+export function currencyFormatter(amount: number, currency: CurrencyCodes = 'USD') {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+  }).format(amount)
 }

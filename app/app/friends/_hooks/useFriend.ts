@@ -1,4 +1,4 @@
-import { countPerPage, FRIEND_REQUEST_MSG, QUERY_KEYS, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
+import { FRIEND_REQUEST_MSG, QUERY_KEYS, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
 import { keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -112,8 +112,6 @@ export function useFriend() {
     setOpenAddFriendDialog(false)
   }
 
-  const totalPage = friendQuery.data ? Math.ceil((friendQuery.data.pages[0]?.count || 0) / countPerPage) : 1
-
   const friendData: FriendResponse[] = friendQuery.data?.pages.flatMap((page) => page.data) || []
 
   return {
@@ -123,7 +121,6 @@ export function useFriend() {
     openAddFriendDialog,
     isAddingFriend: addFriendMutation.isPending,
     openInvitionDialog,
-    totalPage,
     acceptFriendMutation,
     rejectFriendMutation,
     onSubmitFriendForm,

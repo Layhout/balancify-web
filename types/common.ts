@@ -50,11 +50,8 @@ export interface PaginatedResponse<T> {
 export interface GroupMember {
   userId: string
   name: string
-}
-
-export interface GroupExpense {
-  expenseId: string
-  name: string
+  imageUrl?: string
+  profileBgColor: string
 }
 
 export interface Group {
@@ -65,5 +62,6 @@ export interface Group {
   createdAt: FieldValue
   members: GroupMember[]
   totalExpenses: number
-  expenses: GroupExpense[]
 }
+
+export type CurrencyCodes = 'USD' | 'KHR'
