@@ -20,11 +20,12 @@ const createGroup = async ({ name, description, members }: { name: string; descr
     nameTrigrams: generateTrigrams(name),
     createdAt: serverTimestamp(),
     createdBy: user.id,
-    members: members,
+    members: [...members, user],
     totalExpenses: 0,
+    memberIds: [...members.map((m) => m.id), user.id],
   }
 
-  await firestore.setData(`${FIREBASE_COLLTION_NAME.GROUPS}/${user.id}/data`, group.id, group)
+  await firestore.setData(FIREBASE_COLLTION_NAME.GROUPS, group.id, group)
 }
 
 const getGroups = async ({
@@ -38,9 +39,9 @@ const getGroups = async ({
 
   if (!userId) return { data: [], count: 0 }
 
-  const collectionPath = `${FIREBASE_COLLTION_NAME.GROUPS}/${userId}/data`
+  const collectionPath = FIREBASE_COLLTION_NAME.GROUPS
 
-  const query: QueryConstraint[] = [orderBy('createdAt', 'desc')]
+  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId), orderBy('createdAt', 'desc')]
 
   if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt), limit(countPerPage))
   else query.push(limit(countPerPage))
@@ -60,7 +61,7 @@ const getGroupDetail = async (id: string): Promise<Group | null> => {
 
   if (!userId) return null
 
-  const collectionPath = `${FIREBASE_COLLTION_NAME.GROUPS}/${userId}/data`
+  const collectionPath = FIREBASE_COLLTION_NAME.GROUPS
 
   const group: Group | null = await firestore.getData(collectionPath, id)
 

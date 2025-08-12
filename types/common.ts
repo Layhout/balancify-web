@@ -55,6 +55,7 @@ export interface Group {
   createdAt: FieldValue
   createdBy: string
   members: User[]
+  memberIds: string[]
   totalExpenses: number
   expenses?: Record<string, any>[]
 }
