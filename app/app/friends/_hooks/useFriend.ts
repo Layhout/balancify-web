@@ -25,7 +25,7 @@ export function useFriend() {
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
   const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', search]
+  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, search]
 
   const friendQuery = useInfiniteQuery({
     queryKey,

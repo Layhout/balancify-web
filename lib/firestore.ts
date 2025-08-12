@@ -19,12 +19,8 @@ import { IS_DEV_ENV } from './constants'
 const buildCollectionPath = (collectionName: string) => `${IS_DEV_ENV ? 'test/dev/' : ''}${collectionName}`
 
 const setData = async (collectionName: string, id: string, data: WithFieldValue<DocumentData>): Promise<void> => {
-  try {
-    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
-    await setDoc(docRef, data, { merge: true })
-  } catch (error) {
-    console.error('firestore: setData', error)
-  }
+  const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+  await setDoc(docRef, data, { merge: true })
 }
 
 const updateData = async (
@@ -32,50 +28,31 @@ const updateData = async (
   id: string,
   data: { [x: string]: any } & AddPrefixToKeys<string, any>,
 ): Promise<void> => {
-  try {
-    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
-    await updateDoc(docRef, data)
-  } catch (error) {
-    console.error('firestore: updateData', error)
-  }
+  const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+  await updateDoc(docRef, data)
 }
 
 const getData = async <T>(collectionName: string, id: string): Promise<T | null> => {
-  try {
-    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
-    const docSnap = await getDoc(docRef)
+  const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+  const docSnap = await getDoc(docRef)
 
-    return docSnap.data() as T
-  } catch (error) {
-    console.error('firestore: getData', error)
-    return null
-  }
+  return (docSnap.data() as T) || null
 }
 
 const getQueryData = async <T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<T[]> => {
-  try {
-    const colRef = collection(fdb, buildCollectionPath(collectionName))
-    const q = query(colRef, ...constraints)
-    const querySnapshot = await getDocs(q)
+  const colRef = collection(fdb, buildCollectionPath(collectionName))
+  const q = query(colRef, ...constraints)
+  const querySnapshot = await getDocs(q)
 
-    return querySnapshot.docs.map((doc) => doc.data() as T)
-  } catch (error) {
-    console.error('firestore: getQueryData', error)
-    return []
-  }
+  return querySnapshot.docs.map((doc) => doc.data() as T) || []
 }
 
 const getTotalCount = async (collectionName: string, constraints: QueryConstraint[] = []): Promise<number> => {
-  try {
-    const colRef = collection(fdb, buildCollectionPath(collectionName))
-    const q = query(colRef, ...constraints)
-    const countSnapshot = await getCountFromServer(q)
+  const colRef = collection(fdb, buildCollectionPath(collectionName))
+  const q = query(colRef, ...constraints)
+  const countSnapshot = await getCountFromServer(q)
 
-    return countSnapshot.data().count
-  } catch (error) {
-    console.error('firestore: getTotalCount', error)
-    return 0
-  }
+  return countSnapshot.data().count || 0
 }
 
 const updateMultipleData = async (
@@ -83,37 +60,27 @@ const updateMultipleData = async (
 ) => {
   if (!datas.length) return
 
-  try {
-    const batch = writeBatch(fdb)
+  const batch = writeBatch(fdb)
 
-    datas.forEach(({ collectionName, id, data }) => {
-      const docRef = doc(fdb, buildCollectionPath(collectionName), id)
-      batch.update(docRef, data)
-    })
+  datas.forEach(({ collectionName, id, data }) => {
+    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+    batch.update(docRef, data)
+  })
 
-    await batch.commit()
-  } catch (error) {
-    console.error('firestore: updateMultipleData', error)
-    return
-  }
+  await batch.commit()
 }
 
 const setMultipleData = async (datas: { collectionName: string; id: string; data: WithFieldValue<DocumentData> }[]) => {
   if (!datas.length) return
 
-  try {
-    const batch = writeBatch(fdb)
+  const batch = writeBatch(fdb)
 
-    datas.forEach(({ collectionName, id, data }) => {
-      const docRef = doc(fdb, buildCollectionPath(collectionName), id)
-      batch.set(docRef, data, { merge: true })
-    })
+  datas.forEach(({ collectionName, id, data }) => {
+    const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+    batch.set(docRef, data, { merge: true })
+  })
 
-    await batch.commit()
-  } catch (error) {
-    console.error('firestore: updateMultipleData', error)
-    return
-  }
+  await batch.commit()
 }
 
 const firestore = {

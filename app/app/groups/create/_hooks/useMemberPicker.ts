@@ -2,11 +2,15 @@ import { QUERY_KEYS } from '@/lib/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import feature from '@/features'
+import { userAtom } from '@/repositories/user'
+import { useAtomValue } from 'jotai'
 
 export function useMemberPicker() {
+  const localUser = useAtomValue(userAtom)
+
   const [searchFriend, setSearchFriend] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', searchFriend]
+  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, searchFriend]
 
   const friendQuery = useQuery({
     queryKey,

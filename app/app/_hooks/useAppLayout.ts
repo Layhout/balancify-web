@@ -2,7 +2,7 @@
 
 import { MOBILE_NAV_LINKS, QUERY_KEYS } from '@/lib/constants'
 import { useMemo, useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
@@ -10,6 +10,7 @@ import { useClientAuth } from '@/hooks/useClientAuth'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import feature from '@/features'
 import { Noti } from '@/types/common'
+import { userAtom } from '@/repositories/user'
 
 export type AppNavLink = {
   title: string
@@ -21,6 +22,7 @@ export type AppNavLink = {
 export function useAppLayout() {
   const pathname = usePathname()
   const queryClient = useQueryClient()
+  const localUser = useAtomValue(userAtom)
 
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
 
@@ -30,8 +32,10 @@ export function useAppLayout() {
 
   useClientAuth(() => setIsInitialLoading(false))
 
+  const queryKey = [QUERY_KEYS.NOTI, 'list', localUser?.id]
+
   const notiQuery = useQuery({
-    queryKey: [QUERY_KEYS.NOTI, 'list'],
+    queryKey,
     queryFn: feature.noti.getNotis,
   })
 
@@ -39,7 +43,7 @@ export function useAppLayout() {
     mutationFn: feature.noti.readNoti,
     onSuccess: () => {
       queryClient.setQueryData(
-        [QUERY_KEYS.NOTI, 'list'],
+        queryKey,
         notis.map((n) => ({ ...n, read: true })),
       )
     },

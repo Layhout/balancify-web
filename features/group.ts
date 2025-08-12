@@ -1,7 +1,7 @@
 import { PaginatedResponse, User } from '@/types/common'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
+import { limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams } from '@/lib/utils'
 import { countPerPage, FIREBASE_COLLTION_NAME } from '@/lib/constants'
@@ -66,17 +66,8 @@ const getGroupDetail = async (id: string): Promise<Group | null> => {
 
   if (!group) return null
 
-  const users: User[] | null = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
-    where(
-      documentId(),
-      'in',
-      (group?.members || []).map((m) => m.id),
-    ),
-  ])
-
   return {
     ...group,
-    members: users || [],
     expenses: [],
   }
 }

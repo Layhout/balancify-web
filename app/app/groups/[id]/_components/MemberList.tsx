@@ -1,28 +1,30 @@
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { MemberListItem } from './MemberListItem'
 import { User } from '@/types/common'
-import { MemberCardPlaceholder } from './MemberCardPlaceholder'
-import { MemberCard } from './MemberCard'
+import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
 
-type MemberListProps = {
+export type MemberListProps = {
   loading: boolean
   members: User[]
 }
 
 export function MemberList({ loading, members }: MemberListProps) {
   return (
-    <div className="mt-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">Members</h1>
-          {loading ? <Skeleton className="h-6 w-8" /> : <Badge variant="outline">{members.length}</Badge>}
-        </div>
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {loading
-          ? Array.from({ length: 3 }, (_, i) => <MemberCardPlaceholder key={i} />)
-          : members.slice(0, 6).map((member, i) => <MemberCard key={i} {...member} />)}
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Members</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <MemberListItemPlaceholder />
+        ) : (
+          <ul className="flex flex-col gap-4">
+            {members.map((member, i) => (
+              <MemberListItem key={i} {...member} />
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
   )
 }

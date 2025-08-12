@@ -64,11 +64,11 @@ export default function CreateGroup() {
                   </div>
                   <div className="grid flex-[0.8] grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                     <MemberPicker
-                      selectedMembers={field.value.map((member) => member.userId)}
+                      selectedMembers={field.value.map((member) => member.id)}
                       onAddMember={(v) => field.onChange([...field.value, v])}
                     />
                     {field.value.map((member) => (
-                      <Card className="overflow-hidden" key={member.userId}>
+                      <Card className="overflow-hidden" key={member.id}>
                         <CardContent className="flex items-center gap-4 p-4">
                           <UserAvatar
                             imageUrl={member.imageUrl || ''}
@@ -82,7 +82,7 @@ export default function CreateGroup() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            onClick={() => field.onChange(field.value.filter((m) => m.userId !== member.userId))}
+                            onClick={() => field.onChange(field.value.filter((m) => m.id !== member.id))}
                           >
                             <LuX />
                           </Button>

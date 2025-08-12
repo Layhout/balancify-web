@@ -5,11 +5,15 @@ import { QUERY_KEYS } from '@/lib/constants'
 import { Group, PaginatedResponse } from '@/types/common'
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { userAtom } from '@/repositories/user'
+import { useAtomValue } from 'jotai'
 
 export function useGroup() {
+  const localUser = useAtomValue(userAtom)
+
   const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.GROUPS, 'list', search]
+  const queryKey = [QUERY_KEYS.GROUPS, 'list', localUser?.id, search]
 
   const groupQuery = useInfiniteQuery({
     queryKey,

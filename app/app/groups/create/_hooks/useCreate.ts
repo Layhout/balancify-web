@@ -1,9 +1,12 @@
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import feature from '@/features'
 import { useRouter } from 'next/navigation'
+import { QUERY_KEYS } from '@/lib/constants'
+import { userAtom } from '@/repositories/user'
+import { useAtomValue } from 'jotai'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -28,11 +31,17 @@ export type MemberFormType = z.infer<typeof memberFormSchema>
 export type CreateGroupFormType = z.infer<typeof createGroupFormSchema>
 
 export function useCreate() {
+  const localUser = useAtomValue(userAtom)
+
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const createGroupMutation = useMutation({
     mutationFn: feature.group.createGroup,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GROUPS, 'list', localUser?.id],
+      })
       router.back()
     },
   })

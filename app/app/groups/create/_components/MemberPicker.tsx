@@ -61,13 +61,12 @@ export function MemberPicker({
       />
       <CommandList>
         <ScrollArea className="h-[300px]">
-          {!friendQuery.isFetching && <CommandEmpty className="h-full">Find someone</CommandEmpty>}
-          {friendQuery.isFetching ||
-            (isDebouncing && (
-              <CommandLoading className="mt-2 flex justify-center">
-                <LuLoaderCircle className="size-8 animate-spin" />
-              </CommandLoading>
-            ))}
+          {!friendQuery.isFetching && !isDebouncing && <CommandEmpty>Find someone</CommandEmpty>}
+          {(friendQuery.isFetching || isDebouncing) && (
+            <CommandLoading className="mt-2 flex justify-center">
+              <LuLoaderCircle className="size-8 animate-spin" />
+            </CommandLoading>
+          )}
           <CommandGroup>
             {(friendQuery.data?.data || [])?.map((friend) => (
               <CommandItem
@@ -84,7 +83,7 @@ export function MemberPicker({
                     imageUrl: friend.imageUrl,
                     profileBgColor: friend.profileBgColor,
                     email: friend.email,
-                    oneSignalId: friend.oneSignalId,
+                    oneSignalId: friend.oneSignalId || '',
                     referalCode: friend.referalCode,
                   })
                 }}
@@ -111,7 +110,7 @@ export function MemberPicker({
     return (
       <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>{picker}</PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent className="p-0" align="start" side="bottom">
           {foundFriendList}
         </PopoverContent>
       </Popover>

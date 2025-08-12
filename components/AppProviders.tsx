@@ -2,16 +2,26 @@
 
 import { store } from '@/repositories'
 import { Provider } from 'jotai'
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { keepPreviousData, MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
       retry: false,
+      onError: (error) => {
+        toast(error.message)
+      },
     },
     queries: {
       retry: false,
       staleTime: Infinity,
+      placeholderData: keepPreviousData,
+
+      // throwOnError: (error) => {
+      //   toast(error.message)
+      //   return true
+      // },
     },
   },
   mutationCache: new MutationCache({
