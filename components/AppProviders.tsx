@@ -17,11 +17,11 @@ export const queryClient = new QueryClient({
       retry: false,
       staleTime: Infinity,
       placeholderData: keepPreviousData,
-
-      // throwOnError: (error) => {
-      //   toast(error.message)
-      //   return true
-      // },
+      throwOnError(error) {
+        console.error(error)
+        toast(error.message)
+        return false
+      },
     },
   },
   mutationCache: new MutationCache({
