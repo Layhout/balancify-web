@@ -182,4 +182,12 @@ export const FRIEND_REQUEST_MSG = [
   'Your friendship invitation is flying through cyberspace! 📬',
 ]
 
+export const FRIEND_ALREADY_EXISTS_MSG = [
+  'Whoa there! 🚦 You two are already in the friendship club 🎉',
+  'Plot twist 📜: You’re already friends 🤝 No sequel needed 🎬',
+  'Already friends 📋 No extra paperwork required 🖊️',
+  'You’re already connected 📡—Friendship Wi-Fi is strong 📶',
+  'You two are already peas in a pod 🫛',
+]
+
 export const countPerPage = 10

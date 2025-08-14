@@ -23,6 +23,7 @@ export default function Friends() {
     openInvitionDialog,
     acceptFriendMutation,
     rejectFriendMutation,
+    unFriendMutation,
     setOpenAddFriendDialog,
     onSubmitFriendForm,
     setOpenInvitionDialog,
@@ -53,6 +54,7 @@ export default function Friends() {
                 {...(friend as FriendResponse)}
                 onAcceptRequest={(id) => acceptFriendMutation.mutate({ friendUserId: id })}
                 onRejectRequest={(id) => rejectFriendMutation.mutate({ friendUserId: id })}
+                onUnfriend={(id) => unFriendMutation.mutate({ friendUserId: id })}
               />
             ))}
           </FriendsWrapper>

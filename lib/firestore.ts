@@ -1,6 +1,7 @@
 import {
   AddPrefixToKeys,
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getCountFromServer,
@@ -21,6 +22,11 @@ const buildCollectionPath = (collectionName: string) => `${IS_DEV_ENV ? 'test/de
 const setData = async (collectionName: string, id: string, data: WithFieldValue<DocumentData>): Promise<void> => {
   const docRef = doc(fdb, buildCollectionPath(collectionName), id)
   await setDoc(docRef, data, { merge: true })
+}
+
+const deleteData = async (collectionName: string, id: string): Promise<void> => {
+  const docRef = doc(fdb, buildCollectionPath(collectionName), id)
+  await deleteDoc(docRef)
 }
 
 const updateData = async (
@@ -86,6 +92,7 @@ const setMultipleData = async (datas: { collectionName: string; id: string; data
 const firestore = {
   setData,
   getData,
+  deleteData,
   getQueryData,
   updateData,
   getTotalCount,

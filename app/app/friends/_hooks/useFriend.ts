@@ -50,7 +50,9 @@ export function useFriend() {
       toast(FRIEND_REQUEST_MSG[randomNumBetween(0, FRIEND_REQUEST_MSG.length - 1)])
       queryClient.invalidateQueries({ queryKey })
     },
-    onError: () => {
+    onError: (e: Error) => {
+      toast(e.message)
+      if (e.cause !== 404) return
       setOpenAddFriendDialog(false)
       setOpenInvitionDialog(true)
     },
@@ -67,6 +69,13 @@ export function useFriend() {
     mutationFn: feature.friend.rejectFriendRequest,
     onSuccess: (_, variable) => {
       updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Rejected)
+    },
+  })
+
+  const unFriendMutation = useMutation({
+    mutationFn: feature.friend.unFriend,
+    onSuccess: (_, variable) => {
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Unfriend)
     },
   })
 
@@ -123,6 +132,7 @@ export function useFriend() {
     openInvitionDialog,
     acceptFriendMutation,
     rejectFriendMutation,
+    unFriendMutation,
     onSubmitFriendForm,
     setOpenAddFriendDialog,
     setOpenInvitionDialog,

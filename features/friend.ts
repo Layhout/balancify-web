@@ -1,7 +1,14 @@
 import { Friend, FriendResponse, FriendStatusEnum, Noti, NotiType, PaginatedResponse, User } from '@/types/common'
 import feature from '.'
 import { firestore } from '@/lib/firestore'
-import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES, USER_404_MSG, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
+import {
+  countPerPage,
+  FIREBASE_COLLTION_NAME,
+  ROUTES,
+  USER_404_MSG,
+  YOURSELF_AS_FRIEND_MSG,
+  FRIEND_ALREADY_EXISTS_MSG,
+} from '@/lib/constants'
 import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams, randomNumBetween } from '@/lib/utils'
@@ -16,7 +23,18 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
   const foundUser: User | null = await feature.user.findUserByEmail(friendEmail)
 
   if (!foundUser) {
-    throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)])
+    throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)], { cause: 404 })
+  }
+
+  const foundFriend: Friend | null = await firestore.getData(
+    `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
+    foundUser.id,
+  )
+
+  if (foundFriend) {
+    throw new Error(FRIEND_ALREADY_EXISTS_MSG[randomNumBetween(0, FRIEND_ALREADY_EXISTS_MSG.length - 1)], {
+      cause: 409,
+    })
   }
 
   const curServerTimestamp = serverTimestamp()
@@ -170,6 +188,21 @@ const getFriends = async ({
   return { data: result || [], count }
 }
 
-const friend = { addFriendByReferalCode, addFriendToUserByEmail, acceptFriendRequest, rejectFriendRequest, getFriends }
+const unFriend = async ({ friendUserId }: { friendUserId: string }) => {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return
+
+  await firestore.deleteData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId)
+}
+
+const friend = {
+  addFriendByReferalCode,
+  addFriendToUserByEmail,
+  acceptFriendRequest,
+  rejectFriendRequest,
+  getFriends,
+  unFriend,
+}
 
 export { friend }
