@@ -148,13 +148,14 @@ const getFriends = async ({
 
   const query: QueryConstraint[] = [where('status', '!=', FriendStatusEnum.Rejected), orderBy('createdAt', 'desc')]
 
-  if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt), limit(countPerPage))
-  else query.push(limit(countPerPage))
-
   if (search) query.unshift(where('nameTrigrams', 'array-contains-any', generateTrigrams(search)))
 
   const count = await firestore.getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }
+
+  if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt))
+
+  query.push(limit(countPerPage))
 
   const friends: Friend[] | null = await firestore.getQueryData(collectionPath, query)
   const users: User[] | null = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [

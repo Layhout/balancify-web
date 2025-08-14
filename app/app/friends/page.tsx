@@ -46,7 +46,7 @@ export default function Friends() {
       />
       {friendQuery.isFetching || friendData.length ? (
         <>
-          <FriendsWrapper loading={friendQuery.isFetching}>
+          <FriendsWrapper loading={friendQuery.isFetching && !friendQuery.isFetchingNextPage}>
             {friendData.map((friend, i) => (
               <FriendCard
                 key={i}
@@ -59,7 +59,7 @@ export default function Friends() {
           {friendQuery.hasNextPage && (
             <div className="mt-4 flex justify-center">
               <Button onClick={() => friendQuery.fetchNextPage()} variant="secondary">
-              {friendQuery.isFetchingNextPage &&  <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                {friendQuery.isFetchingNextPage && <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
                 Load More
               </Button>
             </div>

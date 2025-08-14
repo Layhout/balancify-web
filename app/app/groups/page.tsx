@@ -33,7 +33,7 @@ export default function Groups() {
       />
       {groupQuery.isFetching || groupData.length ? (
         <>
-          <GroupWrapper loading={groupQuery.isFetching}>
+          <GroupWrapper loading={groupQuery.isFetching && !groupQuery.isFetchingNextPage}>
             {groupData.map((group, i) => (
               <GroupRow key={i} {...group} />
             ))}

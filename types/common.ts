@@ -55,9 +55,13 @@ export interface Group {
   createdAt: FieldValue
   createdBy: string
   members: User[]
-  memberIds: string[]
   totalExpenses: number
   expenses?: Record<string, any>[]
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'
+
+export interface GroupUserJunction {
+  groupId: string
+  userFlag: Record<string, true>
+}
