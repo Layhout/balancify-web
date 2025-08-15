@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { LuLoaderCircle, LuX } from 'react-icons/lu'
 
-export default function CreateGroup() {
+export default function GroupForm() {
   const { createGroupForm, onSubmitCreateGroupForm, isSubmitting } = useCreate()
 
   return (

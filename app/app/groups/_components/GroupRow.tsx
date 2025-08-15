@@ -1,5 +1,4 @@
 import { AvatarStack } from '@/components/AvatarStack'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { DEFAULT_DATE_FORMAT, ROUTES } from '@/lib/constants'
 import { djs } from '@/lib/dayjsExt'
@@ -14,34 +13,32 @@ export function GroupRow({ name, members, createdAt, totalExpenses, id }: Group)
 
   return (
     <li>
-      <Card>
-        <CardContent className="flex items-center gap-4 p-4">
-          <div className="flex-[0.6] overflow-hidden lg:flex-[0.3]">
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap">{name}</p>
-            <p className="block text-xs lg:hidden">
-              {members.length} members • {createdAtString}
-            </p>
-          </div>
-          <div className="hidden flex-[0.3] lg:block">
-            <AvatarStack
-              items={members.map((m) => ({
-                imageSrc: m.imageUrl,
-                initial: m.name[0] + m.name[1],
-                bgColor: m.profileBgColor,
-              }))}
-            />
-          </div>
-          <p className="hidden flex-[0.2] lg:block">{createdAtString}</p>
-          <div className="flex flex-[0.4] items-center justify-between lg:flex-[0.2]">
-            <p>{currencyFormatter(totalExpenses)}</p>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={`${ROUTES.APP.GROUPS}/${id}`}>
-                <LuChevronRight className="size-4" />
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <Link href={`${ROUTES.APP.GROUPS}/${id}`}>
+        <Card>
+          <CardContent className="flex items-center gap-4 p-4">
+            <div className="flex-[0.6] overflow-hidden lg:flex-[0.3]">
+              <p className="overflow-hidden text-ellipsis whitespace-nowrap">{name}</p>
+              <p className="block text-xs lg:hidden">
+                {members.length} members • {createdAtString}
+              </p>
+            </div>
+            <div className="hidden flex-[0.3] lg:block">
+              <AvatarStack
+                items={members.map((m) => ({
+                  imageSrc: m.imageUrl,
+                  initial: m.name[0] + m.name[1],
+                  bgColor: m.profileBgColor,
+                }))}
+              />
+            </div>
+            <p className="hidden flex-[0.2] lg:block">{createdAtString}</p>
+            <div className="flex flex-[0.4] items-center justify-between lg:flex-[0.2]">
+              <p>{currencyFormatter(totalExpenses)}</p>
+              <LuChevronRight className="size-4" />
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
     </li>
   )
 }
