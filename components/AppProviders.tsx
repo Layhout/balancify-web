@@ -2,7 +2,7 @@
 
 import { store } from '@/repositories'
 import { Provider } from 'jotai'
-import { keepPreviousData, MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { keepPreviousData, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 export const queryClient = new QueryClient({
@@ -15,6 +15,7 @@ export const queryClient = new QueryClient({
     },
     queries: {
       retry: false,
+      retryOnMount: false,
       staleTime: Infinity,
       placeholderData: keepPreviousData,
       throwOnError(error) {
@@ -24,12 +25,12 @@ export const queryClient = new QueryClient({
       },
     },
   },
-  mutationCache: new MutationCache({
-    // onSuccess: (res) => onUnauthorized(res as ResponseResult),
-  }),
-  queryCache: new QueryCache({
-    // onSuccess: (res) => onUnauthorized(res as ResponseResult),
-  }),
+  // mutationCache: new MutationCache({
+  //   // onSuccess: (res) => onUnauthorized(res as ResponseResult),
+  // }),
+  // queryCache: new QueryCache({
+  //   // onSuccess: (res) => onUnauthorized(res as ResponseResult),
+  // }),
 })
 
 export function JotaiProviders({

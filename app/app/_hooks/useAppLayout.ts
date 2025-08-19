@@ -8,7 +8,7 @@ import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
 import { useClientAuth } from '@/hooks/useClientAuth'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import feature from '@/features'
+import { getNotis, readNoti } from '@/features'
 import { Noti } from '@/types/common'
 import { userAtom } from '@/repositories/user'
 
@@ -36,11 +36,13 @@ export function useAppLayout() {
 
   const notiQuery = useQuery({
     queryKey,
-    queryFn: feature.noti.getNotis,
+    queryFn: getNotis,
   })
 
+  const notis = useMemo(() => (notiQuery.data || []) as Noti[], [notiQuery.data])
+
   const readNotiMutation = useMutation({
-    mutationFn: feature.noti.readNoti,
+    mutationFn: readNoti,
     onSuccess: () => {
       queryClient.setQueryData(
         queryKey,
@@ -48,8 +50,6 @@ export function useAppLayout() {
       )
     },
   })
-
-  const notis = useMemo(() => (notiQuery.data || []) as Noti[], [notiQuery.data])
 
   const hasUnreadNoti = useMemo(() => notis.some((n) => !n.read), [notis])
 

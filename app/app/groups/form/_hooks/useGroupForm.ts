@@ -2,11 +2,11 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import feature from '@/features'
 import { useRouter } from 'next/navigation'
 import { QUERY_KEYS } from '@/lib/constants'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
+import { createGroup } from '@/features/group'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -18,7 +18,7 @@ const memberFormSchema = z.object({
   referalCode: z.string(),
 })
 
-const createGroupFormSchema = z.object({
+const groupFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
   members: z
@@ -28,16 +28,16 @@ const createGroupFormSchema = z.object({
 })
 
 export type MemberFormType = z.infer<typeof memberFormSchema>
-export type CreateGroupFormType = z.infer<typeof createGroupFormSchema>
+export type GroupFormType = z.infer<typeof groupFormSchema>
 
-export function useCreate() {
+export function useGroupForm() {
   const localUser = useAtomValue(userAtom)
 
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const createGroupMutation = useMutation({
-    mutationFn: feature.group.createGroup,
+  const groupMutation = useMutation({
+    mutationFn: createGroup,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GROUPS, 'list', localUser?.id],
@@ -46,8 +46,8 @@ export function useCreate() {
     },
   })
 
-  const createGroupForm = useForm<CreateGroupFormType>({
-    resolver: zodResolver(createGroupFormSchema),
+  const groupForm = useForm<GroupFormType>({
+    resolver: zodResolver(groupFormSchema),
     defaultValues: {
       name: '',
       description: '',
@@ -55,8 +55,8 @@ export function useCreate() {
     },
   })
 
-  const onSubmitCreateGroupForm = (value: CreateGroupFormType) => {
-    createGroupMutation.mutate({
+  const onSubmitGroupForm = (value: GroupFormType) => {
+    groupMutation.mutate({
       name: value.name,
       description: value.description,
       members: value.members.map((member) => ({
@@ -65,11 +65,15 @@ export function useCreate() {
         profileBgColor: member.profileBgColor,
         imageUrl: member.imageUrl,
         email: member.email,
-        oneSignalId: member.oneSignalId,
+        oneSignalId: member.oneSignalId || '',
         referalCode: member.referalCode,
       })),
     })
   }
 
-  return { createGroupForm, onSubmitCreateGroupForm, isSubmitting: createGroupMutation.isPending }
+  return {
+    groupForm,
+    onSubmitGroupForm,
+    isSubmitting: groupMutation.isPending,
+  }
 }

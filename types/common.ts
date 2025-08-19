@@ -6,7 +6,7 @@ export interface User {
   profileBgColor: string
   email: string
   name: string
-  oneSignalId?: string
+  oneSignalId: string
   referalCode: string
 }
 
@@ -52,17 +52,18 @@ export interface Group {
   id: string
   name: string
   description?: string
-  nameTrigrams: string[]
   createdAt: FieldValue
   createdBy: string
   members: User[]
+  memberIds: string[]
   totalExpenses: number
   expenses?: Record<string, any>[]
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'
 
-export interface GroupUserJunction {
+export interface GroupMetadata {
   groupId: string
-  userFlag: Record<string, true>
+  nameTrigrams: string[]
+  membersFlag: Record<string, true>
 }

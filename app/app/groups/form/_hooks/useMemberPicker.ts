@@ -1,7 +1,7 @@
 import { QUERY_KEYS } from '@/lib/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import feature from '@/features'
+import { getFriends } from '@/features'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 
@@ -14,7 +14,7 @@ export function useMemberPicker() {
 
   const friendQuery = useQuery({
     queryKey,
-    queryFn: () => feature.friend.getFriends({ lastDocCreatedAt: null, search: searchFriend }),
+    queryFn: () => getFriends({ lastDocCreatedAt: null, search: searchFriend }),
     enabled: !!searchFriend,
     placeholderData: keepPreviousData,
   })

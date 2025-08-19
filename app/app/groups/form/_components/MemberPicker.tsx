@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { LuCheck, LuPlus } from 'react-icons/lu'
-import { MemberFormType } from '../_hooks/useCreate'
+import { MemberFormType } from '../_hooks/useGroupForm'
 import { isDesktopAtom } from '@/repositories/layout'
 import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'

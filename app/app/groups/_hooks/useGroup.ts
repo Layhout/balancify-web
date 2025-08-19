@@ -1,12 +1,12 @@
 'use client'
 
-import feature from '@/features'
 import { QUERY_KEYS } from '@/lib/constants'
 import { Group, PaginatedResponse } from '@/types/common'
-import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
+import { getGroups } from '@/features/group'
 
 export function useGroup() {
   const localUser = useAtomValue(userAtom)
@@ -28,11 +28,11 @@ export function useGroup() {
       return lastPage.data.slice().pop()?.createdAt || null
     },
     initialPageParam: null,
-    queryFn: ({ pageParam }) => feature.group.getGroups({ lastDocCreatedAt: pageParam, search }),
-    placeholderData: keepPreviousData,
+    queryFn: ({ pageParam }) => getGroups({ lastDocCreatedAt: pageParam, search }),
   })
 
   const groupData: Group[] = groupQuery.data?.pages.flatMap((page) => page.data) || []
+  console.log('useGroup')
 
   return { groupQuery, groupData, setSearch }
 }

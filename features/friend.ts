@@ -1,5 +1,4 @@
 import { Friend, FriendResponse, FriendStatusEnum, Noti, NotiType, PaginatedResponse, User } from '@/types/common'
-import feature from '.'
 import { firestore } from '@/lib/firestore'
 import {
   countPerPage,
@@ -14,13 +13,14 @@ import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams, randomNumBetween } from '@/lib/utils'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
+import { findUserByEmail, findUserByReferalCode } from './user'
 
-const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) => {
+export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: string }) {
   const user = store.get(userAtom)
 
   if (!user) return
 
-  const foundUser: User | null = await feature.user.findUserByEmail(friendEmail)
+  const foundUser: User | null = await findUserByEmail(friendEmail)
 
   if (!foundUser) {
     throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)], { cause: 404 })
@@ -84,12 +84,12 @@ const addFriendToUserByEmail = async ({ friendEmail }: { friendEmail: string }) 
   ])
 }
 
-const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) => {
+export async function addFriendByReferalCode({ referalCode }: { referalCode: string }) {
   const user = store.get(userAtom)
 
   if (!user) return
 
-  const foundFriend: User | null = await feature.user.findUserByReferalCode(referalCode)
+  const foundFriend: User | null = await findUserByReferalCode(referalCode)
 
   if (!foundFriend) {
     throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)])
@@ -131,7 +131,7 @@ const addFriendByReferalCode = async ({ referalCode }: { referalCode: string }) 
   ])
 }
 
-const acceptFriendRequest = async ({ friendUserId }: { friendUserId: string }) => {
+export async function acceptFriendRequest({ friendUserId }: { friendUserId: string }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
@@ -141,7 +141,7 @@ const acceptFriendRequest = async ({ friendUserId }: { friendUserId: string }) =
   })
 }
 
-const rejectFriendRequest = async ({ friendUserId }: { friendUserId: string }) => {
+export async function rejectFriendRequest({ friendUserId }: { friendUserId: string }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
@@ -151,13 +151,13 @@ const rejectFriendRequest = async ({ friendUserId }: { friendUserId: string }) =
   })
 }
 
-const getFriends = async ({
+export async function getFriends({
   lastDocCreatedAt = null,
   search,
 }: {
   lastDocCreatedAt: Friend['createdAt'] | null
   search: string
-}): Promise<PaginatedResponse<FriendResponse>> => {
+}): Promise<PaginatedResponse<FriendResponse>> {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return { data: [], count: 0 }
@@ -188,21 +188,10 @@ const getFriends = async ({
   return { data: result || [], count }
 }
 
-const unFriend = async ({ friendUserId }: { friendUserId: string }) => {
+export async function unFriend({ friendUserId }: { friendUserId: string }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
 
   await firestore.deleteData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId)
 }
-
-const friend = {
-  addFriendByReferalCode,
-  addFriendToUserByEmail,
-  acceptFriendRequest,
-  rejectFriendRequest,
-  getFriends,
-  unFriend,
-}
-
-export { friend }

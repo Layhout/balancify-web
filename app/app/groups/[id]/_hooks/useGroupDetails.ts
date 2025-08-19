@@ -1,9 +1,9 @@
-import feature from '@/features'
 import { QUERY_KEYS } from '@/lib/constants'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
+import { getGroupDetail } from '@/features/group'
 
 export function useGroupDetails() {
   const localUser = useAtomValue(userAtom)
@@ -12,7 +12,7 @@ export function useGroupDetails() {
 
   const groupDetailsQuery = useQuery({
     queryKey: [QUERY_KEYS.GROUPS, 'details', localUser?.id, id],
-    queryFn: () => feature.group.getGroupDetail(id),
+    queryFn: () => getGroupDetail(id),
   })
 
   return { groupDetailsQuery }

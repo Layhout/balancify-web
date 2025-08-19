@@ -1,4 +1,4 @@
-import feature from '@/features'
+import { addFriendByReferalCode, createUser, findUserById, updateUser } from '@/features'
 import { BG_COLORS, QUERY_KEYS, ROUTES } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
@@ -26,15 +26,15 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   const [idQuery, setIdQuery] = useState('')
 
   const createUserMutation = useMutation({
-    mutationFn: feature.user.createUser,
+    mutationFn: createUser,
   })
 
   const updateUserMutation = useMutation({
-    mutationFn: feature.user.updateUser,
+    mutationFn: updateUser,
   })
 
   const inviteMutation = useMutation({
-    mutationFn: feature.friend.addFriendByReferalCode,
+    mutationFn: addFriendByReferalCode,
     onError: (error) => {
       toast(error.message)
     },
@@ -42,7 +42,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
 
   const findUserQuery = useQuery({
     queryKey: [QUERY_KEYS.USER, 'search', idQuery],
-    queryFn: () => feature.user.findUserById(idQuery),
+    queryFn: () => findUserById(idQuery),
     enabled: false,
   })
 
@@ -70,6 +70,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
       imageUrl: clerkUser?.imageUrl,
       profileBgColor: BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)],
       referalCode: shortid.generate(),
+      oneSignalId: '',
     }
 
     await setDBUser(newUserData)
@@ -122,8 +123,8 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
 
       const newUserData: Partial<User> = {}
 
-      if (OneSignal.User.onesignalId !== localUser.oneSignalId) {
-        newUserData.oneSignalId = OneSignal.User.onesignalId
+      if ((OneSignal.User.onesignalId || '') !== localUser.oneSignalId) {
+        newUserData.oneSignalId = OneSignal.User.onesignalId || ''
       }
 
       if (localUser.imageUrl !== clerkUser?.imageUrl) {
@@ -155,3 +156,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, userId, localUser])
 }
+/**
+ *   }, [isLoaded, userId, localUser])
+
+ */

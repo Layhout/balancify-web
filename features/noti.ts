@@ -5,11 +5,11 @@ import { userAtom } from '@/repositories/user'
 import { Noti } from '@/types/common'
 import { limit, orderBy } from 'firebase/firestore'
 
-const sendNotiToUser = async ({ noti, receiverId }: { receiverId: string; noti: Noti }) => {
+export async function sendNotiToUser({ noti, receiverId }: { receiverId: string; noti: Noti }) {
   await firestore.setData(`${FIREBASE_COLLTION_NAME.NOTIS}/${receiverId}/data`, noti.id, noti)
 }
 
-const readNoti = async ({ notis }: { notis: Noti[] }) => {
+export async function readNoti({ notis }: { notis: Noti[] }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return
@@ -23,7 +23,7 @@ const readNoti = async ({ notis }: { notis: Noti[] }) => {
   )
 }
 
-const getNotis = async (): Promise<Noti[]> => {
+export async function getNotis(): Promise<Noti[]> {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return []
@@ -36,7 +36,3 @@ const getNotis = async (): Promise<Noti[]> => {
 
   return foundNotis || []
 }
-
-const noti = { sendNotiToUser, readNoti, getNotis }
-
-export { noti }

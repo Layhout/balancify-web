@@ -3,7 +3,7 @@ import { keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from 
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import feature from '@/features'
+import { acceptFriendRequest, addFriendToUserByEmail, getFriends, rejectFriendRequest, unFriend } from '@/features'
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
@@ -40,12 +40,12 @@ export function useFriend() {
       return lastPage.data.slice().pop()?.createdAt || null
     },
     initialPageParam: null,
-    queryFn: ({ pageParam }) => feature.friend.getFriends({ lastDocCreatedAt: pageParam, search }),
+    queryFn: ({ pageParam }) => getFriends({ lastDocCreatedAt: pageParam, search }),
     placeholderData: keepPreviousData,
   })
 
   const addFriendMutation = useMutation({
-    mutationFn: feature.friend.addFriendToUserByEmail,
+    mutationFn: addFriendToUserByEmail,
     onSuccess: () => {
       toast(FRIEND_REQUEST_MSG[randomNumBetween(0, FRIEND_REQUEST_MSG.length - 1)])
       queryClient.invalidateQueries({ queryKey })
@@ -59,21 +59,21 @@ export function useFriend() {
   })
 
   const acceptFriendMutation = useMutation({
-    mutationFn: feature.friend.acceptFriendRequest,
+    mutationFn: acceptFriendRequest,
     onSuccess: (_, variable) => {
       updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Accepted)
     },
   })
 
   const rejectFriendMutation = useMutation({
-    mutationFn: feature.friend.rejectFriendRequest,
+    mutationFn: rejectFriendRequest,
     onSuccess: (_, variable) => {
       updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Rejected)
     },
   })
 
   const unFriendMutation = useMutation({
-    mutationFn: feature.friend.unFriend,
+    mutationFn: unFriend,
     onSuccess: (_, variable) => {
       updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Unfriend)
     },

@@ -2,7 +2,7 @@
 
 import { PageHeader } from '@/components/PageHeader'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useCreate } from './_hooks/useCreate'
+import { useGroupForm } from './_hooks/useGroupForm'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -12,16 +12,16 @@ import { UserAvatar } from '@/components/UserAvatar'
 import { LuLoaderCircle, LuX } from 'react-icons/lu'
 
 export default function GroupForm() {
-  const { createGroupForm, onSubmitCreateGroupForm, isSubmitting } = useCreate()
+  const { groupForm, onSubmitGroupForm, isSubmitting } = useGroupForm()
 
   return (
     <div className="container pb-4">
       <PageHeader title="Create Group" hasBackBtn />
       <div className="mt-6 flex flex-col gap-4 md:flex-row">
-        <Form {...createGroupForm}>
-          <form onSubmit={createGroupForm.handleSubmit(onSubmitCreateGroupForm)} className="flex w-full flex-col gap-4">
+        <Form {...groupForm}>
+          <form onSubmit={groupForm.handleSubmit(onSubmitGroupForm)} className="flex w-full flex-col gap-4">
             <FormField
-              control={createGroupForm.control}
+              control={groupForm.control}
               name="name"
               render={({ field }) => (
                 <FormItem className="flex flex-col space-y-0 md:flex-row">
@@ -38,7 +38,7 @@ export default function GroupForm() {
               )}
             />
             <FormField
-              control={createGroupForm.control}
+              control={groupForm.control}
               name="description"
               render={({ field }) => (
                 <FormItem className="flex flex-col space-y-0 md:flex-row">
@@ -55,7 +55,7 @@ export default function GroupForm() {
               )}
             />
             <FormField
-              control={createGroupForm.control}
+              control={groupForm.control}
               name="members"
               render={({ field }) => (
                 <FormItem className="flex flex-col space-y-0 md:flex-row">
