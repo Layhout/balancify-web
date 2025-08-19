@@ -40,7 +40,7 @@ export function ExpenseList({ loading, expenses }: ExpenseListProps) {
           ? Array.from({ length: 3 }, (_, i) => <ExpenseListCardPlaceholder key={i} />)
           : expenses.map((expense, i) => <ExpenseListCard key={i} {...expense} />)}
       </div>
-      {!expenses.length && <Empty />}
+      {!expenses.length && !loading && <Empty />}
       {/* <div className="mt-6 flex justify-center">
         <Button variant="secondary">Load More</Button>
       </div> */}

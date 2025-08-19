@@ -17,7 +17,7 @@ export const ROUTES = {
     EXPENSES: '/app/expenses',
     EXPENSES_CREATE: '/app/expenses/create',
     GROUPS: '/app/groups',
-    GROUPS_CREATE: '/app/groups/create',
+    GROUPS_FORM: '/app/groups/form',
     FRIENDS: '/app/friends',
     SETTINGS: '/app/settings',
     PROFILE: '/app/profile',

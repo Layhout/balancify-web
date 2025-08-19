@@ -25,7 +25,7 @@ export default function Groups() {
         onSearch={setSearch}
         action={
           <Button className="gap-2" asChild>
-            <Link href={ROUTES.APP.GROUPS_CREATE}>
+            <Link href={ROUTES.APP.GROUPS_FORM}>
               <LuPlus className="h-4 w-4" /> New Group
             </Link>
           </Button>

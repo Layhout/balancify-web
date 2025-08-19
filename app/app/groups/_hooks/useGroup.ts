@@ -32,7 +32,6 @@ export function useGroup() {
   })
 
   const groupData: Group[] = groupQuery.data?.pages.flatMap((page) => page.data) || []
-  console.log('useGroup')
 
   return { groupQuery, groupData, setSearch }
 }

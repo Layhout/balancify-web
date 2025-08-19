@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { QUERY_KEYS } from '@/lib/constants'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { createGroup } from '@/features/group'
+import { createGroup } from '@/features'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -42,6 +42,7 @@ export function useGroupForm() {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GROUPS, 'list', localUser?.id],
       })
+
       router.back()
     },
   })

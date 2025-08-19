@@ -19,7 +19,7 @@ export const queryClient = new QueryClient({
       staleTime: Infinity,
       placeholderData: keepPreviousData,
       throwOnError(error) {
-        console.error(error)
+        console.error('queryClient', error)
         toast(error.message)
         return false
       },
