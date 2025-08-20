@@ -1,5 +1,5 @@
 import { addFriendByReferalCode, createUser, findUserById, updateUser } from '@/features'
-import { BG_COLORS, QUERY_KEYS, ROUTES } from '@/lib/constants'
+import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
@@ -41,7 +41,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   })
 
   const findUserQuery = useQuery({
-    queryKey: [QUERY_KEYS.USER, 'search', idQuery],
+    queryKey: [QUERY_KEYS.USER, QueryType.Search, idQuery],
     queryFn: () => findUserById(idQuery),
     enabled: false,
   })

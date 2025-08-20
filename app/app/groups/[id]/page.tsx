@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { MemberList } from './_components/MemberList'
 
 export default function GroupDetails() {
-  const { groupDetailsQuery } = useGroupDetails()
+  const { groupDetailsQuery, onEditGroup, onLeaveGroup } = useGroupDetails()
 
   return (
     <div className="container pb-4">
@@ -20,7 +20,12 @@ export default function GroupDetails() {
             description={groupDetailsQuery.data?.description || ''}
             loading={groupDetailsQuery.isFetching}
           />
-          <ActionButtons loading={groupDetailsQuery.isFetching} members={groupDetailsQuery.data?.members || []} />
+          <ActionButtons
+            loading={groupDetailsQuery.isFetching}
+            members={groupDetailsQuery.data?.members || []}
+            onEditGroup={onEditGroup}
+            onLeaveGroup={onLeaveGroup}
+          />
           <ExpenseList loading={groupDetailsQuery.isFetching} expenses={[]} />
         </div>
         <div className="hidden flex-1 md:block">

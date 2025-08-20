@@ -1,12 +1,24 @@
-import { GroupMetadata, PaginatedResponse, User } from '@/types/common'
+import { GroupMetadata, NotiType, PaginatedResponse, User } from '@/types/common'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
+import {
+  arrayRemove,
+  deleteField,
+  documentId,
+  limit,
+  orderBy,
+  QueryConstraint,
+  serverTimestamp,
+  startAfter,
+  where,
+} from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams } from '@/lib/utils'
 import { countPerPage, FIREBASE_COLLTION_NAME } from '@/lib/constants'
-import { firestore } from '@/lib/firestore'
 import { Group } from '@/types/common'
+import { createNoti } from './noti'
+import { ROUTES } from '@/lib/constants'
+import { deleteData, getQueryData, getTotalCount, setMultipleData, updateMultipleData } from '@/lib/firestore'
 
 export async function createGroup({
   name,
@@ -40,17 +52,26 @@ export async function createGroup({
     membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
   }
 
-  await firestore.setMultipleData([
-    {
-      collectionName: FIREBASE_COLLTION_NAME.GROUPS,
-      id: group.id,
-      data: group,
-    },
-    {
-      collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
-      id: group.id,
-      data: groupMetadata,
-    },
+  await Promise.all([
+    setMultipleData([
+      {
+        collectionName: FIREBASE_COLLTION_NAME.GROUPS,
+        id: group.id,
+        data: group,
+      },
+      {
+        collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
+        id: group.id,
+        data: groupMetadata,
+      },
+    ]),
+    createNoti({
+      title: 'New Group',
+      description: `${user.name} added you to a group.`,
+      link: `${ROUTES.APP.GROUPS}/${group.id}`,
+      type: NotiType.Group,
+      ownerIds: members.map((m) => m.id),
+    }),
   ])
 }
 
@@ -68,7 +89,7 @@ export async function getGroups({
   let groupMetadata: GroupMetadata[] | null = null
 
   if (search) {
-    groupMetadata = (await firestore.getQueryData(FIREBASE_COLLTION_NAME.GROUP_METADATA, [
+    groupMetadata = (await getQueryData(FIREBASE_COLLTION_NAME.GROUP_METADATA, [
       where('nameTrigrams', 'array-contains-any', generateTrigrams(search)),
       where(`membersFlag.${userId}`, '==', true),
     ])) as GroupMetadata[]
@@ -82,26 +103,28 @@ export async function getGroups({
 
   if (groupMetadata) query.push(where(documentId(), 'in', groupMetadata?.map((g) => g.groupId) || []))
 
-  const count = await firestore.getTotalCount(collectionPath, query)
+  const count = await getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }
 
   if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt))
 
   query.push(limit(countPerPage))
 
-  const groups: Group[] | null = await firestore.getQueryData(collectionPath, query)
+  const groups: Group[] | null = await getQueryData(collectionPath, query)
 
   return { data: groups || [], count }
 }
 
 export async function getGroupDetail(id: string): Promise<Group | null> {
+  if (!id) return null
+
   const userId = store.get(userAtom)?.id
 
   if (!userId) return null
 
   const collectionPath = FIREBASE_COLLTION_NAME.GROUPS
 
-  const group: Group[] | null = await firestore.getQueryData(collectionPath, [
+  const group: Group[] | null = await getQueryData(collectionPath, [
     where(documentId(), '==', id),
     where('memberIds', 'array-contains', userId),
   ])
@@ -112,4 +135,76 @@ export async function getGroupDetail(id: string): Promise<Group | null> {
     ...group[0],
     expenses: [],
   }
+}
+
+export async function editGroup({
+  id,
+  name,
+  description,
+  members,
+}: {
+  id: string
+  name: string
+  description?: string
+  members: User[]
+}) {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return
+
+  await updateMultipleData([
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUPS,
+      id,
+      data: <Partial<Group>>{
+        name,
+        description,
+        members,
+        memberIds: members.map((m) => m.id),
+      },
+    },
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
+      id,
+      data: <Partial<GroupMetadata>>{
+        nameTrigrams: generateTrigrams(name),
+        membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
+      },
+    },
+  ])
+}
+
+export async function leaveGroup({ id }: { id: string }) {
+  const user = store.get(userAtom)
+
+  if (!user) return
+
+  await updateMultipleData([
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUPS,
+      id,
+      data: {
+        members: arrayRemove(user),
+        memberIds: arrayRemove(user.id),
+      },
+    },
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
+      id,
+      data: {
+        membersFlag: { [user.id]: deleteField() },
+      },
+    },
+  ])
+}
+
+export async function deleteGroup(id: string) {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return
+
+  await Promise.all([
+    deleteData(FIREBASE_COLLTION_NAME.GROUPS, id),
+    deleteData(FIREBASE_COLLTION_NAME.GROUP_METADATA, id),
+  ])
 }

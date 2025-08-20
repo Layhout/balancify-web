@@ -30,6 +30,7 @@ export type FriendResponse = User & Friend
 
 export enum NotiType {
   FriendRequest = 'friend-request',
+  Group = 'group',
 }
 
 export interface Noti {
@@ -38,7 +39,8 @@ export interface Noti {
   title: string
   description: string
   link: string
-  read: boolean
+  userReadFlag: Record<string, boolean>
+  ownerIds: string[]
   createdAt: FieldValue
   metadata?: Record<string, any>
 }

@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import { QUERY_KEYS } from '@/lib/constants'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { createGroup } from '@/features'
+import { createGroup, editGroup, getGroupDetail } from '@/features'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -35,12 +37,30 @@ export function useGroupForm() {
 
   const router = useRouter()
   const queryClient = useQueryClient()
+  const searchParams = useSearchParams()
+
+  const groupDetailsQuery = useQuery({
+    queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('edit')],
+    queryFn: () => getGroupDetail(searchParams.get('edit') || ''),
+    enabled: !!searchParams.get('edit'),
+  })
 
   const groupMutation = useMutation({
     mutationFn: createGroup,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GROUPS, 'list', localUser?.id],
+        queryKey: [QUERY_KEYS.GROUPS, QueryType.List, localUser?.id],
+      })
+
+      router.back()
+    },
+  })
+
+  const editGroupMutation = useMutation({
+    mutationFn: editGroup,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GROUPS, QueryType.List, localUser?.id],
       })
 
       router.back()
@@ -57,7 +77,7 @@ export function useGroupForm() {
   })
 
   const onSubmitGroupForm = (value: GroupFormType) => {
-    groupMutation.mutate({
+    const data = {
       name: value.name,
       description: value.description,
       members: value.members.map((member) => ({
@@ -69,8 +89,35 @@ export function useGroupForm() {
         oneSignalId: member.oneSignalId || '',
         referalCode: member.referalCode,
       })),
-    })
+    }
+
+    if (searchParams.get('edit')) {
+      if (!groupDetailsQuery.data) {
+        toast('Cannot find group to edit.')
+        return
+      }
+
+      editGroupMutation.mutate({
+        id: searchParams.get('edit') || '',
+        ...data,
+      })
+      return
+    }
+
+    groupMutation.mutate(data)
   }
+
+  useEffect(() => {
+    if (groupDetailsQuery.data) {
+      groupForm.reset({
+        name: groupDetailsQuery.data.name,
+        description: groupDetailsQuery.data.description,
+        members: groupDetailsQuery.data.members,
+      })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupDetailsQuery.data])
 
   return {
     groupForm,

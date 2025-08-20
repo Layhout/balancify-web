@@ -19,17 +19,21 @@ import { IS_DEV_ENV } from './constants'
 
 const buildCollectionPath = (collectionName: string) => `${IS_DEV_ENV ? 'test/dev/' : ''}${collectionName}`
 
-const setData = async (collectionName: string, id: string, data: WithFieldValue<DocumentData>): Promise<void> => {
+export const setData = async (
+  collectionName: string,
+  id: string,
+  data: WithFieldValue<DocumentData>,
+): Promise<void> => {
   const docRef = doc(fdb, buildCollectionPath(collectionName), id)
   await setDoc(docRef, data, { merge: true })
 }
 
-const deleteData = async (collectionName: string, id: string): Promise<void> => {
+export const deleteData = async (collectionName: string, id: string): Promise<void> => {
   const docRef = doc(fdb, buildCollectionPath(collectionName), id)
   await deleteDoc(docRef)
 }
 
-const updateData = async (
+export const updateData = async (
   collectionName: string,
   id: string,
   data: { [x: string]: any } & AddPrefixToKeys<string, any>,
@@ -38,14 +42,14 @@ const updateData = async (
   await updateDoc(docRef, data)
 }
 
-const getData = async <T>(collectionName: string, id: string): Promise<T | null> => {
+export const getData = async <T>(collectionName: string, id: string): Promise<T | null> => {
   const docRef = doc(fdb, buildCollectionPath(collectionName), id)
   const docSnap = await getDoc(docRef)
 
   return (docSnap.data() as T) || null
 }
 
-const getQueryData = async <T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<T[]> => {
+export const getQueryData = async <T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<T[]> => {
   const colRef = collection(fdb, buildCollectionPath(collectionName))
   const q = query(colRef, ...constraints)
   const querySnapshot = await getDocs(q)
@@ -53,7 +57,7 @@ const getQueryData = async <T>(collectionName: string, constraints: QueryConstra
   return querySnapshot.docs.map((doc) => doc.data() as T) || []
 }
 
-const getTotalCount = async (collectionName: string, constraints: QueryConstraint[] = []): Promise<number> => {
+export const getTotalCount = async (collectionName: string, constraints: QueryConstraint[] = []): Promise<number> => {
   const colRef = collection(fdb, buildCollectionPath(collectionName))
   const q = query(colRef, ...constraints)
   const countSnapshot = await getCountFromServer(q)
@@ -61,7 +65,7 @@ const getTotalCount = async (collectionName: string, constraints: QueryConstrain
   return countSnapshot.data().count || 0
 }
 
-const updateMultipleData = async (
+export const updateMultipleData = async (
   datas: { collectionName: string; id: string; data: { [x: string]: any } & AddPrefixToKeys<string, any> }[],
 ) => {
   if (!datas.length) return
@@ -76,7 +80,9 @@ const updateMultipleData = async (
   await batch.commit()
 }
 
-const setMultipleData = async (datas: { collectionName: string; id: string; data: WithFieldValue<DocumentData> }[]) => {
+export const setMultipleData = async (
+  datas: { collectionName: string; id: string; data: WithFieldValue<DocumentData> }[],
+) => {
   if (!datas.length) return
 
   const batch = writeBatch(fdb)
@@ -88,16 +94,3 @@ const setMultipleData = async (datas: { collectionName: string; id: string; data
 
   await batch.commit()
 }
-
-const firestore = {
-  setData,
-  getData,
-  deleteData,
-  getQueryData,
-  updateData,
-  getTotalCount,
-  updateMultipleData,
-  setMultipleData,
-}
-
-export { firestore }

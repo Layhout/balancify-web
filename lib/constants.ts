@@ -103,6 +103,12 @@ export const QUERY_KEYS = {
   NOTI: 'noti',
 }
 
+export enum QueryType {
+  List = 'list',
+  Details = 'details',
+  Search = 'search',
+}
+
 export const EXPENSE_ICONS = {
   SUIT_CASE: 'suit-case',
   COFFEE: 'coffee',

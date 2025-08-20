@@ -1,4 +1,4 @@
-import { FRIEND_REQUEST_MSG, QUERY_KEYS, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
+import { FRIEND_REQUEST_MSG, QUERY_KEYS, QueryType, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
 import { keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -25,7 +25,7 @@ export function useFriend() {
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
   const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, search]
+  const queryKey = [QUERY_KEYS.FRIENDS, QueryType.List, localUser?.id, search]
 
   const friendQuery = useInfiniteQuery({
     queryKey,

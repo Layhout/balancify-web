@@ -1,5 +1,4 @@
-import { Friend, FriendResponse, FriendStatusEnum, Noti, NotiType, PaginatedResponse, User } from '@/types/common'
-import { firestore } from '@/lib/firestore'
+import { Friend, FriendResponse, FriendStatusEnum, NotiType, PaginatedResponse, User } from '@/types/common'
 import {
   countPerPage,
   FIREBASE_COLLTION_NAME,
@@ -9,11 +8,12 @@ import {
   FRIEND_ALREADY_EXISTS_MSG,
 } from '@/lib/constants'
 import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
-import { v4 as uuidv4 } from 'uuid'
 import { generateTrigrams, randomNumBetween } from '@/lib/utils'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import { findUserByEmail, findUserByReferalCode } from './user'
+import { createNoti } from './noti'
+import { deleteData, getData, getQueryData, getTotalCount, setMultipleData, updateData } from '@/lib/firestore'
 
 export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: string }) {
   const user = store.get(userAtom)
@@ -26,10 +26,7 @@ export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: str
     throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)], { cause: 404 })
   }
 
-  const foundFriend: Friend | null = await firestore.getData(
-    `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
-    foundUser.id,
-  )
+  const foundFriend: Friend | null = await getData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`, foundUser.id)
 
   if (foundFriend) {
     throw new Error(FRIEND_ALREADY_EXISTS_MSG[randomNumBetween(0, FRIEND_ALREADY_EXISTS_MSG.length - 1)], {
@@ -55,17 +52,15 @@ export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: str
     nameTrigrams: generateTrigrams(user.name),
   }
 
-  const notification: Noti = {
-    id: uuidv4(),
-    type: NotiType.FriendRequest,
+  await createNoti({
     title: 'New Friend Request',
     description: `${user.name} sent you a firend request.`,
     link: ROUTES.APP.FRIENDS,
-    read: false,
-    createdAt: curServerTimestamp,
-  }
+    type: NotiType.FriendRequest,
+    ownerIds: [foundUser.id],
+  })
 
-  await firestore.setMultipleData([
+  await setMultipleData([
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
       id: friend.userId,
@@ -75,11 +70,6 @@ export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: str
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friend.userId}/data`,
       id: user.id,
       data: youAsfriend,
-    },
-    {
-      collectionName: `${FIREBASE_COLLTION_NAME.NOTIS}/${friend.userId}/data`,
-      id: notification.id,
-      data: notification,
     },
   ])
 }
@@ -117,7 +107,7 @@ export async function addFriendByReferalCode({ referalCode }: { referalCode: str
     nameTrigrams: generateTrigrams(user.name),
   }
 
-  await firestore.setMultipleData([
+  await setMultipleData([
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`,
       id: friend.userId,
@@ -136,7 +126,7 @@ export async function acceptFriendRequest({ friendUserId }: { friendUserId: stri
 
   if (!userId) return
 
-  await firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
+  await updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Accepted,
   })
 }
@@ -146,7 +136,7 @@ export async function rejectFriendRequest({ friendUserId }: { friendUserId: stri
 
   if (!userId) return
 
-  await firestore.updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
+  await updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
     status: FriendStatusEnum.Rejected,
   })
 }
@@ -168,15 +158,15 @@ export async function getFriends({
 
   if (search) query.unshift(where('nameTrigrams', 'array-contains-any', generateTrigrams(search)))
 
-  const count = await firestore.getTotalCount(collectionPath, query)
+  const count = await getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }
 
   if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt))
 
   query.push(limit(countPerPage))
 
-  const friends: Friend[] | null = await firestore.getQueryData(collectionPath, query)
-  const users: User[] | null = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
+  const friends: Friend[] | null = await getQueryData(collectionPath, query)
+  const users: User[] | null = await getQueryData(FIREBASE_COLLTION_NAME.USERS, [
     where(
       documentId(),
       'in',
@@ -193,5 +183,5 @@ export async function unFriend({ friendUserId }: { friendUserId: string }) {
 
   if (!userId) return
 
-  await firestore.deleteData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId)
+  await deleteData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId)
 }

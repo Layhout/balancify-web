@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/lib/constants'
+import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { getFriends } from '@/features'
@@ -10,7 +10,7 @@ export function useMemberPicker() {
 
   const [searchFriend, setSearchFriend] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, searchFriend]
+  const queryKey = [QUERY_KEYS.FRIENDS, QueryType.Search, localUser?.id, searchFriend]
 
   const friendQuery = useQuery({
     queryKey,

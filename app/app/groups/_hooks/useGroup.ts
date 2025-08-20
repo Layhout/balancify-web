@@ -1,6 +1,6 @@
 'use client'
 
-import { QUERY_KEYS } from '@/lib/constants'
+import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { Group, PaginatedResponse } from '@/types/common'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -13,7 +13,7 @@ export function useGroup() {
 
   const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.GROUPS, 'list', localUser?.id, search]
+  const queryKey = [QUERY_KEYS.GROUPS, QueryType.List, localUser?.id, search]
 
   const groupQuery = useInfiniteQuery({
     queryKey,

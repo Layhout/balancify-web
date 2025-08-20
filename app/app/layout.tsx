@@ -8,16 +8,8 @@ import { Splash } from './_components/Splash'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const {
-    isCollapsed,
-    isInitialLoading,
-    pathname,
-    setIsCollapsed,
-    shouldShowMobileNav,
-    notis,
-    hasUnreadNoti,
-    onNotiOpen,
-  } = useAppLayout()
+  const { isCollapsed, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav, unreadNotis, onNotiOpen } =
+    useAppLayout()
 
   return (
     <>
@@ -25,9 +17,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <DesktopNav isCollapsed={isCollapsed} pathname={pathname} setIsCollapsed={setIsCollapsed} />
         <main className="relative flex-1">
           <ScrollArea className="h-dvh">
-          <NotificationBar notis={notis} hasUnreadNoti={hasUnreadNoti} onNotiOpen={onNotiOpen} />
-          {children}
-          {shouldShowMobileNav && <MobileNav pathname={pathname} />}
+            <NotificationBar notis={unreadNotis} hasUnreadNoti={!!unreadNotis.length} onNotiOpen={onNotiOpen} />
+            {children}
+            {shouldShowMobileNav && <MobileNav pathname={pathname} />}
           </ScrollArea>
         </main>
       </div>

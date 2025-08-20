@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/lib/constants'
+import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { services } from '@/services'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
@@ -9,7 +9,7 @@ export function useExpenseDetails(id: string) {
   const localUser = useAtomValue(userAtom)
 
   const { isPending, data: expenseDetailsRes } = useQuery({
-    queryKey: [QUERY_KEYS.EXPENSES, 'details', localUser?.id, id],
+    queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, id],
     queryFn: services.expense.getExpense,
   })
 

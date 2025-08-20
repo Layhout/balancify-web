@@ -13,9 +13,7 @@ const firebaseConfig: FirebaseOptions = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 }
 
-const app = initializeApp(firebaseConfig)
-const rdb = getDatabase(app)
-const fdb = getFirestore(app)
-const auth = getAuth(app)
-
-export { app, rdb, fdb, auth }
+export const app = initializeApp(firebaseConfig)
+export const rdb = getDatabase(app)
+export const fdb = getFirestore(app)
+export const auth = getAuth(app)
