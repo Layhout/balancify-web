@@ -192,13 +192,13 @@ export async function leaveGroup({ id }: { id: string }) {
       collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
       id,
       data: {
-        membersFlag: { [user.id]: deleteField() },
+        [`membersFlag.${user.id}`]: deleteField(),
       },
     },
   ])
 }
 
-export async function deleteGroup(id: string) {
+export async function deleteGroup({ id }: { id: string }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) return

@@ -12,7 +12,7 @@ import { UserAvatar } from '@/components/UserAvatar'
 import { LuLoaderCircle, LuX } from 'react-icons/lu'
 
 export default function GroupForm() {
-  const { groupForm, onSubmitGroupForm, isSubmitting } = useGroupForm()
+  const { groupForm, onSubmitGroupForm, isSubmitting, isEdit } = useGroupForm()
 
   return (
     <div className="container pb-4">
@@ -96,7 +96,7 @@ export default function GroupForm() {
             <div className="flex justify-end">
               <Button type="submit" disabled={isSubmitting} className="gap-2">
                 {isSubmitting && <LuLoaderCircle className="animate-spin" />}
-                Create
+                {isEdit ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>

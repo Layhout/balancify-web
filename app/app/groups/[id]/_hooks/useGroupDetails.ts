@@ -5,7 +5,7 @@ import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { getGroupDetail } from '@/features/group'
 import { useMutation } from '@tanstack/react-query'
-import { leaveGroup } from '@/features'
+import { leaveGroup, deleteGroup } from '@/features'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -21,15 +21,21 @@ export function useGroupDetails() {
     queryFn: () => getGroupDetail(id),
   })
 
+  const handleBack = () => {
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.GROUPS, QueryType.List, localUser?.id],
+    })
+    router.back()
+  }
+
   const leaveGroupMutation = useMutation({
     mutationFn: leaveGroup,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GROUPS, QueryType.List, localUser?.id],
-      })
+    onSuccess: handleBack,
+  })
 
-      router.back()
-    },
+  const deleteGroupMutation = useMutation({
+    mutationFn: deleteGroup,
+    onSuccess: handleBack,
   })
 
   const onEditGroup = () => {
@@ -37,6 +43,11 @@ export function useGroupDetails() {
   }
 
   const onLeaveGroup = () => {
+    if (groupDetailsQuery.data?.members.length === 2) {
+      deleteGroupMutation.mutate({ id })
+      return
+    }
+
     leaveGroupMutation.mutate({ id })
   }
 
