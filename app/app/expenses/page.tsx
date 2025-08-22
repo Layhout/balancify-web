@@ -7,6 +7,7 @@ import { ExpenseWrapper } from './_components/ExpenseWrapper'
 import { ExpenseCard } from './_components/ExpenseCard'
 import Link from 'next/link'
 import { PageHeader } from '@/components/PageHeader'
+import { ROUTES } from '@/lib/constants'
 
 export default function Expenses() {
   const { expenseData, isPending } = useExpense()
@@ -18,7 +19,7 @@ export default function Expenses() {
         hasSearch
         action={
           <Button className="gap-2" asChild>
-            <Link href="/app/expenses/create">
+            <Link href={ROUTES.APP.EXPENSES_FORM}>
               <LuPlus className="h-4 w-4" /> Add Expense
             </Link>
           </Button>

@@ -15,7 +15,7 @@ export const ROUTES = {
     AUTHORIZATION: '/app/authorization',
     DASHBOARD: '/app/dashboard',
     EXPENSES: '/app/expenses',
-    EXPENSES_CREATE: '/app/expenses/create',
+    EXPENSES_FORM: '/app/expenses/form',
     GROUPS: '/app/groups',
     GROUPS_FORM: '/app/groups/form',
     FRIENDS: '/app/friends',

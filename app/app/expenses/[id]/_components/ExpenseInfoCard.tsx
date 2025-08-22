@@ -4,7 +4,7 @@ import { MemberListDrawer } from './MemberListDrawer'
 import { ExpenseDetails } from '@/services/expense.model'
 import { ExpenseInfoCardPlaceholder } from './ExpenseInfoCardPlaceholder'
 import { useMemo } from 'react'
-import { ExpanseAvatar } from '@/components/ExpanseAvatar'
+import { ExpenseAvatar } from '@/components/ExpenseAvatar'
 
 type ExpenseInfoCardProps = {
   loading: boolean
@@ -50,7 +50,7 @@ export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
             </div>
           </div>
         </div>
-        <ExpanseAvatar
+        <ExpenseAvatar
           iconBgColor={details?.iconBgColor || ''}
           icon={details?.icon || ''}
           className="h-24 w-24"

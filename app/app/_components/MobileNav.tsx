@@ -20,8 +20,8 @@ export function MobileNav({ pathname }: MobileNavProps) {
               <Fragment key={title}>
                 {index === 2 && (
                   <div className="flex items-center justify-center">
-                    <Button size="icon" className="col-span-full">
-                      <Link href={ROUTES.APP.EXPENSES_CREATE}>
+                    <Button size="icon" className="col-span-full" asChild>
+                      <Link href={ROUTES.APP.EXPENSES_FORM}>
                         <LuPlus className="h-4 w-4" />
                       </Link>
                     </Button>

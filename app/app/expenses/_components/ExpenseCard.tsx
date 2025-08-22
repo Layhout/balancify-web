@@ -1,5 +1,5 @@
 import { AvatarStack } from '@/components/AvatarStack'
-import { ExpanseAvatar } from '@/components/ExpanseAvatar'
+import { ExpenseAvatar } from '@/components/ExpenseAvatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ROUTES } from '@/lib/constants'
@@ -27,7 +27,7 @@ export function ExpenseCard({
   return (
     <Card className="overflow-hidden ">
       <CardHeader className="flex-row items-center gap-4 space-y-0 border-b p-4">
-        <ExpanseAvatar iconBgColor={iconBgColor} icon={icon} className="h-12 w-12" iconClassName="h-6 w-6" />
+        <ExpenseAvatar iconBgColor={iconBgColor} icon={icon} className="h-12 w-12" iconClassName="h-6 w-6" />
         <div className="flex flex-1 flex-col overflow-hidden">
           <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap pb-1 capitalize">{name}</CardTitle>
           <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">

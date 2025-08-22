@@ -3,14 +3,14 @@ import { isDarkModeAtom } from '@/repositories/layout'
 import { useAtomValue } from 'jotai'
 import { HTMLProps } from 'react'
 
-type ExpanseAvatarProps = {
+type ExpenseAvatarProps = {
   iconBgColor: string
   icon: string
   className?: React.ComponentProps<'div'>['className']
   iconClassName?: HTMLProps<HTMLElement>['className']
 }
 
-export function ExpanseAvatar({ iconBgColor, icon, className, iconClassName }: ExpanseAvatarProps) {
+export function ExpenseAvatar({ iconBgColor, icon, className, iconClassName }: ExpenseAvatarProps) {
   const isDark = useAtomValue(isDarkModeAtom)
 
   return (

@@ -67,6 +67,7 @@ export default function GroupForm() {
                       selectedMembers={field.value.map((member) => member.id)}
                       onAddMember={(v) => field.onChange([...field.value, v])}
                     />
+                    <FormMessage />
                     {field.value.map((member) => (
                       <Card className="overflow-hidden" key={member.id}>
                         <CardContent className="flex items-center gap-4 p-4">
