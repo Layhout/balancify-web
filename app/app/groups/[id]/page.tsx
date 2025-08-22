@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { MemberList } from './_components/MemberList'
 
 export default function GroupDetails() {
-  const { groupDetailsQuery, onEditGroup, onLeaveGroup } = useGroupDetails()
+  const { groupDetailsQuery, onLeaveGroup, id } = useGroupDetails()
 
   return (
     <div className="container pb-4">
@@ -23,7 +23,7 @@ export default function GroupDetails() {
           <ActionButtons
             loading={groupDetailsQuery.isFetching}
             members={groupDetailsQuery.data?.members || []}
-            onEditGroup={onEditGroup}
+            id={id}
             onLeaveGroup={onLeaveGroup}
           />
           <ExpenseList loading={groupDetailsQuery.isFetching} expenses={[]} />

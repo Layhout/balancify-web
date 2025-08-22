@@ -51,5 +51,5 @@ export function useGroupDetails() {
     leaveGroupMutation.mutate({ id })
   }
 
-  return { groupDetailsQuery, onEditGroup, onLeaveGroup }
+  return { groupDetailsQuery, onEditGroup, onLeaveGroup, id }
 }

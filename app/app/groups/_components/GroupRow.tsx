@@ -14,7 +14,7 @@ export function GroupRow({ name, members, createdAt, totalExpenses, id }: Group)
   return (
     <li>
       <Link href={`${ROUTES.APP.GROUPS}/${id}`}>
-        <Card>
+        <Card className="hover:bg-muted">
           <CardContent className="flex items-center gap-4 p-4">
             <div className="flex-[0.6] overflow-hidden lg:flex-[0.3]">
               <p className="overflow-hidden text-ellipsis whitespace-nowrap">{name}</p>
