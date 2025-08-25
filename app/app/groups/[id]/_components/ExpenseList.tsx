@@ -1,10 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import { ExpenseListCard } from './ExpenseListCard'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ExpenseListCardPlaceholder } from './ExpenseListCardPlaceholder'
 import { Expense } from '@/services/expense.model'
+import { Empty } from '@/components/Empty'
 
 type ExpenseListProps = {
   loading: boolean
@@ -37,13 +38,12 @@ export function ExpenseList({ loading, expenses }: ExpenseListProps) {
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {loading
           ? Array.from({ length: 3 }, (_, i) => <ExpenseListCardPlaceholder key={i} />)
-          : expenses.slice(0, 6).map((expense, i) => <ExpenseListCard key={i} {...expense} />)}
+          : expenses.map((expense, i) => <ExpenseListCard key={i} {...expense} />)}
       </div>
-      {expenses.length > 6 ? (
-        <div className="mt-6 flex justify-center">
-          <Button variant="secondary">View All</Button>
-        </div>
-      ) : null}
+      {!expenses.length && !loading && <Empty />}
+      {/* <div className="mt-6 flex justify-center">
+        <Button variant="secondary">Load More</Button>
+      </div> */}
     </div>
   )
 }

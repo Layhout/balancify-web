@@ -1,11 +1,4 @@
-import { friend } from './friend'
-import { user } from './user'
-import { noti } from './noti'
-
-const feature = {
-  user,
-  friend,
-  noti,
-}
-
-export default feature
+export * from './user'
+export * from './friend'
+export * from './group'
+export * from './noti'

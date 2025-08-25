@@ -98,7 +98,7 @@ export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNav
               })}
             >
               <h1 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold">
-                {user?.firstName}
+                {user?.fullName}
               </h1>
               <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground">
                 {user?.primaryEmailAddress?.emailAddress}

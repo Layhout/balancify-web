@@ -1,15 +1,15 @@
-import { countPerPage, FRIEND_REQUEST_MSG, QUERY_KEYS, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { FRIEND_REQUEST_MSG, QUERY_KEYS, QueryType, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
+import { keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import feature from '@/features'
+import { acceptFriendRequest, addFriendToUserByEmail, getFriends, rejectFriendRequest, unFriend } from '@/features'
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { toast } from 'sonner'
 import { randomNumBetween } from '@/lib/utils'
-import { Friend, FriendStatusEnum } from '@/types/common'
+import { FriendResponse, FriendStatusEnum, PaginatedResponse } from '@/types/common'
 
 const addFriendFormSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
@@ -23,51 +23,80 @@ export function useFriend() {
 
   const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false)
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
-  const [page, setPage] = useState(0)
-  const [lastFriendDocCreatedAt, setLastFriendDocCreatedAt] = useState<Friend['createdAt'] | null>(null)
+  const [search, setSearch] = useState('')
 
-  const queryKey = [QUERY_KEYS.FRIENDS, 'list', localUser?.id, page]
+  const queryKey = [QUERY_KEYS.FRIENDS, QueryType.List, localUser?.id, search]
 
-  const friendQuery = useQuery({
+  const friendQuery = useInfiniteQuery({
     queryKey,
-    queryFn: () => feature.friend.getFriends({ lastDocCreatedAt: lastFriendDocCreatedAt }),
+    getNextPageParam: (lastPage: PaginatedResponse<FriendResponse>, allPages: PaginatedResponse<FriendResponse>[]) => {
+      const count = lastPage.count
+      const totalCount = allPages.flatMap((page) => page.data).length
+
+      if (totalCount >= count) {
+        return null
+      }
+
+      return lastPage.data.slice().pop()?.createdAt || null
+    },
+    initialPageParam: null,
+    queryFn: ({ pageParam }) => getFriends({ lastDocCreatedAt: pageParam, search }),
     placeholderData: keepPreviousData,
   })
 
   const addFriendMutation = useMutation({
-    mutationFn: feature.friend.addFriendToUserByEmail,
+    mutationFn: addFriendToUserByEmail,
     onSuccess: () => {
       toast(FRIEND_REQUEST_MSG[randomNumBetween(0, FRIEND_REQUEST_MSG.length - 1)])
       queryClient.invalidateQueries({ queryKey })
     },
-    onError: () => {
+    onError: (e: Error) => {
+      toast(e.message)
+      if (e.cause !== 404) return
       setOpenAddFriendDialog(false)
       setOpenInvitionDialog(true)
     },
   })
 
   const acceptFriendMutation = useMutation({
-    mutationFn: feature.friend.acceptFriendRequest,
+    mutationFn: acceptFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendId, FriendStatusEnum.Accepted)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Accepted)
     },
   })
 
   const rejectFriendMutation = useMutation({
-    mutationFn: feature.friend.rejectFriendRequest,
+    mutationFn: rejectFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendId, FriendStatusEnum.Rejected)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Rejected)
     },
   })
 
-  const updateLocalFriendList = (friendId: string, status: FriendStatusEnum) => {
-    const updatedFriendIndex = friendQuery.data?.data.findIndex((f) => f.id === friendId)
-    const updatedFriend = friendQuery.data?.data[updatedFriendIndex!]
-    updatedFriend!.status = status
+  const unFriendMutation = useMutation({
+    mutationFn: unFriend,
+    onSuccess: (_, variable) => {
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Unfriend)
+    },
+  })
+
+  const updateLocalFriendList = (friendUserId: string, status: FriendStatusEnum) => {
+    const pageIndex = friendQuery.data?.pages.findIndex((page) => page.data.some((f) => f.userId === friendUserId))
+    const friendIndexInPage = friendQuery.data?.pages[pageIndex!].data.findIndex((f) => f.userId === friendUserId)
+    const friend = friendQuery.data?.pages[pageIndex!].data[friendIndexInPage!]
+
+    friend!.status = status
 
     queryClient.setQueryData(queryKey, {
       ...friendQuery.data,
-      data: friendQuery.data?.data.map((f, i) => (i === updatedFriendIndex ? updatedFriend : f)),
+      pages: friendQuery.data?.pages.map((page, i) => {
+        if (i === pageIndex) {
+          return {
+            ...page,
+            data: page.data.map((f, j) => (j === friendIndexInPage ? friend : f)),
+          }
+        }
+        return page
+      }),
     })
   }
 
@@ -78,8 +107,8 @@ export function useFriend() {
     },
   })
 
-  const onSubmitFriendForm = async (values: AddFriendFromType) => {
-    if (localUser?.email === values.email) {
+  const onSubmitFriendForm = (value: AddFriendFromType) => {
+    if (localUser?.email === value.email) {
       addFriendForm.setError(
         'email',
         { message: YOURSELF_AS_FRIEND_MSG[randomNumBetween(0, YOURSELF_AS_FRIEND_MSG.length - 1)] },
@@ -88,60 +117,25 @@ export function useFriend() {
       return
     }
 
-    addFriendMutation.mutate({ friendEmail: values.email })
+    addFriendMutation.mutate({ friendEmail: value.email })
     setOpenAddFriendDialog(false)
   }
 
-  const totalPage = friendQuery.data ? Math.ceil((friendQuery.data.count || 0) / countPerPage) : 1
-
-  const goNextPage = () => {
-    if (page + 1 === totalPage) return
-
-    const nextPage = page + 1
-
-    const lastDoc = friendQuery.data?.data[nextPage * countPerPage - 1]
-
-    if (!lastDoc) return
-
-    setLastFriendDocCreatedAt(lastDoc.createdAt)
-
-    setPage(nextPage)
-  }
-
-  const goPrevPage = () => {
-    if (!page) return
-
-    const nextPage = page - 1
-
-    if (!nextPage) {
-      setLastFriendDocCreatedAt(null)
-      setPage(nextPage)
-      return
-    }
-
-    const lastDoc = friendQuery.data?.data[nextPage * countPerPage - 1]
-
-    if (!lastDoc) return
-
-    setLastFriendDocCreatedAt(lastDoc.createdAt)
-
-    setPage(nextPage)
-  }
+  const friendData: FriendResponse[] = friendQuery.data?.pages.flatMap((page) => page.data) || []
 
   return {
     friendQuery,
+    friendData,
     addFriendForm,
     openAddFriendDialog,
     isAddingFriend: addFriendMutation.isPending,
     openInvitionDialog,
-    page,
-    totalPage,
     acceptFriendMutation,
     rejectFriendMutation,
+    unFriendMutation,
     onSubmitFriendForm,
     setOpenAddFriendDialog,
     setOpenInvitionDialog,
-    goNextPage,
-    goPrevPage,
+    setSearch,
   }
 }

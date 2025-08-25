@@ -17,7 +17,7 @@ export const ROUTES = {
     EXPENSES: '/app/expenses',
     EXPENSES_CREATE: '/app/expenses/create',
     GROUPS: '/app/groups',
-    GROUPS_CREATE: '/app/groups/create',
+    GROUPS_FORM: '/app/groups/form',
     FRIENDS: '/app/friends',
     SETTINGS: '/app/settings',
     PROFILE: '/app/profile',
@@ -103,6 +103,12 @@ export const QUERY_KEYS = {
   NOTI: 'noti',
 }
 
+export enum QueryType {
+  List = 'list',
+  Details = 'details',
+  Search = 'search',
+}
+
 export const EXPENSE_ICONS = {
   SUIT_CASE: 'suit-case',
   COFFEE: 'coffee',
@@ -153,6 +159,8 @@ export const FIREBASE_COLLTION_NAME = {
   USERS: 'users',
   FRIENDS: 'friends',
   NOTIS: 'notis',
+  GROUPS: 'groups',
+  GROUP_METADATA: 'group_metadata',
 }
 
 export const USER_404_MSG = [
@@ -178,6 +186,14 @@ export const FRIEND_REQUEST_MSG = [
   'Your friend request is out there, spreading good vibes. ✨',
   'Boom! Friend request sent. Now we wait... ⏳',
   'Your friendship invitation is flying through cyberspace! 📬',
+]
+
+export const FRIEND_ALREADY_EXISTS_MSG = [
+  'Whoa there! 🚦 You two are already in the friendship club 🎉',
+  'Plot twist 📜: You’re already friends 🤝 No sequel needed 🎬',
+  'Already friends 📋 No extra paperwork required 🖊️',
+  'You’re already connected 📡—Friendship Wi-Fi is strong 📶',
+  'You two are already peas in a pod 🫛',
 ]
 
 export const countPerPage = 10

@@ -1,15 +1,16 @@
 'use client'
 
-import { MOBILE_NAV_LINKS, QUERY_KEYS } from '@/lib/constants'
+import { MOBILE_NAV_LINKS, QUERY_KEYS, QueryType } from '@/lib/constants'
 import { useMemo, useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
 import { useClientAuth } from '@/hooks/useClientAuth'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import feature from '@/features'
+import { getUnreadNotis, readNoti } from '@/features'
 import { Noti } from '@/types/common'
+import { userAtom } from '@/repositories/user'
 
 export type AppNavLink = {
   title: string
@@ -21,6 +22,7 @@ export type AppNavLink = {
 export function useAppLayout() {
   const pathname = usePathname()
   const queryClient = useQueryClient()
+  const localUser = useAtomValue(userAtom)
 
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
 
@@ -30,29 +32,29 @@ export function useAppLayout() {
 
   useClientAuth(() => setIsInitialLoading(false))
 
-  const notiQuery = useQuery({
-    queryKey: [QUERY_KEYS.NOTI, 'list'],
-    queryFn: feature.noti.getNotis,
+  const queryKey = [QUERY_KEYS.NOTI, QueryType.List, localUser?.id]
+
+  const unreadNotiQuery = useQuery({
+    queryKey,
+    queryFn: getUnreadNotis,
   })
 
+  const unreadNotis = useMemo(() => (unreadNotiQuery.data || []) as Noti[], [unreadNotiQuery.data])
+
   const readNotiMutation = useMutation({
-    mutationFn: feature.noti.readNoti,
+    mutationFn: readNoti,
     onSuccess: () => {
       queryClient.setQueryData(
-        [QUERY_KEYS.NOTI, 'list'],
-        notis.map((n) => ({ ...n, read: true })),
+        queryKey,
+        unreadNotis.map((n) => ({ ...n, userReadFlag: { ...n.userReadFlag, [localUser?.id || '']: true } })),
       )
     },
   })
 
-  const notis = useMemo(() => (notiQuery.data || []) as Noti[], [notiQuery.data])
-
-  const hasUnreadNoti = useMemo(() => notis.some((n) => !n.read), [notis])
-
   const onNotiOpen = (v: boolean) => {
-    if (!v || !hasUnreadNoti) return
+    if (!v || !unreadNotis.length) return
 
-    readNotiMutation.mutate({ notis })
+    readNotiMutation.mutate({ notiIds: unreadNotis.map((n) => n.id) })
   }
 
   return {
@@ -61,8 +63,7 @@ export function useAppLayout() {
     isInitialLoading,
     pathname,
     shouldShowMobileNav,
-    notis,
-    hasUnreadNoti,
+    unreadNotis,
     onNotiOpen,
   }
 }

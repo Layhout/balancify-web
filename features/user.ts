@@ -1,46 +1,39 @@
 import { FIREBASE_COLLTION_NAME } from '@/lib/constants'
-import { firestore } from '@/lib/firestore'
+import { getData, getQueryData, setData, updateData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { limit, where } from 'firebase/firestore'
 
-const createUser = (user: User) => {
-  return firestore.setData(FIREBASE_COLLTION_NAME.USERS, user.id, user)
+export async function createUser(user: User) {
+  return await setData(FIREBASE_COLLTION_NAME.USERS, user.id, user)
 }
 
-const updateUser = ({ user }: { user: Partial<User> }) => {
+export async function updateUser({ user }: { user: Partial<User> }) {
   const userId = store.get(userAtom)?.id
 
   if (!userId) throw new Error()
 
-  return firestore.updateData(FIREBASE_COLLTION_NAME.USERS, userId, user)
+  return await updateData(FIREBASE_COLLTION_NAME.USERS, userId, user)
 }
 
-const findUserByEmail = async (email: string): Promise<User | null> => {
-  const [foundUser]: User[] = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
-    where('email', '==', email),
-    limit(1),
-  ])
+export async function findUserByEmail(email: string): Promise<User | null> {
+  const [foundUser]: User[] = await getQueryData(FIREBASE_COLLTION_NAME.USERS, [where('email', '==', email), limit(1)])
 
   return foundUser || null
 }
 
-const findUserById = async (id: string): Promise<User | null> => {
-  const foundUser: User | null = await firestore.getData(FIREBASE_COLLTION_NAME.USERS, id)
+export async function findUserById(id: string): Promise<User | null> {
+  const foundUser: User | null = await getData(FIREBASE_COLLTION_NAME.USERS, id)
 
   return foundUser || null
 }
 
-const findUserByReferalCode = async (code: string): Promise<User | null> => {
-  const [foundUser]: User[] = await firestore.getQueryData(FIREBASE_COLLTION_NAME.USERS, [
+export async function findUserByReferalCode(code: string): Promise<User | null> {
+  const [foundUser]: User[] = await getQueryData(FIREBASE_COLLTION_NAME.USERS, [
     where('referalCode', '==', code),
     limit(1),
   ])
 
   return foundUser || null
 }
-
-const user = { createUser, findUserByEmail, updateUser, findUserById, findUserByReferalCode }
-
-export { user }
