@@ -70,7 +70,7 @@ export default function GroupForm() {
                     <FormMessage />
                     {field.value.map((member) => (
                       <Card className="overflow-hidden" key={member.id}>
-                        <CardContent className="flex items-center gap-4 p-4">
+                        <CardContent className="flex h-full items-center gap-4 p-4">
                           <UserAvatar
                             imageUrl={member.imageUrl || ''}
                             fallbackText={member.name}

@@ -8,7 +8,6 @@ The all-in-one app for splitting bills and tracking group expenses. Keep everyon
 - [Installation](#installation)
 - [Environment](#environment)
 - [Running the App](#running-the-app)
-- [Road Map](#road-map)
 
 ## Requirement
 
@@ -29,5 +28,3 @@ This project required an env file. Contact repo owner for env.
 ```bash
 npm run dev
 ```
-
-## Road Map

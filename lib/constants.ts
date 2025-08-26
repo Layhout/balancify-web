@@ -101,6 +101,7 @@ export const QUERY_KEYS = {
   FRIENDS: 'friends',
   USER: 'user',
   NOTI: 'noti',
+  GROUPS_FRIENDS: 'groups_friends',
 }
 
 export enum QueryType {
