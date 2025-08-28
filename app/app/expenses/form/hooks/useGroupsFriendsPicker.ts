@@ -1,13 +1,15 @@
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getFriends, getGroups } from '@/features'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { FriendResponse, Group, PaginatedResponse } from '@/types/common'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
   const localUser = useAtomValue(userAtom)
+  const queryClient = useQueryClient()
 
   const [searchValue, setSearchValue] = useState('')
 
@@ -25,6 +27,12 @@ export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
     enabled: !!searchValue,
     placeholderData: keepPreviousData,
   })
+
+  useEffect(() => {
+    queryClient.setQueryData(queryKey, { data: [], count: 0 })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode])
 
   return { setSearchValue, foundQuery }
 }

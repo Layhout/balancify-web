@@ -2,6 +2,7 @@ import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
 import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
 import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
 import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
+import { MemberOption, SplitOption } from '@/types/common'
 
 export const ROUTES = {
   LANDING: {
@@ -198,3 +199,33 @@ export const FRIEND_ALREADY_EXISTS_MSG = [
 ]
 
 export const countPerPage = 10
+
+export const memberOptions = [
+  {
+    label: 'Group',
+    value: MemberOption.Group,
+  },
+  {
+    label: 'Friend',
+    value: MemberOption.Friend,
+  },
+]
+
+export const splitOptions = [
+  {
+    label: 'Paid Equally',
+    value: SplitOption.PaidEqually,
+  },
+  {
+    label: 'Paid By You',
+    value: SplitOption.PaidByYou,
+  },
+  {
+    label: 'Paid By Them',
+    value: SplitOption.PaidByThem,
+  },
+  {
+    label: 'Custom',
+    value: SplitOption.Custom,
+  },
+]

@@ -1,23 +1,25 @@
 import { Input } from '@/components/ui/input'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { BsCurrencyDollar } from 'react-icons/bs'
-import { UseFormReturn } from 'react-hook-form'
+import { UseFieldArrayReturn, UseFormReturn } from 'react-hook-form'
 import { ExpenseFormType } from '../hooks/useExpenseForm'
 import { FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form'
 import { MemberPicker } from './MemberPicker'
 import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { Button } from '@/components/ui/button'
-import { LuX } from 'react-icons/lu'
+import { LuLoaderCircle, LuX } from 'react-icons/lu'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
-import { Badge } from '@/components/ui/badge'
+import { memberOptions, splitOptions } from '@/lib/constants'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type InfoFormProps = {
   form: UseFormReturn<ExpenseFormType>
+  memberForm: UseFieldArrayReturn<ExpenseFormType, 'members', 'fieldId'>
+  isSubmitting: boolean
 }
 
-export function InfoForm({ form }: InfoFormProps) {
+export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
   const localUser = useAtomValue(userAtom)
 
   const [memberOption, selectedGroup] = form.watch(['memberOption', 'selectedGroup'])
@@ -41,29 +43,47 @@ export function InfoForm({ form }: InfoFormProps) {
         <FormField
           control={form.control}
           name="amount"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem className="flex-1">
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input startIcon={BsCurrencyDollar} placeholder="Enter expense amount" {...field} />
+                <Input
+                  startIcon={BsCurrencyDollar}
+                  placeholder="Enter expense amount"
+                  type="number"
+                  onFocus={(e) => !fieldState.isTouched && e.target.select()}
+                  {...field}
+                  onChange={(e) => {
+                    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
+                    field.onChange(e.target.valueAsNumber)
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-4">
         <FormField
           control={form.control}
           name="memberOption"
           render={({ field }) => (
             <FormItem>
-              <FormControl>
-                <ToggleGroup type="single" className="justify-start" value={field.value} onValueChange={field.onChange}>
-                  <ToggleGroupItem value="group">Group</ToggleGroupItem>
-                  <ToggleGroupItem value="friend">Friend</ToggleGroupItem>
-                </ToggleGroup>
-              </FormControl>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {memberOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />
@@ -72,100 +92,120 @@ export function InfoForm({ form }: InfoFormProps) {
           name="splitOption"
           render={({ field }) => (
             <FormItem>
-              <FormControl>
-                <ToggleGroup type="single" className="justify-start" value={field.value} onValueChange={field.onChange}>
-                  <ToggleGroupItem value="paid_equally">Paid equally</ToggleGroupItem>
-                  <ToggleGroupItem value="paid_by_you">Paid by you</ToggleGroupItem>
-                  <ToggleGroupItem value="paid_by_them">Paid by them</ToggleGroupItem>
-                  <ToggleGroupItem value="custom">Custom</ToggleGroupItem>
-                </ToggleGroup>
-              </FormControl>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {splitOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />
       </div>
-
-      <FormField
-        control={form.control}
-        name="members"
-        render={({ field }) => (
-          <FormItem className="grid grid-cols-1 gap-4 space-y-0">
-            {((memberOption === 'group' && !selectedGroup?.id) ||
-              (memberOption === 'friend' && field.value.length < 10)) && (
-              <MemberPicker
-                mode={memberOption}
-                selectedIds={
-                  memberOption === 'group' ? [selectedGroup?.id || ''] : field.value.map((member) => member.id)
-                }
-                onAddMember={(v) => {
-                  if (memberOption === 'group') {
-                    field.onChange(v)
-                  } else {
-                    field.onChange([...field.value, v[0]])
-                  }
-                }}
-                onSelectGroup={(group) => form.setValue('selectedGroup', group)}
-              />
-            )}
-            {selectedGroup && (
-              <Card className="overflow-hidden">
-                <CardContent className="flex h-full items-center justify-between gap-4 p-4">
-                  <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{selectedGroup.name}</p>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => {
-                      form.setValue('selectedGroup', undefined)
-                      field.onChange([])
-                    }}
-                  >
-                    <LuX />
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-            {field.value.map((member) => (
-              <Card className="overflow-hidden" key={member.id}>
-                <CardContent className="flex h-full items-center gap-4 p-4">
-                  <UserAvatar
-                    imageUrl={member.imageUrl || ''}
-                    fallbackText={member.name}
-                    profileBgColor={member.profileBgColor || ''}
-                  />
-                  <div className="flex flex-1 items-center gap-4">
-                    <div className="overflow-hidden">
-                      <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{member.name}</p>
-                    </div>
-                    {localUser?.id === member.id && <Badge>You</Badge>}
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name={`memberExpenseAmount.${member.id}`}
-                    render={({ field }) => (
-                      <FormItem className="">
-                        <FormControl>
-                          <Input startIcon={BsCurrencyDollar} placeholder="Enter expense amount" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {memberOption === 'friend' && (
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => field.onChange(field.value.filter((m) => m.id !== member.id))}
-                      disabled={localUser?.id === member.id}
-                    >
-                      <LuX />
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </FormItem>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {((memberOption === 'group' && !selectedGroup?.id) ||
+          (memberOption === 'friend' && memberForm.fields.length < 10)) && (
+          <MemberPicker
+            mode={memberOption}
+            selectedIds={
+              memberOption === 'group' ? [selectedGroup?.id || ''] : memberForm.fields.map((field) => field.id)
+            }
+            onAddMember={(v) => {
+              if (memberOption === 'group') {
+                memberForm.append(v.map((member) => ({ ...member, amount: 0 })))
+              } else {
+                memberForm.append({ ...v[0], amount: 0 })
+              }
+            }}
+            onSelectGroup={(group) => form.setValue('selectedGroup', group)}
+          />
         )}
-      />
+        {form.formState.errors.members?.root?.message && (
+          <p className="text-[0.8rem] font-medium text-destructive">{form.formState.errors.members?.root?.message}</p>
+        )}
+        {selectedGroup && (
+          <Card className="overflow-hidden">
+            <CardContent className="flex h-full items-center justify-between gap-4 p-4">
+              <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{selectedGroup.name}</p>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  form.setValue('selectedGroup', undefined)
+                  memberForm.remove()
+                }}
+              >
+                <LuX />
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+        {memberForm.fields.map((field, i) => (
+          <Card className="overflow-hidden" key={field.fieldId}>
+            <CardContent className="flex items-center gap-2 overflow-hidden p-4">
+              <UserAvatar
+                imageUrl={field.imageUrl || ''}
+                fallbackText={field.name}
+                profileBgColor={field.profileBgColor || ''}
+              />
+              <div className="flex-1 overflow-hidden">
+                <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
+                  {localUser?.id === field.id ? 'You' : field.name}
+                </p>
+              </div>
+              <FormField
+                control={form.control}
+                name={`members.${i}.amount`}
+                render={({ field }) => (
+                  <FormItem className="w-[100px]">
+                    <FormControl>
+                      <Input
+                        startIcon={BsCurrencyDollar}
+                        placeholder="Enter expense amount"
+                        type="number"
+                        {...field}
+                        onChange={(e) => {
+                          if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
+                          field.onChange(e.target.valueAsNumber)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {memberOption === 'friend' && (
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => {
+                    memberForm.remove(i)
+                  }}
+                  disabled={localUser?.id === field.id}
+                >
+                  <LuX />
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="hidden md:flex md:justify-end">
+        <Button type="submit" disabled={isSubmitting} className="gap-2">
+          {isSubmitting && <LuLoaderCircle className="animate-spin" />}
+          {/* {isEdit ? 'Update' : 'Create'} */}
+          Create
+        </Button>
+      </div>
     </div>
   )
 }

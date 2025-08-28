@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { EXPENSE_ICONS, BG_COLORS } from '@/lib/constants'
@@ -6,6 +6,7 @@ import { randomNumBetween } from '@/lib/utils'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
+import { MemberOption, SplitOption } from '@/types/common'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -15,17 +16,17 @@ const memberFormSchema = z.object({
   name: z.string(),
   oneSignalId: z.string().optional(),
   referalCode: z.string(),
+  amount: z.coerce.number(),
 })
 
 const expenseFormSchema = z
   .object({
     name: z.string().min(1, 'Name is required'),
-    amount: z.number().min(1, 'Amount is required'),
+    amount: z.coerce.number().min(1, 'Amount is required'),
     icon: z.string(),
     iconBgColor: z.string(),
-    memberExpenseAmount: z.record(z.string(), z.number()),
-    memberOption: z.enum(['group', 'friend']),
-    splitOption: z.enum(['paid_equally', 'paid_by_you', 'paid_by_them', 'custom']),
+    memberOption: z.nativeEnum(MemberOption),
+    splitOption: z.nativeEnum(SplitOption),
     selectedGroup: z
       .object({
         id: z.string(),
@@ -34,12 +35,24 @@ const expenseFormSchema = z
       .optional(),
     members: z
       .array(memberFormSchema)
-      .min(1, 'You need to add at least one member.')
+      .min(2, 'You need to add at least two members.')
       .max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
   })
-  .refine((data) => Object.values(data.memberExpenseAmount).reduce((a, b) => a + b, 0) === data.amount, {
-    message: 'Total amount does not match',
-    path: ['amount'],
+  .superRefine((data, ctx) => {
+    if (data.members.reduce((a, b) => a + b.amount, 0) !== data.amount) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['amount'],
+        message: 'Amount and members expense amount does not match',
+      })
+      data.members.forEach((_, i) => {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [`members.${i}.amount`],
+          message: '',
+        })
+      })
+    }
   })
 
 export type MemberFormType = z.infer<typeof memberFormSchema>
@@ -55,15 +68,25 @@ export function useExpenseForm() {
       amount: 0,
       icon: '',
       iconBgColor: '',
-      memberExpenseAmount: {},
-      memberOption: 'group',
-      splitOption: 'paid_equally',
+      memberOption: MemberOption.Group,
+      splitOption: SplitOption.PaidEqually,
       selectedGroup: undefined,
       members: [],
     },
   })
 
-  const [memberOption] = expenseForm.watch(['memberOption', 'amount', 'splitOption', 'members'])
+  const memberExpenseAmountForm = useFieldArray({
+    control: expenseForm.control,
+    name: 'members',
+    keyName: 'fieldId',
+  })
+
+  const [memberOption, amount, splitOption, members] = expenseForm.watch([
+    'memberOption',
+    'amount',
+    'splitOption',
+    'members',
+  ])
 
   const onSubmitExpenseForm = (value: ExpenseFormType) => {
     console.log(value)
@@ -80,13 +103,56 @@ export function useExpenseForm() {
   }, [])
 
   useEffect(() => {
-    expenseForm.setValue('members', memberOption === 'friend' && localUser ? [localUser] : [])
+    expenseForm.setValue('selectedGroup', undefined)
+    expenseForm.setValue(
+      'members',
+      memberOption === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0 }] : [],
+    )
+    // memberExpenseAmountForm.remove()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberOption])
 
+  useEffect(() => {
+    if (!members.length || splitOption === SplitOption.Custom) return
+
+    members.forEach((member, i) => {
+      switch (splitOption) {
+        case SplitOption.PaidEqually:
+          const amountPerMember = amount / members.length
+          memberExpenseAmountForm.update(i, { ...member, amount: Number(amountPerMember.toFixed(2)) })
+          break
+
+        case SplitOption.PaidByYou:
+          if (member.id === localUser?.id) {
+            memberExpenseAmountForm.update(i, { ...member, amount: 0 })
+          } else {
+            memberExpenseAmountForm.update(i, { ...member, amount })
+          }
+          break
+
+        case SplitOption.PaidByThem:
+          const amountPerMemberWithoutYou = amount / (members.length - 1)
+          if (member.id === localUser?.id) {
+            memberExpenseAmountForm.update(i, { ...member, amount: Number(amountPerMemberWithoutYou.toFixed(2)) })
+          } else {
+            memberExpenseAmountForm.update(i, { ...member, amount: 0 })
+          }
+          break
+
+        default:
+          break
+      }
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [members.length, amount, splitOption])
+
+  console.count('useExpenseForm')
+
   return {
     expenseForm,
+    memberExpenseAmountForm,
     onSubmitExpenseForm,
   }
 }

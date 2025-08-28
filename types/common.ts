@@ -69,3 +69,30 @@ export interface GroupMetadata {
   nameTrigrams: string[]
   membersFlag: Record<string, true>
 }
+
+export enum MemberOption {
+  Group = 'group',
+  Friend = 'friend',
+}
+
+export enum SplitOption {
+  PaidEqually = 'paid_equally',
+  PaidByYou = 'paid_by_you',
+  PaidByThem = 'paid_by_them',
+  Custom = 'custom',
+}
+
+export type ExpenseMember = User & { amount: number }
+
+export interface Expense {
+  id: string
+  name: string
+  createdAt: string
+  amount: number
+  icon: string
+  iconBgColor: string
+  groupId: string | null
+  members: ExpenseMember[]
+  createdBy: string
+  settledAmount: number
+}

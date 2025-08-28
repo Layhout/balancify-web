@@ -5,20 +5,32 @@ import { AvatarForm } from './_components/AvatarForm'
 import { InfoForm } from './_components/InfoForm'
 import { Form } from '@/components/ui/form'
 import { useExpenseForm } from './hooks/useExpenseForm'
+import { Button } from '@/components/ui/button'
+import { LuLoaderCircle } from 'react-icons/lu'
 
 export default function CreateExpenses() {
-  const { expenseForm, onSubmitExpenseForm } = useExpenseForm()
+  const { expenseForm, memberExpenseAmountForm, onSubmitExpenseForm } = useExpenseForm()
+
   return (
-    <div className="container pb-4">
-      <PageHeader title="Create Expense" hasBackBtn />
-      <Form {...expenseForm}>
-        <form onSubmit={expenseForm.handleSubmit(onSubmitExpenseForm)}>
-          <div className="mt-6 flex flex-col gap-4 md:flex-row">
-            <AvatarForm form={expenseForm} />
-            <InfoForm form={expenseForm} />
-          </div>
-        </form>
-      </Form>
-    </div>
+    <>
+      <div className="container pb-20">
+        <PageHeader title="Create Expense" hasBackBtn />
+        <Form {...expenseForm}>
+          <form onSubmit={expenseForm.handleSubmit(onSubmitExpenseForm)} id="expenseForm">
+            <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-start">
+              <AvatarForm form={expenseForm} />
+              <InfoForm form={expenseForm} memberForm={memberExpenseAmountForm} isSubmitting={false} />
+            </div>
+          </form>
+        </Form>
+      </div>
+      <div className="fixed bottom-0 left-0 right-0 block bg-background p-4 md:hidden">
+        <Button type="submit" form="expenseForm" disabled={false} className="w-full gap-2">
+          {false && <LuLoaderCircle className="animate-spin" />}
+          {/* {isEdit ? 'Update' : 'Create'} */}
+          Create
+        </Button>
+      </div>
+    </>
   )
 }

@@ -41,7 +41,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
 
   const picker = (
     <Card className="cursor-pointer overflow-hidden border-2 border-dashed">
-      <CardContent className="flex w-full items-center justify-center p-4">
+      <CardContent className="flex h-full w-full items-center justify-center p-4">
         <div className="grid size-11 place-items-center rounded-full border-2 border-dashed">
           {mode === 'group' ? <AiOutlineUsergroupAdd /> : <AiOutlineUserAdd />}
         </div>
