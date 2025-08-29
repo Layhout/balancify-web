@@ -1,5 +1,5 @@
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { getFriends, getGroups } from '@/features'
 import { userAtom } from '@/repositories/user'
@@ -25,7 +25,6 @@ export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
       return getFriends({ lastDocCreatedAt: null, search: searchValue })
     },
     enabled: !!searchValue,
-    placeholderData: keepPreviousData,
   })
 
   useEffect(() => {

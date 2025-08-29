@@ -49,7 +49,7 @@ export async function createGroup({
   const groupMetadata: GroupMetadata = {
     groupId: group.id,
     nameTrigrams: generateTrigrams(group.name),
-    membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
+    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
 
   await Promise.all([
@@ -168,7 +168,7 @@ export async function editGroup({
       id,
       data: <Partial<GroupMetadata>>{
         nameTrigrams: generateTrigrams(name),
-        membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
+        membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
       },
     },
   ])

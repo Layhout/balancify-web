@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker'
 import { Dashboard, DashboardResult } from './dashboard.model'
-import { services } from './index'
 import { djs } from '@/lib/dayjsExt'
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
 
@@ -19,7 +18,7 @@ export class DashboardService {
           date: djs(date).format(STANDARD_DATE_FORMAT),
           amount: faker.number.float({ min: 5, max: 100, fractionDigits: 2 }),
         })),
-      toBeSettled: (await services.expense.getExpenses()).data,
+      toBeSettled: [],
     }
 
     const response = await new Promise<DashboardResult>((resolve) => {

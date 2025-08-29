@@ -12,6 +12,7 @@ import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { memberOptions, splitOptions } from '@/lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { SplitOption } from '@/types/common'
 
 type InfoFormProps = {
   form: UseFormReturn<ExpenseFormType>
@@ -120,16 +121,16 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
             }
             onAddMember={(v) => {
               if (memberOption === 'group') {
-                memberForm.append(v.map((member) => ({ ...member, amount: 0 })))
+                memberForm.append([
+                  { ...localUser!, amount: 0 },
+                  ...v.filter((member) => member.id !== localUser?.id).map((member) => ({ ...member, amount: 0 })),
+                ])
               } else {
                 memberForm.append({ ...v[0], amount: 0 })
               }
             }}
             onSelectGroup={(group) => form.setValue('selectedGroup', group)}
           />
-        )}
-        {form.formState.errors.members?.root?.message && (
-          <p className="text-[0.8rem] font-medium text-destructive">{form.formState.errors.members?.root?.message}</p>
         )}
         {selectedGroup && (
           <Card className="overflow-hidden">
@@ -169,12 +170,12 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
                     <FormControl>
                       <Input
                         startIcon={BsCurrencyDollar}
-                        placeholder="Enter expense amount"
                         type="number"
                         {...field}
                         onChange={(e) => {
                           if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
                           field.onChange(e.target.valueAsNumber)
+                          form.setValue('splitOption', SplitOption.Custom)
                         }}
                       />
                     </FormControl>
@@ -198,7 +199,9 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           </Card>
         ))}
       </div>
-
+      {form.formState.errors.members?.root?.message && (
+        <p className="text-[0.8rem] font-medium text-destructive">{form.formState.errors.members?.root?.message}</p>
+      )}
       <div className="hidden md:flex md:justify-end">
         <Button type="submit" disabled={isSubmitting} className="gap-2">
           {isSubmitting && <LuLoaderCircle className="animate-spin" />}

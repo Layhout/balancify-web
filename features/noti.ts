@@ -29,7 +29,7 @@ export async function createNoti({
     description,
     link,
     type,
-    userReadFlag: ownerIds.reduce((acc, id) => ({ ...acc, [id]: false }), {}),
+    userReadFlag: ownerIds.reduce((p, c) => ({ ...p, [c]: false }), {}),
     ownerIds,
     createdAt: serverTimestamp(),
   }

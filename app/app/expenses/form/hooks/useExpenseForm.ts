@@ -6,7 +6,12 @@ import { randomNumBetween } from '@/lib/utils'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
-import { MemberOption, SplitOption } from '@/types/common'
+import { ExpenseMember, MemberOption, SplitOption } from '@/types/common'
+import { useMutation } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { QUERY_KEYS, QueryType } from '@/lib/constants'
+import { createExpense } from '@/features'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -39,7 +44,7 @@ const expenseFormSchema = z
       .max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
   })
   .superRefine((data, ctx) => {
-    if (data.members.reduce((a, b) => a + b.amount, 0) !== data.amount) {
+    if (data.members.reduce((p, c) => p + c.amount, 0) !== data.amount) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['amount'],
@@ -60,6 +65,20 @@ export type ExpenseFormType = z.infer<typeof expenseFormSchema>
 
 export function useExpenseForm() {
   const localUser = useAtomValue(userAtom)
+
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  const expenseMutation = useMutation({
+    mutationFn: createExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.EXPENSES, QueryType.List, localUser?.id],
+      })
+
+      router.back()
+    },
+  })
 
   const expenseForm = useForm<ExpenseFormType>({
     resolver: zodResolver(expenseFormSchema),
@@ -89,7 +108,26 @@ export function useExpenseForm() {
   ])
 
   const onSubmitExpenseForm = (value: ExpenseFormType) => {
-    console.log(value)
+    expenseMutation.mutate({
+      name: value.name,
+      amount: value.amount,
+      icon: value.icon,
+      iconBgColor: value.iconBgColor,
+      memberOption: value.memberOption,
+      splitOption: value.splitOption,
+      group: value.selectedGroup,
+      members: value.members.map<ExpenseMember>((m) => ({
+        amount: m.amount,
+        id: m.id,
+        imageUrl: m.imageUrl,
+        profileBgColor: m.profileBgColor,
+        email: m.email,
+        name: m.name,
+        oneSignalId: m.oneSignalId || '',
+        referalCode: m.referalCode,
+        settledAmount: 0,
+      })),
+    })
   }
 
   useEffect(() => {
@@ -108,7 +146,6 @@ export function useExpenseForm() {
       'members',
       memberOption === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0 }] : [],
     )
-    // memberExpenseAmountForm.remove()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberOption])
@@ -116,39 +153,48 @@ export function useExpenseForm() {
   useEffect(() => {
     if (!members.length || splitOption === SplitOption.Custom) return
 
-    members.forEach((member, i) => {
+    const memberAmounts = members.map((member) => {
       switch (splitOption) {
         case SplitOption.PaidEqually:
-          const amountPerMember = amount / members.length
-          memberExpenseAmountForm.update(i, { ...member, amount: Number(amountPerMember.toFixed(2)) })
-          break
+          const amountPerMember = Number((amount / members.length).toFixed(2))
+          return amountPerMember
 
         case SplitOption.PaidByYou:
+          const amountPerMemberWithoutYou = Number((amount / (members.length - 1)).toFixed(2))
           if (member.id === localUser?.id) {
-            memberExpenseAmountForm.update(i, { ...member, amount: 0 })
+            return 0
           } else {
-            memberExpenseAmountForm.update(i, { ...member, amount })
+            return amountPerMemberWithoutYou
           }
-          break
 
         case SplitOption.PaidByThem:
-          const amountPerMemberWithoutYou = amount / (members.length - 1)
           if (member.id === localUser?.id) {
-            memberExpenseAmountForm.update(i, { ...member, amount: Number(amountPerMemberWithoutYou.toFixed(2)) })
+            return amount
           } else {
-            memberExpenseAmountForm.update(i, { ...member, amount: 0 })
+            return 0
           }
-          break
 
         default:
-          break
+          return 0
       }
+    })
+
+    const remainingAmount = Number((amount - memberAmounts.reduce((p, c) => p + c, 0)).toFixed(2))
+
+    if (remainingAmount) {
+      memberAmounts[members.length - 1] += remainingAmount
+    }
+
+    memberAmounts.forEach((amount, i) => {
+      memberExpenseAmountForm.update(i, { ...memberExpenseAmountForm.fields[i], amount })
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members.length, amount, splitOption])
 
-  console.count('useExpenseForm')
+  useEffect(() => {
+    console.log(members)
+  }, [members])
 
   return {
     expenseForm,

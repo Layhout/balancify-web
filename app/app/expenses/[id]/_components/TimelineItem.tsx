@@ -1,5 +1,7 @@
 import { UserAvatar } from '@/components/UserAvatar'
-import { Timeline } from '@/services/expense.model'
+import { DEFAULT_DATETIME_FORMAT } from '@/lib/constants'
+import { djs } from '@/lib/dayjsExt'
+import { Timeline } from '@/types/common'
 
 export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
   return (
@@ -16,7 +18,7 @@ export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
             profileBgColor={createdBy.profileBgColor}
           />
           <h1>
-            {createdBy.name} • {createdAt}
+            {createdBy.name} • {djs(createdAt).format(DEFAULT_DATETIME_FORMAT)}
           </h1>
         </div>
         <p className="mt-2">{events}</p>

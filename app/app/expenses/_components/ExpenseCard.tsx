@@ -2,26 +2,20 @@ import { AvatarStack } from '@/components/AvatarStack'
 import { ExpenseAvatar } from '@/components/ExpenseAvatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { ROUTES } from '@/lib/constants'
-import { Expense } from '@/services/expense.model'
+import { DEFAULT_DATE_FORMAT, ROUTES } from '@/lib/constants'
+import { Expense } from '@/types/common'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useAtomValue } from 'jotai'
+import { userAtom } from '@/repositories/user'
+import { Timestamp } from 'firebase/firestore'
+import { djs } from '@/lib/dayjsExt'
 
-export function ExpenseCard({
-  id,
-  name,
-  createdAt,
-  icon,
-  iconBgColor,
-  totalCost,
-  totalOwe,
-  members,
-  createdByYou,
-  createdBy,
-}: Expense) {
-  const settledPercentage = useMemo(
-    () => Math.min(Math.round((totalOwe / totalCost) * 100), 100),
-    [totalCost, totalOwe],
+export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, members, createdBy }: Expense) {
+  const localUser = useAtomValue(userAtom)
+
+  const settledPercentage = Math.min(
+    Math.round((members.reduce((p, c) => p + (c.settledAmount || 0), 0) / amount) * 100),
+    100,
   )
 
   return (
@@ -31,10 +25,10 @@ export function ExpenseCard({
         <div className="flex flex-1 flex-col overflow-hidden">
           <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap pb-1 capitalize">{name}</CardTitle>
           <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
-            Paid by {createdByYou ? 'You' : createdBy}
+            Paid by {createdBy.id === localUser?.id ? 'You' : createdBy.name}
           </CardDescription>
         </div>
-        <h1 className="text-lg font-bold text-foreground">${totalCost}</h1>
+        <h1 className="text-lg font-bold text-foreground">${amount}</h1>
       </CardHeader>
       <CardContent className="flex items-center justify-between p-4">
         <AvatarStack
@@ -51,7 +45,9 @@ export function ExpenseCard({
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">
-        <p className="text-sm text-muted-foreground">{createdAt}</p>
+        <p className="text-sm text-muted-foreground">
+          {djs((createdAt as Timestamp).toDate()).format(DEFAULT_DATE_FORMAT)}
+        </p>
         <Button variant="secondary" size="sm" asChild>
           <Link href={`${ROUTES.APP.EXPENSES}/${id}`}>View Details</Link>
         </Button>

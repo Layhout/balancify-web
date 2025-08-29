@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MemberListItem } from './MemberListItem'
-import { ExpenseDetailsMember } from '@/services/expense.model'
 import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
+import { ExpenseMember } from '@/types/common'
 
 export type MemberListProps = {
   loading: boolean
-  members: ExpenseDetailsMember[]
+  members: ExpenseMember[]
 }
 
 export function MemberList({ loading, members }: MemberListProps) {

@@ -1,4 +1,3 @@
-import { Expense } from './expense.model'
 import { ResponseResult } from './types'
 
 export type SpendingHistory = {
@@ -10,7 +9,7 @@ export type Dashboard = {
   getBack: number
   owed: number
   spendingHistory: SpendingHistory[]
-  toBeSettled: Expense[]
+  toBeSettled: []
 }
 
 export type DashboardResult = ResponseResult<Dashboard>

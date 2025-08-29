@@ -163,6 +163,8 @@ export const FIREBASE_COLLTION_NAME = {
   NOTIS: 'notis',
   GROUPS: 'groups',
   GROUP_METADATA: 'group_metadata',
+  EXPENSES: 'expenses',
+  EXPENSE_METADATA: 'expense_metadata',
 }
 
 export const USER_404_MSG = [
