@@ -83,7 +83,7 @@ export enum SplitOption {
   Custom = 'custom',
 }
 
-export type ExpenseMember = User & { amount: number; settledAmount?: number }
+export type ExpenseMember = User & { amount: number; settledAmount: number }
 
 export interface Timeline {
   createdAt: number

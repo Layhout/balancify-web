@@ -9,13 +9,17 @@ import { userAtom } from '@/repositories/user'
 import { Timestamp } from 'firebase/firestore'
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import { djs } from '@/lib/dayjsExt'
+import { HiOutlineCog6Tooth } from 'react-icons/hi2'
+import { LuTrash2 } from 'react-icons/lu'
+import { ConfirmationDialog } from '@/components/ConfirmationDialog'
 
 type ExpenseInfoCardProps = {
   loading: boolean
   details: Expense | null
+  isOwner: boolean
 }
 
-export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
+export function ExpenseInfoCard({ loading, details, isOwner = false }: ExpenseInfoCardProps) {
   const localUser = useAtomValue(userAtom)
 
   const settledPercentage = details
@@ -63,13 +67,27 @@ export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
           iconClassName="h-16 w-16"
         />
       </CardContent>
-      <CardFooter className="flex gap-2 md:hidden">
-        <div className="flex-1">
-          <MemberListDrawer loading={loading} members={details?.members || []} />
-        </div>
-        <div className="flex-1">
-          <Button className="w-full">Settle up</Button>
-        </div>
+      <CardFooter className="flex items-center gap-2 md:hidden">
+        <Button className="flex-1">Settle up</Button>
+        <MemberListDrawer loading={loading} members={details?.members || []} />
+        {isOwner && (
+          <>
+            <Button variant="outline" size="icon">
+              <HiOutlineCog6Tooth />
+            </Button>
+            <ConfirmationDialog
+              title="Are you sure you want to delete this expense?"
+              description="This action cannot be undone."
+              confirmText="Delete"
+              triggerBtn={
+                <Button variant="destructive" size="icon">
+                  <LuTrash2 />
+                </Button>
+              }
+              onConfirm={() => {}}
+            />
+          </>
+        )}
       </CardFooter>
     </Card>
   )

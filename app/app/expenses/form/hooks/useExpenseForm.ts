@@ -32,6 +32,7 @@ const expenseFormSchema = z
     iconBgColor: z.string(),
     memberOption: z.nativeEnum(MemberOption),
     splitOption: z.nativeEnum(SplitOption),
+    alreadyPaidMyAmount: z.boolean(),
     selectedGroup: z
       .object({
         id: z.string(),
@@ -91,6 +92,7 @@ export function useExpenseForm() {
       splitOption: SplitOption.PaidEqually,
       selectedGroup: undefined,
       members: [],
+      alreadyPaidMyAmount: true,
     },
   })
 
@@ -116,17 +118,26 @@ export function useExpenseForm() {
       memberOption: value.memberOption,
       splitOption: value.splitOption,
       group: value.selectedGroup,
-      members: value.members.map<ExpenseMember>((m) => ({
-        amount: m.amount,
-        id: m.id,
-        imageUrl: m.imageUrl,
-        profileBgColor: m.profileBgColor,
-        email: m.email,
-        name: m.name,
-        oneSignalId: m.oneSignalId || '',
-        referalCode: m.referalCode,
-        settledAmount: 0,
-      })),
+      alreadyPaid: value.alreadyPaidMyAmount,
+      members: value.members.map<ExpenseMember>((m, i) => {
+        let settledAmount = 0
+
+        if (value.alreadyPaidMyAmount && i === 0) {
+          settledAmount = m.amount
+        }
+
+        return {
+          amount: m.amount,
+          id: m.id,
+          imageUrl: m.imageUrl,
+          profileBgColor: m.profileBgColor,
+          email: m.email,
+          name: m.name,
+          oneSignalId: m.oneSignalId || '',
+          referalCode: m.referalCode,
+          settledAmount,
+        }
+      }),
     })
   }
 

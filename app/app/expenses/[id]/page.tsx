@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 
 export default function ExpenseDetails() {
-  const { expenseDetailsQuery } = useExpenseDetails()
+  const { expenseDetailsQuery, isOwner } = useExpenseDetails()
 
   return (
     <div className="container pb-4">
@@ -20,7 +20,11 @@ export default function ExpenseDetails() {
       />
       <div className="mt-6 flex items-start gap-4">
         <div className="flex-[2] shrink-0">
-          <ExpenseInfoCard loading={expenseDetailsQuery.isFetching} details={expenseDetailsQuery.data || null} />
+          <ExpenseInfoCard
+            loading={expenseDetailsQuery.isFetching}
+            details={expenseDetailsQuery.data || null}
+            isOwner={isOwner}
+          />
           <TimelineList
             loading={expenseDetailsQuery.isFetching}
             timelines={expenseDetailsQuery.data?.timelines || []}

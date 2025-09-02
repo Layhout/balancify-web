@@ -3,8 +3,9 @@ import { currencyFormatter } from '@/lib/utils'
 import { ExpenseMember } from '@/types/common'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
+import { Badge } from '@/components/ui/badge'
 
-export function MemberListItem({ name, amount, imageUrl, profileBgColor, id }: ExpenseMember) {
+export function MemberListItem({ name, amount, imageUrl, profileBgColor, id, settledAmount }: ExpenseMember) {
   const localUser = useAtomValue(userAtom)
 
   return (
@@ -18,7 +19,13 @@ export function MemberListItem({ name, amount, imageUrl, profileBgColor, id }: E
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
           {id === localUser?.id ? 'You' : name}
         </h1>
-        <p className="overflow-hidden text-ellipsis  whitespace-nowrap text-sm">owns {currencyFormatter(amount)}</p>
+        {amount - settledAmount <= 0 ? (
+          <Badge>Settled</Badge>
+        ) : (
+          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
+            owns {currencyFormatter(amount - settledAmount)}
+          </p>
+        )}
       </div>
     </li>
   )

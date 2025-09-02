@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { FriendResponse, FriendStatusEnum } from '@/types/common'
-import { LuCheck, LuX } from 'react-icons/lu'
-import { UnfriendAlertDialog } from './UnfriendAlertDialog'
+import { LuCheck, LuUserRoundX, LuX } from 'react-icons/lu'
+import { ConfirmationDialog } from '@/components/ConfirmationDialog'
 
 type FriendCardProps = {
   onAcceptRequest?: (id: string) => void
@@ -31,7 +31,19 @@ export function FriendCard({
           <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{name}</p>
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">{email}</p>
         </div>
-        {status === FriendStatusEnum.Accepted && <UnfriendAlertDialog onUnfriend={() => onUnfriend?.(userId)} />}
+        {status === FriendStatusEnum.Accepted && (
+          <ConfirmationDialog
+            title="Are you sure you want to unfriend?"
+            description="This action cannot be undone."
+            confirmText="Unfriend"
+            triggerBtn={
+              <Button size="icon" variant="ghost">
+                <LuUserRoundX className="text-destructive" />
+              </Button>
+            }
+            onConfirm={() => onUnfriend?.(userId)}
+          />
+        )}
         {status === FriendStatusEnum.Requesting && (
           <div className="flex items-center">
             <Button variant="ghost" size="icon" className="text-destructive" onClick={() => onRejectRequest?.(userId)}>

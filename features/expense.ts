@@ -1,5 +1,5 @@
 import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES } from '@/lib/constants'
-import { getQueryData, getTotalCount, setMultipleData } from '@/lib/firestore'
+import { deleteData, getQueryData, getTotalCount, setMultipleData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import {
@@ -22,7 +22,7 @@ import {
   where,
 } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
-import { generateTrigrams } from '@/lib/utils'
+import { currencyFormatter, generateTrigrams } from '@/lib/utils'
 import { createNoti } from './noti'
 import { djs } from '@/lib/dayjsExt'
 
@@ -35,6 +35,7 @@ export async function createExpense({
   splitOption,
   group,
   members,
+  alreadyPaid,
 }: {
   name: string
   amount: number
@@ -44,10 +45,27 @@ export async function createExpense({
   splitOption: SplitOption
   group?: { id: string; name: string }
   members: ExpenseMember[]
+  alreadyPaid: boolean
 }) {
   const user = store.get(userAtom)
 
   if (!user) return
+
+  const timelines = [
+    {
+      createdAt: djs().valueOf(),
+      createdBy: user,
+      events: 'Created expense',
+    },
+  ]
+
+  if (alreadyPaid) {
+    timelines.push({
+      createdAt: djs().valueOf(),
+      createdBy: user,
+      events: `Settled expense with amount ${currencyFormatter(amount)}`,
+    })
+  }
 
   const curServerTimestamp = serverTimestamp()
 
@@ -64,13 +82,7 @@ export async function createExpense({
     members,
     memberIds: members.map((m) => m.id),
     createdBy: user,
-    timelines: [
-      {
-        createdAt: djs().valueOf(),
-        createdBy: user,
-        events: 'Expense created',
-      },
-    ],
+    timelines,
   }
 
   const expenseMetadata: ExpenseMetadata = {
@@ -159,4 +171,15 @@ export async function getExpenseDetail(id: string): Promise<Expense | null> {
   if (!expense?.length) return null
 
   return expense[0]
+}
+
+export async function deleteExpense({ id }: { id: string }) {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return
+
+  await Promise.all([
+    deleteData(FIREBASE_COLLTION_NAME.EXPENSES, id),
+    deleteData(FIREBASE_COLLTION_NAME.EXPENSE_METADATA, id),
+  ])
 }

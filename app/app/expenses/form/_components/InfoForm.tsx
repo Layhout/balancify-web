@@ -13,6 +13,7 @@ import { userAtom } from '@/repositories/user'
 import { memberOptions, splitOptions } from '@/lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { SplitOption } from '@/types/common'
+import { Checkbox } from '@/components/ui/checkbox'
 
 type InfoFormProps = {
   form: UseFormReturn<ExpenseFormType>
@@ -65,6 +66,18 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           )}
         />
       </div>
+      <FormField
+        control={form.control}
+        name="alreadyPaidMyAmount"
+        render={({ field }) => (
+          <FormItem className="flex items-center gap-2 space-y-0">
+            <FormControl>
+              <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+            </FormControl>
+            <FormLabel>Already paid my amount</FormLabel>
+          </FormItem>
+        )}
+      />
       <div className="flex items-center gap-4">
         <FormField
           control={form.control}
