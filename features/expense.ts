@@ -85,6 +85,8 @@ export async function createExpense({
     timelines,
   }
 
+  expense.member[paidBy.id].settledAmount = expense.member[paidBy.id].amount
+
   const expenseMetadata: ExpenseMetadata = {
     expenseId: expense.id,
     nameTrigrams: generateTrigrams(expense.name),
