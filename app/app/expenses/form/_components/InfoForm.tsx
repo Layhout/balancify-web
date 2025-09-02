@@ -7,13 +7,14 @@ import { MemberPicker } from './MemberPicker'
 import { Card, CardContent } from '@/components/ui/card'
 import { UserAvatar } from '@/components/UserAvatar'
 import { Button } from '@/components/ui/button'
-import { LuLoaderCircle, LuX } from 'react-icons/lu'
+import { LuEllipsisVertical, LuLoaderCircle, LuPointer, LuX } from 'react-icons/lu'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { memberOptions, splitOptions } from '@/lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { SplitOption } from '@/types/common'
-import { Checkbox } from '@/components/ui/checkbox'
+import { format2DigitDecimal } from '@/lib/utils'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 type InfoFormProps = {
   form: UseFormReturn<ExpenseFormType>
@@ -24,7 +25,7 @@ type InfoFormProps = {
 export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
   const localUser = useAtomValue(userAtom)
 
-  const [memberOption, selectedGroup] = form.watch(['memberOption', 'selectedGroup'])
+  const [memberOption, selectedGroup, paidBy] = form.watch(['memberOption', 'selectedGroup', 'paidBy'])
 
   return (
     <div className="flex flex-[0.7] flex-col gap-4">
@@ -55,10 +56,7 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
                   type="number"
                   onFocus={(e) => !fieldState.isTouched && e.target.select()}
                   {...field}
-                  onChange={(e) => {
-                    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
-                    field.onChange(e.target.valueAsNumber)
-                  }}
+                  onChange={format2DigitDecimal(field.onChange)}
                 />
               </FormControl>
               <FormMessage />
@@ -66,18 +64,6 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           )}
         />
       </div>
-      <FormField
-        control={form.control}
-        name="alreadyPaidMyAmount"
-        render={({ field }) => (
-          <FormItem className="flex items-center gap-2 space-y-0">
-            <FormControl>
-              <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            </FormControl>
-            <FormLabel>Already paid my amount</FormLabel>
-          </FormItem>
-        )}
-      />
       <div className="flex items-center gap-4">
         <FormField
           control={form.control}
@@ -163,7 +149,7 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           </Card>
         )}
         {memberForm.fields.map((field, i) => (
-          <Card className="overflow-hidden" key={field.fieldId}>
+          <Card key={field.fieldId}>
             <CardContent className="flex items-center gap-2 overflow-hidden p-4">
               <UserAvatar
                 imageUrl={field.imageUrl || ''}
@@ -174,6 +160,7 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
                 <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
                   {localUser?.id === field.id ? 'You' : field.name}
                 </p>
+                {paidBy?.id === field.id && <p className="text-xs text-primary">pays for this expense</p>}
               </div>
               <FormField
                 control={form.control}
@@ -185,29 +172,35 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
                         startIcon={BsCurrencyDollar}
                         type="number"
                         {...field}
-                        onChange={(e) => {
-                          if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
-                          field.onChange(e.target.valueAsNumber)
+                        onChange={format2DigitDecimal((v) => {
+                          field.onChange(v)
                           form.setValue('splitOption', SplitOption.Custom)
-                        }}
+                        })}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {memberOption === 'friend' && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => {
-                    memberForm.remove(i)
-                  }}
-                  disabled={localUser?.id === field.id}
-                >
-                  <LuX />
-                </Button>
-              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <LuEllipsisVertical />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onSelect={() => form.setValue('paidBy', field)} disabled={paidBy?.id === field.id}>
+                    <LuPointer />
+                    Assign payer
+                  </DropdownMenuItem>
+                  {memberOption === 'friend' && (
+                    <DropdownMenuItem onSelect={() => memberForm.remove(i)} disabled={localUser?.id === field.id}>
+                      <LuX />
+                      Remove
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </CardContent>
           </Card>
         ))}

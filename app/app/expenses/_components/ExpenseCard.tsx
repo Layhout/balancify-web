@@ -10,11 +10,11 @@ import { userAtom } from '@/repositories/user'
 import { Timestamp } from 'firebase/firestore'
 import { djs } from '@/lib/dayjsExt'
 
-export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, members, createdBy }: Expense) {
+export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, member, createdBy }: Expense) {
   const localUser = useAtomValue(userAtom)
 
   const settledPercentage = Math.min(
-    Math.round((members.reduce((p, c) => p + (c.settledAmount || 0), 0) / amount) * 100),
+    Math.round((Object.values(member).reduce((p, c) => p + (c.settledAmount || 0), 0) / amount) * 100),
     100,
   )
 
@@ -32,7 +32,7 @@ export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, me
       </CardHeader>
       <CardContent className="flex items-center justify-between p-4">
         <AvatarStack
-          items={members.map((m) => ({
+          items={Object.values(member).map((m) => ({
             imageSrc: m.imageUrl,
             initial: m.name[0] + m.name[1],
             bgColor: m.profileBgColor,

@@ -1,5 +1,5 @@
 import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES } from '@/lib/constants'
-import { deleteData, getQueryData, getTotalCount, setMultipleData } from '@/lib/firestore'
+import { deleteData, getQueryData, getTotalCount, setMultipleData, updateData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import {
@@ -10,8 +10,10 @@ import {
   NotiType,
   PaginatedResponse,
   SplitOption,
+  User,
 } from '@/types/common'
 import {
+  arrayUnion,
   documentId,
   FieldValue,
   limit,
@@ -35,7 +37,7 @@ export async function createExpense({
   splitOption,
   group,
   members,
-  alreadyPaid,
+  paidBy,
 }: {
   name: string
   amount: number
@@ -45,7 +47,7 @@ export async function createExpense({
   splitOption: SplitOption
   group?: { id: string; name: string }
   members: ExpenseMember[]
-  alreadyPaid: boolean
+  paidBy: User
 }) {
   const user = store.get(userAtom)
 
@@ -54,18 +56,15 @@ export async function createExpense({
   const timelines = [
     {
       createdAt: djs().valueOf(),
+      createdBy: paidBy,
+      events: 'Paid for this expense',
+    },
+    {
+      createdAt: djs().valueOf(),
       createdBy: user,
       events: 'Created expense',
     },
   ]
-
-  if (alreadyPaid) {
-    timelines.push({
-      createdAt: djs().valueOf(),
-      createdBy: user,
-      events: `Settled expense with amount ${currencyFormatter(amount)}`,
-    })
-  }
 
   const curServerTimestamp = serverTimestamp()
 
@@ -79,16 +78,17 @@ export async function createExpense({
     memberOption,
     splitOption,
     group,
-    members,
+    member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
     memberIds: members.map((m) => m.id),
     createdBy: user,
+    paidBy,
     timelines,
   }
 
   const expenseMetadata: ExpenseMetadata = {
     expenseId: expense.id,
     nameTrigrams: generateTrigrams(expense.name),
-    membersFlag: expense.members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
+    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
 
   await Promise.all([
@@ -170,7 +170,12 @@ export async function getExpenseDetail(id: string): Promise<Expense | null> {
 
   if (!expense?.length) return null
 
-  return expense[0]
+  const sortedTimelines = expense[0].timelines.slice().sort((a, b) => (djs(a.createdAt).isAfter(b.createdAt) ? -1 : 1))
+
+  return {
+    ...expense[0],
+    timelines: sortedTimelines,
+  }
 }
 
 export async function deleteExpense({ id }: { id: string }) {
@@ -182,4 +187,19 @@ export async function deleteExpense({ id }: { id: string }) {
     deleteData(FIREBASE_COLLTION_NAME.EXPENSES, id),
     deleteData(FIREBASE_COLLTION_NAME.EXPENSE_METADATA, id),
   ])
+}
+
+export async function settleExpense({ id, amount }: { id: string; amount: number }) {
+  const user = store.get(userAtom)
+
+  if (!user) return
+
+  await updateData(FIREBASE_COLLTION_NAME.EXPENSES, id, {
+    [`member.${user.id}.settledAmount`]: amount,
+    timelines: arrayUnion({
+      createdAt: djs().valueOf(),
+      createdBy: user,
+      events: `Settled expense with amount ${currencyFormatter(amount)}`,
+    }),
+  })
 }

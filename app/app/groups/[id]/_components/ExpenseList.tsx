@@ -4,8 +4,8 @@ import { ExpenseListCard } from './ExpenseListCard'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ExpenseListCardPlaceholder } from './ExpenseListCardPlaceholder'
-import { Expense } from '@/services/expense.model'
 import { Empty } from '@/components/Empty'
+import { Expense } from '@/types/common'
 
 type ExpenseListProps = {
   loading: boolean

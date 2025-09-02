@@ -215,16 +215,8 @@ export const memberOptions = [
 
 export const splitOptions = [
   {
-    label: 'Paid Equally',
-    value: SplitOption.PaidEqually,
-  },
-  {
-    label: 'Paid By You',
-    value: SplitOption.PaidByYou,
-  },
-  {
-    label: 'Paid By Them',
-    value: SplitOption.PaidByThem,
+    label: 'Split Equally',
+    value: SplitOption.SplitEqually,
   },
   {
     label: 'Custom',

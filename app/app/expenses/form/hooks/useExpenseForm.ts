@@ -6,7 +6,7 @@ import { randomNumBetween } from '@/lib/utils'
 import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
-import { ExpenseMember, MemberOption, SplitOption } from '@/types/common'
+import { ExpenseMember, MemberOption, SplitOption, User } from '@/types/common'
 import { useMutation } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
@@ -19,7 +19,7 @@ const memberFormSchema = z.object({
   profileBgColor: z.string(),
   email: z.string(),
   name: z.string(),
-  oneSignalId: z.string().optional(),
+  oneSignalId: z.string(),
   referalCode: z.string(),
   amount: z.coerce.number(),
 })
@@ -32,7 +32,7 @@ const expenseFormSchema = z
     iconBgColor: z.string(),
     memberOption: z.nativeEnum(MemberOption),
     splitOption: z.nativeEnum(SplitOption),
-    alreadyPaidMyAmount: z.boolean(),
+    paidBy: memberFormSchema.omit({ amount: true }).optional(),
     selectedGroup: z
       .object({
         id: z.string(),
@@ -89,10 +89,10 @@ export function useExpenseForm() {
       icon: '',
       iconBgColor: '',
       memberOption: MemberOption.Group,
-      splitOption: SplitOption.PaidEqually,
+      splitOption: SplitOption.SplitEqually,
       selectedGroup: undefined,
+      paidBy: undefined,
       members: [],
-      alreadyPaidMyAmount: true,
     },
   })
 
@@ -118,14 +118,8 @@ export function useExpenseForm() {
       memberOption: value.memberOption,
       splitOption: value.splitOption,
       group: value.selectedGroup,
-      alreadyPaid: value.alreadyPaidMyAmount,
-      members: value.members.map<ExpenseMember>((m, i) => {
-        let settledAmount = 0
-
-        if (value.alreadyPaidMyAmount && i === 0) {
-          settledAmount = m.amount
-        }
-
+      paidBy: value.paidBy as User,
+      members: value.members.map<ExpenseMember>((m) => {
         return {
           amount: m.amount,
           id: m.id,
@@ -135,7 +129,7 @@ export function useExpenseForm() {
           name: m.name,
           oneSignalId: m.oneSignalId || '',
           referalCode: m.referalCode,
-          settledAmount,
+          settledAmount: 0,
         }
       }),
     })
@@ -152,6 +146,14 @@ export function useExpenseForm() {
   }, [])
 
   useEffect(() => {
+    if (!localUser) return
+
+    expenseForm.setValue('paidBy', localUser)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localUser])
+
+  useEffect(() => {
     expenseForm.setValue('selectedGroup', undefined)
     expenseForm.setValue(
       'members',
@@ -164,26 +166,26 @@ export function useExpenseForm() {
   useEffect(() => {
     if (!members.length || splitOption === SplitOption.Custom) return
 
-    const memberAmounts = members.map((member) => {
+    const memberAmounts = members.map(() => {
       switch (splitOption) {
-        case SplitOption.PaidEqually:
+        case SplitOption.SplitEqually:
           const amountPerMember = Number((amount / members.length).toFixed(2))
           return amountPerMember
 
-        case SplitOption.PaidByYou:
-          const amountPerMemberWithoutYou = Number((amount / (members.length - 1)).toFixed(2))
-          if (member.id === localUser?.id) {
-            return 0
-          } else {
-            return amountPerMemberWithoutYou
-          }
+        // case SplitOption.PaidByYou:
+        //   const amountPerMemberWithoutYou = Number((amount / (members.length - 1)).toFixed(2))
+        //   if (member.id === localUser?.id) {
+        //     return 0
+        //   } else {
+        //     return amountPerMemberWithoutYou
+        //   }
 
-        case SplitOption.PaidByThem:
-          if (member.id === localUser?.id) {
-            return amount
-          } else {
-            return 0
-          }
+        // case SplitOption.PaidByThem:
+        //   if (member.id === localUser?.id) {
+        //     return amount
+        //   } else {
+        //     return 0
+        //   }
 
         default:
           return 0
@@ -202,10 +204,6 @@ export function useExpenseForm() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members.length, amount, splitOption])
-
-  useEffect(() => {
-    console.log(members)
-  }, [members])
 
   return {
     expenseForm,

@@ -30,7 +30,6 @@ export function useExpense() {
   })
 
   const expenseData: Expense[] = expenseQuery.data?.pages.flatMap((page) => page.data) || []
-  console.log(expenseData)
 
   return { expenseQuery, expenseData, setSearch }
 }

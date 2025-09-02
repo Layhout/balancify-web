@@ -5,9 +5,10 @@ import { useAtomValue } from 'jotai'
 import { useParams } from 'next/navigation'
 import { getExpenseDetail } from '@/features'
 import { useMutation } from '@tanstack/react-query'
-import { deleteExpense } from '@/features'
+import { deleteExpense, settleExpense } from '@/features'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
+import { Expense } from '@/types/common'
 
 export function useExpenseDetails() {
   const localUser = useAtomValue(userAtom)
@@ -16,8 +17,10 @@ export function useExpenseDetails() {
 
   const { id } = useParams<{ id: string }>()
 
+  const queryKey = [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, id]
+
   const expenseDetailsQuery = useQuery({
-    queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, id],
+    queryKey,
     queryFn: () => getExpenseDetail(id),
   })
 
@@ -31,9 +34,34 @@ export function useExpenseDetails() {
     },
   })
 
+  const settleExpenseMutation = useMutation({
+    mutationFn: settleExpense,
+    onSuccess: (_, variable) => {
+      queryClient.setQueryData(queryKey, (oldData: Expense | null) => {
+        if (!oldData) return oldData
+
+        return {
+          ...oldData,
+          member: {
+            ...oldData.member,
+            [localUser!.id]: {
+              ...oldData.member[localUser!.id],
+              settledAmount: variable.amount,
+            },
+          },
+        }
+      })
+    },
+  })
+
+  const onSettleExpense = (amount: number) => {
+    settleExpenseMutation.mutate({ id, amount })
+  }
+
   return {
     expenseDetailsQuery,
     isOwner: expenseDetailsQuery.data?.createdBy.id === localUser?.id,
     onDelete: () => deleteExpenseMutation.mutate({ id }),
+    onSettleExpense,
   }
 }

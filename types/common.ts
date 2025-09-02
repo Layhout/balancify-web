@@ -77,9 +77,7 @@ export enum MemberOption {
 }
 
 export enum SplitOption {
-  PaidEqually = 'paid_equally',
-  PaidByYou = 'paid_by_you',
-  PaidByThem = 'paid_by_them',
+  SplitEqually = 'split_equally',
   Custom = 'custom',
 }
 
@@ -101,9 +99,10 @@ export interface Expense {
   memberOption: MemberOption
   splitOption: SplitOption
   group?: { id: string; name: string }
-  members: ExpenseMember[]
+  member: Record<string, ExpenseMember>
   memberIds: string[]
   createdBy: User
+  paidBy: User
   timelines: Timeline[]
 }
 

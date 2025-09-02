@@ -19,12 +19,14 @@ export function MemberListItem({ name, amount, imageUrl, profileBgColor, id, set
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
           {id === localUser?.id ? 'You' : name}
         </h1>
-        {amount - settledAmount <= 0 ? (
-          <Badge>Settled</Badge>
-        ) : (
+        {amount - settledAmount === 0 && <Badge className="bg-green-500 text-white">Settled</Badge>}
+        {amount - settledAmount > 0 && (
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
             owns {currencyFormatter(amount - settledAmount)}
           </p>
+        )}
+        {amount - settledAmount < 0 && (
+          <Badge variant="destructive">Overpaid {currencyFormatter(Math.abs(amount - settledAmount))}</Badge>
         )}
       </div>
     </li>
