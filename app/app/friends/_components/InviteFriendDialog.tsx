@@ -73,7 +73,7 @@ export function InviteFriendDialog({ open, setOpen }: InviteFriendDialogProps) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader>
           <DrawerTitle>Invite Friends</DrawerTitle>
           <DrawerDescription />
         </DrawerHeader>

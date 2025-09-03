@@ -58,10 +58,16 @@ export function useExpenseDetails() {
     settleExpenseMutation.mutate({ id, amount })
   }
 
+  const hasSettled =
+    (expenseDetailsQuery.data?.member[localUser?.id || ''].amount || 0) -
+      (expenseDetailsQuery.data?.member[localUser?.id || ''].settledAmount || 0) ===
+    0
+
   return {
     expenseDetailsQuery,
     isOwner: expenseDetailsQuery.data?.createdBy.id === localUser?.id,
     onDelete: () => deleteExpenseMutation.mutate({ id }),
     onSettleExpense,
+    hasSettled,
   }
 }

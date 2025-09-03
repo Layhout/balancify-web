@@ -98,7 +98,7 @@ export interface Expense {
   iconBgColor: string
   memberOption: MemberOption
   splitOption: SplitOption
-  group?: { id: string; name: string }
+  group: { id: string; name: string } | null
   member: Record<string, ExpenseMember>
   memberIds: string[]
   createdBy: User

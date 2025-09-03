@@ -4,18 +4,26 @@ import { ConfirmationDialog } from '@/components/ConfirmationDialog'
 import { HiOutlineCog6Tooth } from 'react-icons/hi2'
 import { LuTrash2 } from 'react-icons/lu'
 import { Expense } from '@/types/common'
+import { SettleDialog } from './SettleDialog'
+import { useAtomValue } from 'jotai'
+import { userAtom } from '@/repositories/user'
 
 interface ActionButtonsProps {
   loading: boolean
   details: Expense | null
   isOwner: boolean
   onDelete: () => void
+  hasSettled: boolean
 }
 
-export function ActionButtons({ loading, details, isOwner, onDelete }: ActionButtonsProps) {
+export function ActionButtons({ loading, details, isOwner, onDelete, hasSettled }: ActionButtonsProps) {
+  const localUser = useAtomValue(userAtom)
+
   return (
     <div className="mt-6 flex items-center gap-2 md:gap-4">
-      <Button className="flex-1 md:flex-none">Settle up</Button>
+      {!hasSettled && (
+        <SettleDialog payer={details?.paidBy} amount={details?.member[localUser?.id || ''].amount || 0} />
+      )}
       <MemberListDrawer loading={loading} members={Object.values(details?.member || {}) || []} />
       {isOwner && (
         <>

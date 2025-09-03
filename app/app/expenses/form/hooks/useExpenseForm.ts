@@ -209,5 +209,6 @@ export function useExpenseForm() {
     expenseForm,
     memberExpenseAmountForm,
     onSubmitExpenseForm,
+    isSubmitting: expenseMutation.isPending,
   }
 }

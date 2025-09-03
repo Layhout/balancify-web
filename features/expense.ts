@@ -77,7 +77,7 @@ export async function createExpense({
     iconBgColor,
     memberOption,
     splitOption,
-    group,
+    group: group || null,
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
     memberIds: members.map((m) => m.id),
     createdBy: user,
@@ -92,6 +92,8 @@ export async function createExpense({
     nameTrigrams: generateTrigrams(expense.name),
     membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
+
+  console.log({ expense, expenseMetadata })
 
   await Promise.all([
     setMultipleData([
