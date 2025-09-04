@@ -60,7 +60,7 @@ export function useGroupForm() {
     mutationFn: editGroup,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id],
+        queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('edit')],
       })
 
       router.back()

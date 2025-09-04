@@ -5,8 +5,6 @@ import { HiOutlineCog6Tooth } from 'react-icons/hi2'
 import { LuTrash2 } from 'react-icons/lu'
 import { Expense } from '@/types/common'
 import { SettleDialog } from './SettleDialog'
-import { useAtomValue } from 'jotai'
-import { userAtom } from '@/repositories/user'
 
 interface ActionButtonsProps {
   loading: boolean
@@ -14,16 +12,30 @@ interface ActionButtonsProps {
   isOwner: boolean
   onDelete: () => void
   hasSettled: boolean
+  isSettling: boolean
+  onSettleExpense: (amount: number) => void
+  amountToSettle: number
 }
 
-export function ActionButtons({ loading, details, isOwner, onDelete, hasSettled }: ActionButtonsProps) {
-  const localUser = useAtomValue(userAtom)
-
+export function ActionButtons({
+  loading,
+  details,
+  isOwner,
+  onDelete,
+  hasSettled,
+  isSettling,
+  onSettleExpense,
+  amountToSettle,
+}: ActionButtonsProps) {
   return (
     <div className="mt-6 flex items-center gap-2 md:gap-4">
-      {!hasSettled && (
-        <SettleDialog payer={details?.paidBy} amount={details?.member[localUser?.id || ''].amount || 0} />
-      )}
+      <SettleDialog
+        payer={details?.paidBy}
+        amount={amountToSettle}
+        disabled={isSettling || hasSettled}
+        loading={isSettling}
+        onSettleExpense={onSettleExpense}
+      />
       <MemberListDrawer loading={loading} members={Object.values(details?.member || {}) || []} />
       {isOwner && (
         <>

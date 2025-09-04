@@ -7,11 +7,13 @@ import { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { ExpenseMember, MemberOption, SplitOption, User } from '@/types/common'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
-import { createExpense } from '@/features'
+import { createExpense, editExpense, getExpenseDetail } from '@/features'
+import { toast } from 'sonner'
+import { djs } from '@/lib/dayjsExt'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -69,12 +71,30 @@ export function useExpenseForm() {
 
   const queryClient = useQueryClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const expenseDetailsQuery = useQuery({
+    queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, searchParams.get('edit')],
+    queryFn: () => getExpenseDetail(searchParams.get('edit') || ''),
+    enabled: !!searchParams.get('edit'),
+  })
 
   const expenseMutation = useMutation({
     mutationFn: createExpense,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.EXPENSES, QueryType.List, localUser?.id],
+      })
+
+      router.back()
+    },
+  })
+
+  const editExpenseMutation = useMutation({
+    mutationFn: editExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, searchParams.get('edit')],
       })
 
       router.back()
@@ -110,7 +130,7 @@ export function useExpenseForm() {
   ])
 
   const onSubmitExpenseForm = (value: ExpenseFormType) => {
-    expenseMutation.mutate({
+    const data = {
       name: value.name,
       amount: value.amount,
       icon: value.icon,
@@ -132,7 +152,30 @@ export function useExpenseForm() {
           settledAmount: 0,
         }
       }),
-    })
+    }
+
+    if (searchParams.get('edit')) {
+      if (!expenseDetailsQuery.data) {
+        toast('Cannot find expense to edit.')
+        return
+      }
+
+      editExpenseMutation.mutate({
+        id: searchParams.get('edit')!,
+        ...data,
+        timelines: [
+          {
+            createdAt: djs().valueOf(),
+            createdBy: localUser!,
+            events: `${localUser!.name} edited this expense`,
+          },
+          ...(expenseDetailsQuery.data?.timelines || []),
+        ],
+      })
+      return
+    }
+
+    expenseMutation.mutate(data)
   }
 
   useEffect(() => {
@@ -204,6 +247,27 @@ export function useExpenseForm() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [members.length, amount, splitOption])
+
+  useEffect(() => {
+    if (expenseDetailsQuery.data) {
+      expenseForm.reset(
+        {
+          name: expenseDetailsQuery.data.name,
+          amount: expenseDetailsQuery.data.amount,
+          icon: expenseDetailsQuery.data.icon,
+          iconBgColor: expenseDetailsQuery.data.iconBgColor,
+          memberOption: expenseDetailsQuery.data.memberOption,
+          splitOption: expenseDetailsQuery.data.splitOption,
+          paidBy: expenseDetailsQuery.data.paidBy,
+          selectedGroup: expenseDetailsQuery.data.group || undefined,
+          members: Object.values(expenseDetailsQuery.data.member),
+        },
+        { keepDefaultValues: true },
+      )
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expenseDetailsQuery.data])
 
   return {
     expenseForm,

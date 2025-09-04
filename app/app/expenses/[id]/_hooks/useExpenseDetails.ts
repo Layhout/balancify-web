@@ -24,6 +24,11 @@ export function useExpenseDetails() {
     queryFn: () => getExpenseDetail(id),
   })
 
+  const amount = expenseDetailsQuery.data?.member[localUser?.id || ''].amount || 0
+  const settledAmount = expenseDetailsQuery.data?.member[localUser?.id || ''].settledAmount || 0
+  const amountToSettle = amount - settledAmount
+  const hasSettled = amountToSettle === 0
+
   const deleteExpenseMutation = useMutation({
     mutationFn: deleteExpense,
     onSuccess: () => {
@@ -58,16 +63,13 @@ export function useExpenseDetails() {
     settleExpenseMutation.mutate({ id, amount })
   }
 
-  const hasSettled =
-    (expenseDetailsQuery.data?.member[localUser?.id || ''].amount || 0) -
-      (expenseDetailsQuery.data?.member[localUser?.id || ''].settledAmount || 0) ===
-    0
-
   return {
     expenseDetailsQuery,
     isOwner: expenseDetailsQuery.data?.createdBy.id === localUser?.id,
     onDelete: () => deleteExpenseMutation.mutate({ id }),
     onSettleExpense,
     hasSettled,
+    amountToSettle,
+    isSettling: settleExpenseMutation.isPending,
   }
 }

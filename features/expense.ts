@@ -1,5 +1,12 @@
 import { countPerPage, FIREBASE_COLLTION_NAME, ROUTES } from '@/lib/constants'
-import { deleteData, getQueryData, getTotalCount, setMultipleData, updateData } from '@/lib/firestore'
+import {
+  deleteData,
+  getQueryData,
+  getTotalCount,
+  setMultipleData,
+  updateData,
+  updateMultipleData,
+} from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import {
@@ -10,6 +17,7 @@ import {
   NotiType,
   PaginatedResponse,
   SplitOption,
+  Timeline,
   User,
 } from '@/types/common'
 import {
@@ -28,6 +36,18 @@ import { currencyFormatter, generateTrigrams } from '@/lib/utils'
 import { createNoti } from './noti'
 import { djs } from '@/lib/dayjsExt'
 
+interface CreateExpenseParams {
+  name: string
+  amount: number
+  icon: string
+  iconBgColor: string
+  memberOption: MemberOption
+  splitOption: SplitOption
+  group?: { id: string; name: string }
+  members: ExpenseMember[]
+  paidBy: User
+}
+
 export async function createExpense({
   name,
   amount,
@@ -38,17 +58,7 @@ export async function createExpense({
   group,
   members,
   paidBy,
-}: {
-  name: string
-  amount: number
-  icon: string
-  iconBgColor: string
-  memberOption: MemberOption
-  splitOption: SplitOption
-  group?: { id: string; name: string }
-  members: ExpenseMember[]
-  paidBy: User
-}) {
+}: CreateExpenseParams) {
   const user = store.get(userAtom)
 
   if (!user) return
@@ -66,12 +76,10 @@ export async function createExpense({
     },
   ]
 
-  const curServerTimestamp = serverTimestamp()
-
   const expense: Expense = {
     id: uuidv4(),
     name,
-    createdAt: curServerTimestamp,
+    createdAt: serverTimestamp(),
     amount,
     icon,
     iconBgColor,
@@ -93,29 +101,26 @@ export async function createExpense({
     membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
 
-  console.log({ expense, expenseMetadata })
-
-  await Promise.all([
-    setMultipleData([
-      {
-        collectionName: FIREBASE_COLLTION_NAME.EXPENSES,
-        id: expense.id,
-        data: expense,
-      },
-      {
-        collectionName: FIREBASE_COLLTION_NAME.EXPENSE_METADATA,
-        id: expense.id,
-        data: expenseMetadata,
-      },
-    ]),
-    createNoti({
-      title: 'New Expense',
-      description: `${user.name} added a new expense.`,
-      link: `${ROUTES.APP.EXPENSES}/${expense.id}`,
-      type: NotiType.Group,
-      ownerIds: members.map((m) => m.id),
-    }),
+  await setMultipleData([
+    {
+      collectionName: FIREBASE_COLLTION_NAME.EXPENSES,
+      id: expense.id,
+      data: expense,
+    },
+    {
+      collectionName: FIREBASE_COLLTION_NAME.EXPENSE_METADATA,
+      id: expense.id,
+      data: expenseMetadata,
+    },
   ])
+
+  await createNoti({
+    title: 'New Expense',
+    description: `${user.name} added a new expense.`,
+    link: `${ROUTES.APP.EXPENSES}/${expense.id}`,
+    type: NotiType.Group,
+    ownerIds: members.map((m) => m.id),
+  })
 }
 
 export async function getExpenses({
@@ -206,4 +211,55 @@ export async function settleExpense({ id, amount }: { id: string; amount: number
       events: `Settled expense with amount ${currencyFormatter(amount)}`,
     }),
   })
+}
+
+export async function editExpense({
+  id,
+  name,
+  amount,
+  icon,
+  iconBgColor,
+  memberOption,
+  splitOption,
+  group,
+  members,
+  paidBy,
+  timelines,
+}: CreateExpenseParams & { id: string; timelines: Timeline[] }) {
+  const user = store.get(userAtom)
+
+  if (!user) return
+
+  const expense: Partial<Expense> = {
+    name,
+    createdAt: serverTimestamp(),
+    amount,
+    icon,
+    iconBgColor,
+    memberOption,
+    splitOption,
+    group: group || null,
+    member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
+    memberIds: members.map((m) => m.id),
+    paidBy,
+    timelines,
+  }
+
+  const expenseMetadata: Partial<ExpenseMetadata> = {
+    nameTrigrams: generateTrigrams(expense.name!),
+    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
+  }
+
+  await updateMultipleData([
+    {
+      collectionName: FIREBASE_COLLTION_NAME.EXPENSES,
+      id,
+      data: expense,
+    },
+    {
+      collectionName: FIREBASE_COLLTION_NAME.EXPENSE_METADATA,
+      id,
+      data: expenseMetadata,
+    },
+  ])
 }

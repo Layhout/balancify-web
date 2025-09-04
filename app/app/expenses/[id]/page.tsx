@@ -8,7 +8,8 @@ import { useExpenseDetails } from './_hooks/useExpenseDetails'
 import { PageHeader } from '@/components/PageHeader'
 
 export default function ExpenseDetails() {
-  const { expenseDetailsQuery, isOwner, onDelete, hasSettled } = useExpenseDetails()
+  const { expenseDetailsQuery, isOwner, amountToSettle, hasSettled, isSettling, onDelete, onSettleExpense } =
+    useExpenseDetails()
 
   return (
     <div className="container pb-4">
@@ -22,6 +23,9 @@ export default function ExpenseDetails() {
             isOwner={isOwner}
             onDelete={onDelete}
             hasSettled={hasSettled}
+            isSettling={isSettling}
+            onSettleExpense={onSettleExpense}
+            amountToSettle={amountToSettle}
           />
           <TimelineList
             loading={expenseDetailsQuery.isFetching}

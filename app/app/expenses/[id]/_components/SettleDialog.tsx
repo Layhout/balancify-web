@@ -28,10 +28,16 @@ import { useAtomValue } from 'jotai'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsCurrencyDollar } from 'react-icons/bs'
-import { LuMoveRight } from 'react-icons/lu'
+import { LuLoaderCircle, LuMoveRight } from 'react-icons/lu'
 import z from 'zod'
 
-type SettleDialogProps = { payer?: User; amount: number }
+type SettleDialogProps = {
+  payer?: User
+  amount: number
+  disabled: boolean
+  loading: boolean
+  onSettleExpense: (amount: number) => void
+}
 
 const settlementFormScheme = z.object({
   amount: z.coerce.number(),
@@ -39,7 +45,7 @@ const settlementFormScheme = z.object({
 
 type SettlementFormScheme = z.infer<typeof settlementFormScheme>
 
-export function SettleDialog({ payer, amount }: SettleDialogProps) {
+export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense }: SettleDialogProps) {
   const localUser = useAtomValue(userAtom)
   const isDesktop = useAtomValue(isDesktopAtom)
 
@@ -54,13 +60,19 @@ export function SettleDialog({ payer, amount }: SettleDialogProps) {
 
   const onSubmit = (value: SettlementFormScheme) => {
     setOpen(false)
-    console.log(value)
+    onSettleExpense(value.amount)
   }
 
-  const triggerBtn = <Button className="flex-1 md:flex-none">Settle up</Button>
+  const triggerBtn = (
+    <Button className="flex-1 md:flex-none" disabled={disabled}>
+      {loading && <LuLoaderCircle className="animate-spin" />}
+      Settle up
+    </Button>
+  )
   const dialogTitle = 'Record Settlement'
   const submitBtn = (
-    <Button type="submit" form="settlementForm">
+    <Button type="submit" form="settlementForm" className="gap-2" disabled={disabled}>
+      {loading && <LuLoaderCircle className="animate-spin" />}
       Submit
     </Button>
   )
