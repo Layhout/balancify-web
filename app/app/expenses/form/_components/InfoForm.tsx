@@ -76,7 +76,10 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                 onValueChange={(v) => {
                   if (!v) return
                   form.setValue('selectedGroup', undefined)
-                  form.setValue('members', v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0 }] : [])
+                  form.setValue(
+                    'members',
+                    v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
+                  )
                   field.onChange(v)
                 }}
               >
@@ -138,11 +141,13 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
             onAddMember={(v) => {
               if (memberOption === MemberOption.Group) {
                 memberForm.append([
-                  { ...localUser!, amount: 0 },
-                  ...v.filter((member) => member.id !== localUser?.id).map((member) => ({ ...member, amount: 0 })),
+                  { ...localUser!, amount: 0, settledAmount: 0 },
+                  ...v
+                    .filter((member) => member.id !== localUser?.id)
+                    .map((member) => ({ ...member, amount: 0, settledAmount: 0 })),
                 ])
               } else {
-                memberForm.append({ ...v[0], amount: 0 })
+                memberForm.append({ ...v[0], amount: 0, settledAmount: 0 })
               }
             }}
             onSelectGroup={(group) => form.setValue('selectedGroup', group)}

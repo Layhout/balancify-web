@@ -250,7 +250,14 @@ export async function editExpense({
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
     memberIds: members.map((m) => m.id),
     paidBy,
-    timelines,
+    timelines: [
+      {
+        createdAt: djs().valueOf(),
+        createdBy: user,
+        events: 'Edited the expense',
+      },
+      ...timelines,
+    ],
   }
 
   const expenseMetadata: Partial<ExpenseMetadata> = {

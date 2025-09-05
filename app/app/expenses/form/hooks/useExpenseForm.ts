@@ -13,7 +13,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { createExpense, editExpense, getExpenseDetail } from '@/features'
 import { toast } from 'sonner'
-import { djs } from '@/lib/dayjsExt'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -24,6 +23,7 @@ const memberFormSchema = z.object({
   oneSignalId: z.string(),
   referalCode: z.string(),
   amount: z.coerce.number(),
+  settledAmount: z.number(),
 })
 
 const expenseFormSchema = z
@@ -34,7 +34,7 @@ const expenseFormSchema = z
     iconBgColor: z.string(),
     memberOption: z.nativeEnum(MemberOption),
     splitOption: z.nativeEnum(SplitOption),
-    paidBy: memberFormSchema.omit({ amount: true }).optional(),
+    paidBy: memberFormSchema.omit({ amount: true, settledAmount: true }).optional(),
     selectedGroup: z
       .object({
         id: z.string(),
@@ -144,7 +144,7 @@ export function useExpenseForm() {
           name: m.name,
           oneSignalId: m.oneSignalId || '',
           referalCode: m.referalCode,
-          settledAmount: 0,
+          settledAmount: m.settledAmount || 0,
         }
       }),
     }
@@ -158,14 +158,7 @@ export function useExpenseForm() {
       editExpenseMutation.mutate({
         id: searchParams.get('edit')!,
         ...data,
-        timelines: [
-          {
-            createdAt: djs().valueOf(),
-            createdBy: localUser!,
-            events: 'Edited the expense',
-          },
-          ...(expenseDetailsQuery.data?.timelines || []),
-        ],
+        timelines: expenseDetailsQuery.data?.timelines || [],
       })
       return
     }
