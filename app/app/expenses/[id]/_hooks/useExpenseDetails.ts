@@ -60,7 +60,7 @@ export function useExpenseDetails() {
   })
 
   const onSettleExpense = (amount: number) => {
-    settleExpenseMutation.mutate({ id, amount })
+    settleExpenseMutation.mutate({ id, amount, receiverName: expenseDetailsQuery.data?.paidBy.name || '' })
   }
 
   return {

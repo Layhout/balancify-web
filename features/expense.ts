@@ -198,7 +198,15 @@ export async function deleteExpense({ id }: { id: string }) {
   ])
 }
 
-export async function settleExpense({ id, amount }: { id: string; amount: number }) {
+export async function settleExpense({
+  id,
+  amount,
+  receiverName,
+}: {
+  id: string
+  amount: number
+  receiverName: string
+}) {
   const user = store.get(userAtom)
 
   if (!user) return
@@ -208,7 +216,7 @@ export async function settleExpense({ id, amount }: { id: string; amount: number
     timelines: arrayUnion({
       createdAt: djs().valueOf(),
       createdBy: user,
-      events: `Settled expense with amount ${currencyFormatter(amount)}`,
+      events: `${user.name} pays ${receiverName} with amount ${currencyFormatter(amount)}`,
     }),
   })
 }

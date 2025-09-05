@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { memberOptions, splitOptions } from '@/lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { SplitOption } from '@/types/common'
+import { MemberOption, SplitOption } from '@/types/common'
 import { format2DigitDecimal } from '@/lib/utils'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
@@ -20,9 +20,10 @@ type InfoFormProps = {
   form: UseFormReturn<ExpenseFormType>
   memberForm: UseFieldArrayReturn<ExpenseFormType, 'members', 'fieldId'>
   isSubmitting: boolean
+  isEdit: boolean
 }
 
-export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
+export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormProps) {
   const localUser = useAtomValue(userAtom)
 
   const [memberOption, selectedGroup, paidBy] = form.watch(['memberOption', 'selectedGroup', 'paidBy'])
@@ -70,7 +71,15 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           name="memberOption"
           render={({ field }) => (
             <FormItem>
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                value={field.value}
+                onValueChange={(v) => {
+                  if (!v) return
+                  form.setValue('selectedGroup', undefined)
+                  form.setValue('members', v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0 }] : [])
+                  field.onChange(v)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />
@@ -92,7 +101,13 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
           name="splitOption"
           render={({ field }) => (
             <FormItem>
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select
+                value={field.value}
+                onValueChange={(v) => {
+                  if (!v) return
+                  field.onChange(v)
+                }}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />
@@ -111,15 +126,17 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
         />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {((memberOption === 'group' && !selectedGroup?.id) ||
-          (memberOption === 'friend' && memberForm.fields.length < 10)) && (
+        {((memberOption === MemberOption.Group && !selectedGroup?.id) ||
+          (memberOption === MemberOption.Friend && memberForm.fields.length < 10)) && (
           <MemberPicker
             mode={memberOption}
             selectedIds={
-              memberOption === 'group' ? [selectedGroup?.id || ''] : memberForm.fields.map((field) => field.id)
+              memberOption === MemberOption.Group
+                ? [selectedGroup?.id || '']
+                : memberForm.fields.map((field) => field.id)
             }
             onAddMember={(v) => {
-              if (memberOption === 'group') {
+              if (memberOption === MemberOption.Group) {
                 memberForm.append([
                   { ...localUser!, amount: 0 },
                   ...v.filter((member) => member.id !== localUser?.id).map((member) => ({ ...member, amount: 0 })),
@@ -211,8 +228,7 @@ export function InfoForm({ form, memberForm, isSubmitting }: InfoFormProps) {
       <div className="hidden md:flex md:justify-end">
         <Button type="submit" disabled={isSubmitting} className="gap-2">
           {isSubmitting && <LuLoaderCircle className="animate-spin" />}
-          {/* {isEdit ? 'Update' : 'Create'} */}
-          Create
+          {isEdit ? 'Update' : 'Create'}
         </Button>
       </div>
     </div>

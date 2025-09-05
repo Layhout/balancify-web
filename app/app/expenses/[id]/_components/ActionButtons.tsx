@@ -5,6 +5,8 @@ import { HiOutlineCog6Tooth } from 'react-icons/hi2'
 import { LuTrash2 } from 'react-icons/lu'
 import { Expense } from '@/types/common'
 import { SettleDialog } from './SettleDialog'
+import Link from 'next/link'
+import { ROUTES } from '@/lib/constants'
 
 interface ActionButtonsProps {
   loading: boolean
@@ -39,9 +41,11 @@ export function ActionButtons({
       <MemberListDrawer loading={loading} members={Object.values(details?.member || {}) || []} />
       {isOwner && (
         <>
-          <Button variant="outline" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2">
-            <HiOutlineCog6Tooth />
-            <span className="hidden md:inline">Edit</span>
+          <Button variant="outline" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2" asChild>
+            <Link href={`${ROUTES.APP.EXPENSES_FORM}?edit=${details?.id}`}>
+              <HiOutlineCog6Tooth />
+              <span className="hidden md:inline">Edit</span>
+            </Link>
           </Button>
           <ConfirmationDialog
             title="Are you sure you want to delete this expense?"

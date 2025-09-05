@@ -25,7 +25,7 @@ import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAtomValue } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsCurrencyDollar } from 'react-icons/bs'
 import { LuLoaderCircle, LuMoveRight } from 'react-icons/lu'
@@ -62,6 +62,12 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
     setOpen(false)
     onSettleExpense(value.amount)
   }
+
+  useEffect(() => {
+    settlementForm.setValue('amount', amount)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount])
 
   const triggerBtn = (
     <Button className="flex-1 md:flex-none" disabled={disabled}>

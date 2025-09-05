@@ -122,12 +122,7 @@ export function useExpenseForm() {
     keyName: 'fieldId',
   })
 
-  const [memberOption, amount, splitOption, members] = expenseForm.watch([
-    'memberOption',
-    'amount',
-    'splitOption',
-    'members',
-  ])
+  const [amount, splitOption, members] = expenseForm.watch(['amount', 'splitOption', 'members'])
 
   const onSubmitExpenseForm = (value: ExpenseFormType) => {
     const data = {
@@ -167,7 +162,7 @@ export function useExpenseForm() {
           {
             createdAt: djs().valueOf(),
             createdBy: localUser!,
-            events: `${localUser!.name} edited this expense`,
+            events: 'Edited the expense',
           },
           ...(expenseDetailsQuery.data?.timelines || []),
         ],
@@ -189,22 +184,12 @@ export function useExpenseForm() {
   }, [])
 
   useEffect(() => {
-    if (!localUser) return
+    if (!localUser || expenseForm.getValues('paidBy')) return
 
     expenseForm.setValue('paidBy', localUser)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser])
-
-  useEffect(() => {
-    expenseForm.setValue('selectedGroup', undefined)
-    expenseForm.setValue(
-      'members',
-      memberOption === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0 }] : [],
-    )
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memberOption])
 
   useEffect(() => {
     if (!members.length || splitOption === SplitOption.Custom) return
@@ -250,20 +235,17 @@ export function useExpenseForm() {
 
   useEffect(() => {
     if (expenseDetailsQuery.data) {
-      expenseForm.reset(
-        {
-          name: expenseDetailsQuery.data.name,
-          amount: expenseDetailsQuery.data.amount,
-          icon: expenseDetailsQuery.data.icon,
-          iconBgColor: expenseDetailsQuery.data.iconBgColor,
-          memberOption: expenseDetailsQuery.data.memberOption,
-          splitOption: expenseDetailsQuery.data.splitOption,
-          paidBy: expenseDetailsQuery.data.paidBy,
-          selectedGroup: expenseDetailsQuery.data.group || undefined,
-          members: Object.values(expenseDetailsQuery.data.member),
-        },
-        { keepDefaultValues: true },
-      )
+      expenseForm.reset({
+        name: expenseDetailsQuery.data.name,
+        amount: expenseDetailsQuery.data.amount,
+        icon: expenseDetailsQuery.data.icon,
+        iconBgColor: expenseDetailsQuery.data.iconBgColor,
+        memberOption: expenseDetailsQuery.data.memberOption,
+        splitOption: expenseDetailsQuery.data.splitOption,
+        paidBy: expenseDetailsQuery.data.paidBy,
+        selectedGroup: expenseDetailsQuery.data.group || undefined,
+        members: Object.values(expenseDetailsQuery.data.member),
+      })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,5 +256,6 @@ export function useExpenseForm() {
     memberExpenseAmountForm,
     onSubmitExpenseForm,
     isSubmitting: expenseMutation.isPending,
+    isEdit: !!searchParams.get('edit'),
   }
 }
