@@ -111,3 +111,10 @@ export interface ExpenseMetadata {
   nameTrigrams: string[]
   membersFlag: Record<string, true>
 }
+
+export interface Dashboard {
+  expenses: Expense[]
+  getBack: number
+  owed: number
+  spendingHistory: { amount: number; createdAt: Date }[]
+}

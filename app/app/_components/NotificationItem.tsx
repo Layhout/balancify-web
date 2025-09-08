@@ -1,27 +1,27 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { djs } from '@/lib/dayjsExt'
+import { Noti, NotiType } from '@/types/common'
+import { Timestamp } from 'firebase/firestore'
 import Link from 'next/link'
-import { LuUserRoundPlus } from 'react-icons/lu'
+import { AiOutlineUsergroupAdd } from 'react-icons/ai'
+import { LuCircleDollarSign, LuUserRoundPlus } from 'react-icons/lu'
 
-type NotificationItemProps = {
-  title: string
-  description: string
-  createdAt: string
-}
-
-export function NotificationItem({ title, description, createdAt }: NotificationItemProps) {
+export function NotificationItem({ title, description, createdAt, type, link }: Noti) {
   return (
     <li className="rounded-lg p-2 hover:bg-accent hover:text-accent-foreground">
-      <Link href="">
+      <Link href={link}>
         <div className="flex items-start gap-4 rounded-md">
           <Avatar>
             <AvatarFallback>
-              <LuUserRoundPlus />
+              {type === NotiType.FriendRequest && <LuUserRoundPlus />}
+              {type === NotiType.Group && <AiOutlineUsergroupAdd />}
+              {type === NotiType.Expense && <LuCircleDollarSign />}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-1 flex-col">
             <div className="flex items-center">
               <h1 className="flex-1">{title}</h1>
-              <p className="text-xs">{createdAt}</p>
+              <p className="text-xs">{djs((createdAt as Timestamp).toDate()).fromNow(true)}</p>
             </div>
             <p className="mt-1 text-xs">{description}</p>
           </div>
