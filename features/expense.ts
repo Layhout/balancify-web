@@ -235,7 +235,8 @@ export async function editExpense({
   members,
   paidBy,
   timelines,
-}: CreateExpenseParams & { id: string; timelines: Timeline[] }) {
+  previousPayer,
+}: CreateExpenseParams & { id: string; timelines: Timeline[]; previousPayer: User }) {
   const user = store.get(userAtom)
 
   if (!user) return
@@ -260,6 +261,11 @@ export async function editExpense({
       },
       ...timelines,
     ],
+  }
+
+  if (previousPayer.id !== paidBy.id) {
+    expense.member![previousPayer.id].settledAmount -= expense.member![previousPayer.id].amount
+    expense.member![paidBy.id].settledAmount += expense.member![paidBy.id].amount
   }
 
   const expenseMetadata: Partial<ExpenseMetadata> = {

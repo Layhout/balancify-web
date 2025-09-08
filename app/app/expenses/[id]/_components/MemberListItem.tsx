@@ -1,11 +1,19 @@
 import { UserAvatar } from '@/components/UserAvatar'
 import { currencyFormatter } from '@/lib/utils'
-import { ExpenseMember } from '@/types/common'
+import { ExpenseMember, User } from '@/types/common'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { Badge } from '@/components/ui/badge'
 
-export function MemberListItem({ name, amount, imageUrl, profileBgColor, id, settledAmount }: ExpenseMember) {
+export function MemberListItem({
+  name,
+  amount,
+  imageUrl,
+  profileBgColor,
+  id,
+  settledAmount,
+  payer,
+}: ExpenseMember & { payer?: User }) {
   const localUser = useAtomValue(userAtom)
 
   return (
@@ -19,15 +27,20 @@ export function MemberListItem({ name, amount, imageUrl, profileBgColor, id, set
         <h1 className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">
           {id === localUser?.id ? 'You' : name}
         </h1>
-        {amount - settledAmount === 0 && <Badge className="bg-green-500 text-sm text-white">Settled</Badge>}
-        {amount - settledAmount > 0 && (
-          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
-            owns {currencyFormatter(amount - settledAmount)}
-          </p>
-        )}
-        {amount - settledAmount < 0 && (
-          <Badge variant="destructive">Overpaid {currencyFormatter(Math.abs(amount - settledAmount))}</Badge>
-        )}
+        <div className="flex items-center gap-2">
+          {id === payer?.id && <Badge className="text-sm">Payer</Badge>}
+          {amount - settledAmount === 0 && id !== payer?.id && (
+            <Badge className="bg-green-500 text-sm text-white">Settled</Badge>
+          )}
+          {amount - settledAmount > 0 && (
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">
+              owns {currencyFormatter(amount - settledAmount)}
+            </p>
+          )}
+          {amount - settledAmount < 0 && (
+            <Badge variant="destructive">Overpaid {currencyFormatter(Math.abs(amount - settledAmount))}</Badge>
+          )}
+        </div>
       </div>
     </li>
   )

@@ -36,6 +36,7 @@ export default function ExpenseDetails() {
           <MemberList
             loading={expenseDetailsQuery.isFetching}
             members={Object.values(expenseDetailsQuery.data?.member || {}) || []}
+            payer={expenseDetailsQuery.data?.paidBy}
           />
         </div>
       </div>

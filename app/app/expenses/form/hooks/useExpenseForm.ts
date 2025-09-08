@@ -163,7 +163,8 @@ export function useExpenseForm() {
       editExpenseMutation.mutate({
         id: searchParams.get('edit')!,
         ...data,
-        timelines: expenseDetailsQuery.data?.timelines || [],
+        timelines: expenseDetailsQuery.data.timelines || [],
+        previousPayer: expenseDetailsQuery.data.paidBy,
       })
       return
     }

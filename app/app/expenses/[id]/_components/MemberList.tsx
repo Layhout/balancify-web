@@ -1,14 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MemberListItem } from './MemberListItem'
 import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
-import { ExpenseMember } from '@/types/common'
+import { ExpenseMember, User } from '@/types/common'
 
 export type MemberListProps = {
   loading: boolean
   members: ExpenseMember[]
+  payer?: User
 }
 
-export function MemberList({ loading, members }: MemberListProps) {
+export function MemberList({ loading, members, payer }: MemberListProps) {
   return (
     <Card>
       <CardHeader>
@@ -20,7 +21,7 @@ export function MemberList({ loading, members }: MemberListProps) {
         ) : (
           <ul className="flex flex-col gap-4">
             {members.map((member, i) => (
-              <MemberListItem key={i} {...member} />
+              <MemberListItem key={i} {...member} payer={payer} />
             ))}
           </ul>
         )}
