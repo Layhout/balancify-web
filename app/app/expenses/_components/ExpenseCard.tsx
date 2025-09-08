@@ -10,27 +10,26 @@ import { userAtom } from '@/repositories/user'
 import { Timestamp } from 'firebase/firestore'
 import { djs } from '@/lib/dayjsExt'
 
-export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, member, createdBy }: Expense) {
+export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, member, paidBy }: Expense) {
   const localUser = useAtomValue(userAtom)
 
-  const settledPercentage = Math.min(
-    Math.round((Object.values(member).reduce((p, c) => p + (c.settledAmount || 0), 0) / amount) * 100),
-    100,
+  const settledPercentage = Math.round(
+    (Object.values(member).reduce((p, c) => p + (c.settledAmount || 0), 0) / amount) * 100,
   )
 
   return (
-    <Card className="overflow-hidden ">
+    <Card className="flex flex-col overflow-hidden">
       <CardHeader className="flex-row items-center gap-4 space-y-0 border-b p-4">
         <ExpenseAvatar iconBgColor={iconBgColor} icon={icon} className="h-12 w-12" iconClassName="h-6 w-6" />
         <div className="flex flex-1 flex-col overflow-hidden">
           <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap pb-1 capitalize">{name}</CardTitle>
           <CardDescription className="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
-            Paid by {createdBy.id === localUser?.id ? 'You' : createdBy.name}
+            Paid by {paidBy.id === localUser?.id ? 'You' : paidBy.name}
           </CardDescription>
         </div>
         <h1 className="text-lg font-bold text-foreground">${amount}</h1>
       </CardHeader>
-      <CardContent className="flex items-center justify-between p-4">
+      <CardContent className="flex flex-1 items-center justify-between p-4">
         <AvatarStack
           items={Object.values(member).map((m) => ({
             imageSrc: m.imageUrl,
@@ -41,7 +40,9 @@ export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, me
         />
         <div className="flex flex-col items-end">
           <p className="font-bold">{settledPercentage}%</p>
-          <p className="text-sm text-muted-foreground">{settledPercentage >= 100 ? 'Settled' : 'Paid'}</p>
+          {settledPercentage === 100 && <p className="text-sm text-green-500">Settled</p>}
+          {settledPercentage < 100 && <p className="text-sm text-muted-foreground">Paid</p>}
+          {settledPercentage > 100 && <p className="text-sm text-red-500">Overpaid</p>}
         </div>
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4 pt-0">

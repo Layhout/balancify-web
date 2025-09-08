@@ -3,14 +3,12 @@ import { djs } from '@/lib/dayjsExt'
 import { SpendingHistory } from '@/services/dashboard.model'
 import { DayContentProps } from 'react-day-picker'
 import { useCallback, useMemo } from 'react'
-import { getSpendingLevel, isMobileBrowser } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { getSpendingLevel } from '@/lib/utils'
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { TooltipX } from '@/components/TooltipX'
 
 export function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
   const { l1, l2, l3, l4 } = useMemo(() => getSpendingLevel(spendingHistory), [spendingHistory])
-  const isMobileDevice = useMemo(isMobileBrowser, [])
 
   const dayComponent = useCallback(
     ({ date, activeModifiers }: DayContentProps) => {
@@ -22,34 +20,18 @@ export function CalendarHeatMap({ spendingHistory }: { spendingHistory: Spending
           l2[djs(date).format(STANDARD_DATE_FORMAT)] ||
           l1[djs(date).format(STANDARD_DATE_FORMAT)]
 
-        if (isMobileDevice) {
-          return (
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="flex h-full w-full items-center justify-center">{day}</div>
-              </PopoverTrigger>
-              <PopoverContent side="top" className="w-fit px-3 py-1.5">
-                <span>${amount}</span>
-              </PopoverContent>
-            </Popover>
-          )
-        }
-
         return (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex h-full w-full items-center justify-center">{day}</div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>${amount}</span>
-            </TooltipContent>
-          </Tooltip>
+          <TooltipX
+            trigger={<div className="flex h-full w-full items-center justify-center">{day}</div>}
+            content={<span>${amount}</span>}
+            side="top"
+          />
         )
       }
 
       return <>{djs(date).format('D')}</>
     },
-    [isMobileDevice, l1, l2, l3, l4],
+    [l1, l2, l3, l4],
   )
 
   return (

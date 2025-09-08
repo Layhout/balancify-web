@@ -125,6 +125,11 @@ export function useExpenseForm() {
   const [amount, splitOption, members] = expenseForm.watch(['amount', 'splitOption', 'members'])
 
   const onSubmitExpenseForm = (value: ExpenseFormType) => {
+    if (!expenseForm.formState.isDirty) {
+      router.back()
+      return
+    }
+
     const data = {
       name: value.name,
       amount: value.amount,
@@ -248,7 +253,7 @@ export function useExpenseForm() {
     expenseForm,
     memberExpenseAmountForm,
     onSubmitExpenseForm,
-    isSubmitting: expenseMutation.isPending,
+    isSubmitting: expenseMutation.isPending || editExpenseMutation.isPending,
     isEdit: !!searchParams.get('edit'),
   }
 }

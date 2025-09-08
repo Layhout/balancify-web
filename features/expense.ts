@@ -200,10 +200,12 @@ export async function deleteExpense({ id }: { id: string }) {
 
 export async function settleExpense({
   id,
+  settledAmount,
   amount,
   receiverName,
 }: {
   id: string
+  settledAmount: number
   amount: number
   receiverName: string
 }) {
@@ -212,7 +214,7 @@ export async function settleExpense({
   if (!user) return
 
   await updateData(FIREBASE_COLLTION_NAME.EXPENSES, id, {
-    [`member.${user.id}.settledAmount`]: amount,
+    [`member.${user.id}.settledAmount`]: settledAmount + amount,
     timelines: arrayUnion({
       createdAt: djs().valueOf(),
       createdBy: user,

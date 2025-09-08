@@ -1,3 +1,4 @@
+import { TooltipX } from '@/components/TooltipX'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -28,7 +29,7 @@ import { useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsCurrencyDollar } from 'react-icons/bs'
-import { LuLoaderCircle, LuMoveRight } from 'react-icons/lu'
+import { LuInfo, LuLoaderCircle, LuMoveRight } from 'react-icons/lu'
 import z from 'zod'
 
 type SettleDialogProps = {
@@ -75,7 +76,20 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
       Settle up
     </Button>
   )
-  const dialogTitle = 'Record Settlement'
+  const dialogTitle = (
+    <div className="flex items-center gap-2">
+      <p>Record Settlement</p>
+      <TooltipX
+        trigger={
+          <div>
+            <LuInfo />
+          </div>
+        }
+        content={<span>Use negative amount to settle overpaid.</span>}
+        side="top"
+      />
+    </div>
+  )
   const submitBtn = (
     <Button type="submit" form="settlementForm" className="gap-2" disabled={disabled}>
       {loading && <LuLoaderCircle className="animate-spin" />}
@@ -84,7 +98,7 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
   )
   const content = (
     <div>
-      <div className="flex items-center justify-center gap-6">
+      <div className="mb-6 flex items-center justify-center gap-6">
         <UserAvatar
           fallbackText={(localUser?.name[0] || '') + (localUser?.name[1] || '')}
           imageUrl={localUser?.imageUrl || ''}
@@ -155,3 +169,8 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
     </Drawer>
   )
 }
+
+/**
+ * 
+                 
+ */

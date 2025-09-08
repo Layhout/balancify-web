@@ -17,12 +17,7 @@ export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
   const localUser = useAtomValue(userAtom)
 
   const settledPercentage = details
-    ? Math.min(
-        Math.round(
-          (Object.values(details.member).reduce((p, c) => p + (c.settledAmount || 0), 0) / details.amount) * 100,
-        ),
-        100,
-      )
+    ? Math.round((Object.values(details.member).reduce((p, c) => p + (c.settledAmount || 0), 0) / details.amount) * 100)
     : 0
 
   if (loading || !details) return <ExpenseInfoCardPlaceholder />
@@ -34,7 +29,7 @@ export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
           <div className="text-center md:text-left">
             <h1 className="text-xl font-bold capitalize">{details.name}</h1>
             <p className="text-xs text-muted-foreground">
-              Added by {details.createdBy.id === localUser?.id ? 'You' : details.createdBy.name}
+              Paid by {details.paidBy.id === localUser?.id ? 'You' : details.paidBy.name}
               {' • '}
               {djs((details.createdAt as Timestamp).toDate()).format(DEFAULT_DATE_FORMAT)}
             </p>

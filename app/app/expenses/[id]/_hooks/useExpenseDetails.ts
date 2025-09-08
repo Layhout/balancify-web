@@ -9,6 +9,8 @@ import { deleteExpense, settleExpense } from '@/features'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 import { Expense } from '@/types/common'
+import { djs } from '@/lib/dayjsExt'
+import { currencyFormatter } from '@/lib/utils'
 
 export function useExpenseDetails() {
   const localUser = useAtomValue(userAtom)
@@ -51,16 +53,29 @@ export function useExpenseDetails() {
             ...oldData.member,
             [localUser!.id]: {
               ...oldData.member[localUser!.id],
-              settledAmount: variable.amount,
+              settledAmount: settledAmount + variable.amount,
             },
           },
+          timelines: [
+            {
+              createdAt: djs().valueOf(),
+              createdBy: localUser!,
+              events: `${localUser!.name} pays ${oldData.paidBy.name} with amount ${currencyFormatter(variable.amount)}`,
+            },
+            ...oldData.timelines,
+          ],
         }
       })
     },
   })
 
   const onSettleExpense = (amount: number) => {
-    settleExpenseMutation.mutate({ id, amount, receiverName: expenseDetailsQuery.data?.paidBy.name || '' })
+    settleExpenseMutation.mutate({
+      id,
+      settledAmount,
+      amount,
+      receiverName: expenseDetailsQuery.data?.paidBy.name || '',
+    })
   }
 
   return {
