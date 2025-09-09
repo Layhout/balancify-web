@@ -31,6 +31,7 @@ export type FriendResponse = User & Friend
 export enum NotiType {
   FriendRequest = 'friend-request',
   Group = 'group',
+  Expense = 'expense',
 }
 
 export interface Noti {
@@ -66,6 +67,47 @@ export type CurrencyCodes = 'USD' | 'KHR'
 
 export interface GroupMetadata {
   groupId: string
+  nameTrigrams: string[]
+  membersFlag: Record<string, true>
+}
+
+export enum MemberOption {
+  Group = 'group',
+  Friend = 'friend',
+}
+
+export enum SplitOption {
+  SplitEqually = 'split_equally',
+  Custom = 'custom',
+}
+
+export type ExpenseMember = User & { amount: number; settledAmount: number }
+
+export interface Timeline {
+  createdAt: number
+  createdBy: User
+  events: string
+}
+
+export interface Expense {
+  id: string
+  name: string
+  createdAt: FieldValue
+  amount: number
+  icon: string
+  iconBgColor: string
+  memberOption: MemberOption
+  splitOption: SplitOption
+  group: { id: string; name: string } | null
+  member: Record<string, ExpenseMember>
+  memberIds: string[]
+  createdBy: User
+  paidBy: User
+  timelines: Timeline[]
+}
+
+export interface ExpenseMetadata {
+  expenseId: string
   nameTrigrams: string[]
   membersFlag: Record<string, true>
 }

@@ -7,7 +7,7 @@ import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
 import { useClientAuth } from '@/hooks/useClientAuth'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { getUnreadNotis, readNoti } from '@/features'
 import { Noti } from '@/types/common'
 import { userAtom } from '@/repositories/user'
@@ -21,7 +21,6 @@ export type AppNavLink = {
 
 export function useAppLayout() {
   const pathname = usePathname()
-  const queryClient = useQueryClient()
   const localUser = useAtomValue(userAtom)
 
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
@@ -43,12 +42,6 @@ export function useAppLayout() {
 
   const readNotiMutation = useMutation({
     mutationFn: readNoti,
-    onSuccess: () => {
-      queryClient.setQueryData(
-        queryKey,
-        unreadNotis.map((n) => ({ ...n, userReadFlag: { ...n.userReadFlag, [localUser?.id || '']: true } })),
-      )
-    },
   })
 
   const onNotiOpen = (v: boolean) => {

@@ -65,19 +65,19 @@ export function PageHeader({
         <div className="mt-6 flex items-center justify-between gap-4">
           {hasSearch && (
             <Form {...searchForm}>
-              <form onSubmit={searchForm.handleSubmit(onSubmit)} className="w-full flex gap-4">
+              <form onSubmit={searchForm.handleSubmit(onSubmit)} className="flex w-full gap-4">
                 <FormField
                   control={searchForm.control}
                   name="search"
                   render={({ field }) => (
-                    <FormItem className="md:max-w-sm flex-1">
+                    <FormItem className="flex-1 md:max-w-sm">
                       <FormControl>
                         <Input
-                          {...field}
                           startIcon={() => <LuSearch />}
                           placeholder={searchPlaceholder || 'Search...'}
                           type="search"
                           onInput={(e) => !e.currentTarget.value && onSearch?.('')}
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />

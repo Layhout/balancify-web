@@ -3,6 +3,7 @@ import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { djs } from './dayjsExt'
 import { CurrencyCodes } from '@/types/common'
+import { ChangeEvent } from 'react'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -113,4 +114,11 @@ export function currencyFormatter(amount: number, currency: CurrencyCodes = 'USD
     style: 'currency',
     currency,
   }).format(amount)
+}
+
+export function format2DigitDecimal(onChange: (value: number) => void) {
+  return (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
+    onChange(e.target.valueAsNumber)
+  }
 }

@@ -60,7 +60,7 @@ export function useGroupForm() {
     mutationFn: editGroup,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id],
+        queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('edit')],
       })
 
       router.back()
@@ -77,6 +77,11 @@ export function useGroupForm() {
   })
 
   const onSubmitGroupForm = (value: GroupFormType) => {
+    if (!groupForm.formState.isDirty) {
+      router.back()
+      return
+    }
+
     const data = {
       name: value.name,
       description: value.description,
@@ -122,7 +127,7 @@ export function useGroupForm() {
   return {
     groupForm,
     onSubmitGroupForm,
-    isSubmitting: groupMutation.isPending,
+    isSubmitting: groupMutation.isPending || editGroupMutation.isPending,
     isEdit: !!searchParams.get('edit'),
   }
 }

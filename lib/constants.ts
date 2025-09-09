@@ -2,6 +2,7 @@ import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
 import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
 import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
 import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
+import { MemberOption, SplitOption } from '@/types/common'
 
 export const ROUTES = {
   LANDING: {
@@ -15,7 +16,7 @@ export const ROUTES = {
     AUTHORIZATION: '/app/authorization',
     DASHBOARD: '/app/dashboard',
     EXPENSES: '/app/expenses',
-    EXPENSES_CREATE: '/app/expenses/create',
+    EXPENSES_FORM: '/app/expenses/form',
     GROUPS: '/app/groups',
     GROUPS_FORM: '/app/groups/form',
     FRIENDS: '/app/friends',
@@ -101,6 +102,7 @@ export const QUERY_KEYS = {
   FRIENDS: 'friends',
   USER: 'user',
   NOTI: 'noti',
+  GROUPS_FRIENDS: 'groups_friends',
 }
 
 export enum QueryType {
@@ -161,6 +163,8 @@ export const FIREBASE_COLLTION_NAME = {
   NOTIS: 'notis',
   GROUPS: 'groups',
   GROUP_METADATA: 'group_metadata',
+  EXPENSES: 'expenses',
+  EXPENSE_METADATA: 'expense_metadata',
 }
 
 export const USER_404_MSG = [
@@ -197,3 +201,25 @@ export const FRIEND_ALREADY_EXISTS_MSG = [
 ]
 
 export const countPerPage = 10
+
+export const memberOptions = [
+  {
+    label: 'Group',
+    value: MemberOption.Group,
+  },
+  {
+    label: 'Friend',
+    value: MemberOption.Friend,
+  },
+]
+
+export const splitOptions = [
+  {
+    label: 'Split Equally',
+    value: SplitOption.SplitEqually,
+  },
+  {
+    label: 'Custom',
+    value: SplitOption.Custom,
+  },
+]

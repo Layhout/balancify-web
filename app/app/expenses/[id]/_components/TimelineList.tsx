@@ -1,4 +1,4 @@
-import { Timeline } from '@/services/expense.model'
+import { Timeline } from '@/types/common'
 import { TimelineItem } from './TimelineItem'
 import { TimelinePlaceholder } from './TimelinePlaceholder'
 

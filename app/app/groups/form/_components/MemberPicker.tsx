@@ -27,7 +27,6 @@ export function MemberPicker({
   const { friendQuery, setSearchFriend } = useMemberPicker()
 
   const [open, setOpen] = useState(false)
-
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 1000)
   const [isDebouncing, setIsDebouncing] = useState(false)
@@ -63,7 +62,7 @@ export function MemberPicker({
         <ScrollArea className="h-[300px]">
           {!friendQuery.isFetching && !isDebouncing && <CommandEmpty>Find someone</CommandEmpty>}
           {(friendQuery.isFetching || isDebouncing) && (
-            <CommandLoading className="mt-2 flex justify-center">
+            <CommandLoading className="flex justify-center pt-2">
               <LuLoaderCircle className="size-8 animate-spin" />
             </CommandLoading>
           )}
@@ -109,7 +108,7 @@ export function MemberPicker({
   if (isDesktop)
     return (
       <Popover open={open} onOpenChange={setOpen} modal>
-        <PopoverTrigger asChild>{picker}</PopoverTrigger>
+        {selectedMembers.length < 10 && <PopoverTrigger asChild>{picker}</PopoverTrigger>}
         <PopoverContent className="p-0" align="start" side="bottom">
           {foundFriendList}
         </PopoverContent>
@@ -118,7 +117,7 @@ export function MemberPicker({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>{picker}</DrawerTrigger>
+      {selectedMembers.length < 10 && <DrawerTrigger asChild>{picker}</DrawerTrigger>}
       <DrawerContent>
         <div className="mt-4 border-t">{foundFriendList}</div>
       </DrawerContent>

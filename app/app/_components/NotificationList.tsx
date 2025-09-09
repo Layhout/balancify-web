@@ -4,12 +4,8 @@ import { Empty } from '@/components/Empty'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Timestamp } from 'firebase/firestore'
 import { djs } from '@/lib/dayjsExt'
-import { useAtomValue } from 'jotai'
-import { userAtom } from '@/repositories/user'
 
 export function NotificationList({ notis }: { notis: Noti[] }) {
-  const localUser = useAtomValue(userAtom)
-
   return (
     <div>
       <h1 className="p-4 pb-0 text-lg font-bold">Notifications</h1>
@@ -18,7 +14,6 @@ export function NotificationList({ notis }: { notis: Noti[] }) {
           <ul className="mt-4 flex flex-col px-2">
             {notis.map((n, i) => (
               <NotificationItem
-                read={n.userReadFlag[localUser?.id || '']}
                 title={n.title}
                 description={n.description}
                 createdAt={djs((n.createdAt as Timestamp).toDate()).fromNow(true)}

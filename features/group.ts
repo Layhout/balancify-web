@@ -49,30 +49,29 @@ export async function createGroup({
   const groupMetadata: GroupMetadata = {
     groupId: group.id,
     nameTrigrams: generateTrigrams(group.name),
-    membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
+    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
 
-  await Promise.all([
-    setMultipleData([
-      {
-        collectionName: FIREBASE_COLLTION_NAME.GROUPS,
-        id: group.id,
-        data: group,
-      },
-      {
-        collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
-        id: group.id,
-        data: groupMetadata,
-      },
-    ]),
-    createNoti({
-      title: 'New Group',
-      description: `${user.name} added you to a group.`,
-      link: `${ROUTES.APP.GROUPS}/${group.id}`,
-      type: NotiType.Group,
-      ownerIds: members.map((m) => m.id),
-    }),
+  await setMultipleData([
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUPS,
+      id: group.id,
+      data: group,
+    },
+    {
+      collectionName: FIREBASE_COLLTION_NAME.GROUP_METADATA,
+      id: group.id,
+      data: groupMetadata,
+    },
   ])
+
+  await createNoti({
+    title: 'New Group',
+    description: `${user.name} added you to a group.`,
+    link: `${ROUTES.APP.GROUPS}/${group.id}`,
+    type: NotiType.Group,
+    ownerIds: members.map((m) => m.id),
+  })
 }
 
 export async function getGroups({
@@ -168,7 +167,7 @@ export async function editGroup({
       id,
       data: <Partial<GroupMetadata>>{
         nameTrigrams: generateTrigrams(name),
-        membersFlag: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {}),
+        membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
       },
     },
   ])

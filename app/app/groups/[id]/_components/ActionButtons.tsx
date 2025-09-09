@@ -3,9 +3,10 @@ import { HiOutlineCog6Tooth } from 'react-icons/hi2'
 import { LuPlus } from 'react-icons/lu'
 import { MemberListDrawer } from './MemberListDrawer'
 import { User } from '@/types/common'
-import { LeaveGroupAlertDialog } from './LeaveGroupAlertDialog'
 import Link from 'next/link'
 import { ROUTES } from '@/lib/constants'
+import { ConfirmationDialog } from '@/components/ConfirmationDialog'
+import { HiOutlineLogout } from 'react-icons/hi'
 
 type ActionButtonsProps = {
   loading: boolean
@@ -28,7 +29,18 @@ export function ActionButtons({ loading, members, id, onLeaveGroup }: ActionButt
           <span className="hidden md:inline">Edit</span>
         </Link>
       </Button>
-      <LeaveGroupAlertDialog onLeaveGroup={onLeaveGroup} />
+      <ConfirmationDialog
+        title="Are you sure you want to leave this group?"
+        description="This action cannot be undone."
+        confirmText="Leave"
+        triggerBtn={
+          <Button variant="destructive" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2">
+            <HiOutlineLogout className="h-4 w-4" />
+            <span className="hidden md:inline">Leave</span>
+          </Button>
+        }
+        onConfirm={onLeaveGroup}
+      />
     </div>
   )
 }

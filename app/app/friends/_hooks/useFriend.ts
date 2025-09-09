@@ -1,5 +1,5 @@
 import { FRIEND_REQUEST_MSG, QUERY_KEYS, QueryType, YOURSELF_AS_FRIEND_MSG } from '@/lib/constants'
-import { keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, keepPreviousData, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -80,23 +80,27 @@ export function useFriend() {
   })
 
   const updateLocalFriendList = (friendUserId: string, status: FriendStatusEnum) => {
-    const pageIndex = friendQuery.data?.pages.findIndex((page) => page.data.some((f) => f.userId === friendUserId))
-    const friendIndexInPage = friendQuery.data?.pages[pageIndex!].data.findIndex((f) => f.userId === friendUserId)
-    const friend = friendQuery.data?.pages[pageIndex!].data[friendIndexInPage!]
+    queryClient.setQueryData(queryKey, (oldData: InfiniteData<PaginatedResponse<FriendResponse>> | void) => {
+      if (!oldData) return oldData
 
-    friend!.status = status
+      const pageIndex = oldData.pages.findIndex((page) => page.data.some((f) => f.userId === friendUserId))
+      const friendIndexInPage = oldData.pages[pageIndex!].data.findIndex((f) => f.userId === friendUserId)
+      const friend = oldData.pages[pageIndex!].data[friendIndexInPage!]
 
-    queryClient.setQueryData(queryKey, {
-      ...friendQuery.data,
-      pages: friendQuery.data?.pages.map((page, i) => {
-        if (i === pageIndex) {
-          return {
-            ...page,
-            data: page.data.map((f, j) => (j === friendIndexInPage ? friend : f)),
+      friend!.status = status
+
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page, i) => {
+          if (i === pageIndex) {
+            return {
+              ...page,
+              data: page.data.map((f, j) => (j === friendIndexInPage ? friend : f)),
+            }
           }
-        }
-        return page
-      }),
+          return page
+        }),
+      }
     })
   }
 
