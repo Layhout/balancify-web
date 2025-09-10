@@ -1,5 +1,5 @@
 import { getQueryData } from '@/lib/firestore'
-import { FIREBASE_COLLTION_NAME } from '@/lib/constants'
+import { FIREBASE_COLLTION_NAME, STANDARD_DATE_FORMAT } from '@/lib/constants'
 import { where, QueryConstraint, Timestamp } from 'firebase/firestore'
 import { userAtom } from '@/repositories/user'
 import { Dashboard, Expense } from '@/types/common'
@@ -23,7 +23,7 @@ export async function getDashboardData(): Promise<Dashboard | null> {
   const { getBack, owed, spendingHistory } = expenses.reduce<{
     getBack: number
     owed: number
-    spendingHistory: { amount: number; createdAt: Date }[]
+    spendingHistory: Record<string, number>
   }>(
     (p, c) => {
       if (c.paidBy.id === userId) {
@@ -32,12 +32,20 @@ export async function getDashboardData(): Promise<Dashboard | null> {
         p.owed += c.member[userId].amount - c.member[userId].settledAmount
       }
 
-      p.spendingHistory.push({ amount: c.member[userId].amount, createdAt: (c.createdAt as Timestamp).toDate() })
+      p.spendingHistory[djs((c.createdAt as Timestamp).toDate()).format(STANDARD_DATE_FORMAT)] ??= 0
+
+      p.spendingHistory[djs((c.createdAt as Timestamp).toDate()).format(STANDARD_DATE_FORMAT)] +=
+        c.member[userId].amount
 
       return p
     },
-    { getBack: 0, owed: 0, spendingHistory: [] },
+    { getBack: 0, owed: 0, spendingHistory: {} },
   )
 
-  return { getBack, owed, expenses, spendingHistory }
+  return {
+    getBack,
+    owed,
+    expenses,
+    spendingHistory: Object.entries(spendingHistory).map(([createdAt, amount]) => ({ createdAt, amount })),
+  }
 }

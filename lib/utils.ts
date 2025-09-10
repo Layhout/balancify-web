@@ -1,8 +1,7 @@
-import { SpendingHistory } from '@/services/dashboard.model'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { djs } from './dayjsExt'
-import { CurrencyCodes } from '@/types/common'
+import { CurrencyCodes, Dashboard } from '@/types/common'
 import { ChangeEvent } from 'react'
 
 export function cn(...inputs: ClassValue[]) {
@@ -25,7 +24,7 @@ export function hexColorToRgbColor(hex: string) {
     : null
 }
 
-export function getSpendingLevel(spendingHistory: SpendingHistory[]) {
+export function getSpendingLevel(spendingHistory: Dashboard['spendingHistory']) {
   const levels: Record<'l1' | 'l2' | 'l3' | 'l4', Record<string, number>> = {
     l1: {},
     l2: {},
@@ -44,20 +43,20 @@ export function getSpendingLevel(spendingHistory: SpendingHistory[]) {
 
   for (const s of spendingHistory) {
     if (s.amount <= (min + range) * 0.25) {
-      levels.l1[s.date] = s.amount
+      levels.l1[s.createdAt] = s.amount
     } else if (s.amount <= (min + range) * 0.5) {
-      levels.l2[s.date] = s.amount
+      levels.l2[s.createdAt] = s.amount
     } else if (s.amount <= (min + range) * 0.75) {
-      levels.l3[s.date] = s.amount
+      levels.l3[s.createdAt] = s.amount
     } else {
-      levels.l4[s.date] = s.amount
+      levels.l4[s.createdAt] = s.amount
     }
   }
 
   return levels
 }
 
-export function getSpendingPerMonth(spendingHistory: SpendingHistory[]) {
+export function getSpendingPerMonth(spendingHistory: Dashboard['spendingHistory']) {
   const data: Record<'month' | 'spent', any>[] = []
 
   if (spendingHistory.length === 0) {
@@ -67,7 +66,7 @@ export function getSpendingPerMonth(spendingHistory: SpendingHistory[]) {
   const group: Record<string, number> = {}
 
   for (const s of spendingHistory) {
-    const month = djs(s.date).format('MMMM')
+    const month = djs(s.createdAt).format('MMMM')
     group[month] = (group[month] || 0) + s.amount
   }
 

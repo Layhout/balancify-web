@@ -1,13 +1,13 @@
 import { Calendar } from '@/components/ui/calendar'
 import { djs } from '@/lib/dayjsExt'
-import { SpendingHistory } from '@/services/dashboard.model'
 import { DayContentProps } from 'react-day-picker'
 import { useCallback, useMemo } from 'react'
-import { getSpendingLevel } from '@/lib/utils'
+import { currencyFormatter, getSpendingLevel } from '@/lib/utils'
 import { STANDARD_DATE_FORMAT } from '@/lib/constants'
 import { TooltipX } from '@/components/TooltipX'
+import { Dashboard } from '@/types/common'
 
-export function CalendarHeatMap({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function CalendarHeatMap({ spendingHistory }: { spendingHistory: Dashboard['spendingHistory'] }) {
   const { l1, l2, l3, l4 } = useMemo(() => getSpendingLevel(spendingHistory), [spendingHistory])
 
   const dayComponent = useCallback(
@@ -23,7 +23,7 @@ export function CalendarHeatMap({ spendingHistory }: { spendingHistory: Spending
         return (
           <TooltipX
             trigger={<div className="flex h-full w-full items-center justify-center">{day}</div>}
-            content={<span>${amount}</span>}
+            content={<span>{currencyFormatter(amount)}</span>}
             side="top"
           />
         )

@@ -1,16 +1,16 @@
 import { addFriendByReferalCode, createUser, findUserById, updateUser } from '@/features'
 import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
-import { auth } from '@/lib/firebase'
+import { auth, firebaseMessagingUrl } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
+import { getMessaging, getToken as getMessagingToken } from 'firebase/messaging'
 import { useAtom } from 'jotai'
 import { isEmpty } from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import OneSignal from 'react-onesignal'
 import shortid from 'shortid'
 import { toast } from 'sonner'
 
@@ -70,7 +70,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
       imageUrl: clerkUser?.imageUrl,
       profileBgColor: BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)],
       referalCode: shortid.generate(),
-      oneSignalId: '',
+      notiToken: '',
     }
 
     await setDBUser(newUserData)
@@ -108,24 +108,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
         return
       }
 
-      try {
-        if (process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID)
-          await OneSignal.init({
-            appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-            // You can add other initialization options here
-            // notifyButton: {
-            //   enable: true,
-            // },
-            // Uncomment the below line to run on localhost. See: https://documentation.onesignal.com/docs/local-testing
-            allowLocalhostAsSecureOrigin: true,
-          })
-      } catch {}
-
       const newUserData: Partial<User> = {}
-
-      if ((OneSignal.User.onesignalId || '') !== localUser.oneSignalId) {
-        newUserData.oneSignalId = OneSignal.User.onesignalId || ''
-      }
 
       if (localUser.imageUrl !== clerkUser?.imageUrl) {
         newUserData.imageUrl = clerkUser?.imageUrl
@@ -154,9 +137,49 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, userId, localUser])
-}
-/**
- *   }, [isLoaded, userId, localUser])
+  }, [isLoaded, userId, localUser?.id])
 
- */
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('navigator' in window) || !localUser) return
+
+    const initNoti = async () => {
+      try {
+        const permission = await Notification.requestPermission()
+
+        if (permission !== 'granted') {
+          return
+        }
+
+        const registration = await navigator.serviceWorker.register(firebaseMessagingUrl())
+
+        if (!registration) {
+          return
+        }
+
+        const messaging = getMessaging()
+
+        const token = await getMessagingToken(messaging, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          serviceWorkerRegistration: registration,
+        })
+
+        if (!token) {
+          return
+        }
+
+        if (localUser?.notiToken === token) {
+          return
+        }
+
+        await updateDBUser({ notiToken: token })
+      } catch (error) {
+        console.error('Error Requesting Notification Permission:', error)
+        return
+      }
+    }
+
+    initNoti()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localUser?.notiToken])
+}

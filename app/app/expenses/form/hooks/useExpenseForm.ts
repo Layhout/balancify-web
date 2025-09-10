@@ -20,7 +20,7 @@ const memberFormSchema = z.object({
   profileBgColor: z.string(),
   email: z.string(),
   name: z.string(),
-  oneSignalId: z.string(),
+  notiToken: z.string(),
   referalCode: z.string(),
   amount: z.coerce.number(),
   settledAmount: z.number(),
@@ -147,7 +147,7 @@ export function useExpenseForm() {
           profileBgColor: m.profileBgColor,
           email: m.email,
           name: m.name,
-          oneSignalId: m.oneSignalId || '',
+          notiToken: m.notiToken || '',
           referalCode: m.referalCode,
           settledAmount: m.settledAmount || 0,
         }

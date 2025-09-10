@@ -6,7 +6,7 @@ export interface User {
   profileBgColor: string
   email: string
   name: string
-  oneSignalId: string
+  notiToken: string
   referalCode: string
 }
 
@@ -116,5 +116,5 @@ export interface Dashboard {
   expenses: Expense[]
   getBack: number
   owed: number
-  spendingHistory: { amount: number; createdAt: Date }[]
+  spendingHistory: { amount: number; createdAt: string }[]
 }

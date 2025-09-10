@@ -88,7 +88,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
                             imageUrl: friend.imageUrl,
                             profileBgColor: friend.profileBgColor,
                             email: friend.email,
-                            oneSignalId: friend.oneSignalId || '',
+                            notiToken: friend.notiToken || '',
                             referalCode: friend.referalCode,
                           },
                         ])

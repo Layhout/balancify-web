@@ -2,6 +2,7 @@ import { initializeApp, FirebaseOptions } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import { getMessaging } from 'firebase/messaging'
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,3 +18,21 @@ export const app = initializeApp(firebaseConfig)
 export const rdb = getDatabase(app)
 export const fdb = getFirestore(app)
 export const auth = getAuth(app)
+
+let messaging: ReturnType<typeof getMessaging>
+
+if (typeof window !== 'undefined' && 'navigator' in window) {
+  messaging = getMessaging(app)
+}
+
+export { messaging }
+
+export function firebaseMessagingUrl() {
+  let url = '/firebase-messaging-sw.js' // or any other file name you want
+
+  // Append the params
+  Object.entries(firebaseConfig).forEach(([key, value], index) => {
+    url += `${index === 0 ? '?' : '&'}${key}=${value}`
+  })
+  return url
+}
