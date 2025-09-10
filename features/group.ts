@@ -70,7 +70,7 @@ export async function createGroup({
     description: `${user.name} added you to a group.`,
     link: `${ROUTES.APP.GROUPS}/${group.id}`,
     type: NotiType.Group,
-    ownerIds: members.map((m) => m.id),
+    owners: members,
   })
 }
 

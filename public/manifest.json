@@ -1,0 +1,100 @@
+{
+  "theme_color": "#F59E0B",
+  "background_color": "#C47E09",
+  "icons": [
+    {
+      "purpose": "any",
+      "sizes": "114x114",
+      "src": "/assets/images/114.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "120x120",
+      "src": "/assets/images/120.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "144x144",
+      "src": "/assets/images/144.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "152x152",
+      "src": "/assets/images/152.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "180x180",
+      "src": "/assets/images/180.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "57x57",
+      "src": "/assets/images/57.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "60x60",
+      "src": "/assets/images/60.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "72x72",
+      "src": "/assets/images/72.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "76x76",
+      "src": "/assets/images/76.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "src": "/assets/images/192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "/assets/images/512.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "/assets/images/512.png",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "name": "Balancify",
+  "short_name": "Balancify: Web Application",
+  "start_url": "/",
+  "description": "The all-in-one app for splitting bills and tracking group expenses. Keep everyone on the same page and settle up in seconds.",
+  "screenshots": [
+    {
+      "src": "/assets/images/mock-mobile.png",
+      "type": "image/png",
+      "sizes": "1302x2568",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/images/mock-desktop.png",
+      "type": "image/png",
+      "sizes": "2492x1536",
+      "form_factor": "wide"
+    }
+  ]
+}
