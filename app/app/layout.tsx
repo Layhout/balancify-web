@@ -6,6 +6,7 @@ import { MobileNav } from './_components/MobileNav'
 import { NotificationBar } from './_components/NotificationBar'
 import { Splash } from './_components/Splash'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { isCollapsed, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav, unreadNotis, onNotiOpen } =
@@ -24,6 +25,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <Splash show={isInitialLoading} />
+      <PWAInstallPrompt />
     </>
   )
 }

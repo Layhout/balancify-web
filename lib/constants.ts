@@ -93,6 +93,7 @@ export const LOCALSTORAGE_KEYS = {
   DESKTOP_NAV_TOGGLE: 'desktop_nav_toggle',
   APP_THEME: 'app_theme',
   USER: 'user',
+  SHOWN_PWA: 'shown_pwa',
 }
 
 export const QUERY_KEYS = {

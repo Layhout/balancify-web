@@ -121,3 +121,19 @@ export function format2DigitDecimal(onChange: (value: number) => void) {
     onChange(e.target.valueAsNumber)
   }
 }
+
+export function isInstalledPWA() {
+  return (
+    window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone
+  )
+}
+
+export function isIOS() {
+  return (
+    ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  )
+}

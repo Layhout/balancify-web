@@ -27,11 +27,24 @@ export const metadata: Metadata = {
     'Group budget',
   ],
   authors: [{ name: 'Layhout Chea', url: 'https://layhout.is-a.dev' }],
-  // icons:[
-  //   {
-  //     rel:''
-  //   }
-  // ]
+  applicationName: 'Balancify',
+  appleWebApp: {
+    capable: true,
+    title: 'Balancify',
+    statusBarStyle: 'default',
+  },
+  icons: [
+    {
+      rel: 'icon',
+      url: '/favicon.ico',
+      sizes: 'any',
+    },
+    {
+      rel: 'apple-touch-icon',
+      url: '/assets/images/180.png',
+      sizes: '180x180',
+    },
+  ],
 }
 
 export const viewport: Viewport = {

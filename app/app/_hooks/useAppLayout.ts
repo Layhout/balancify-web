@@ -11,7 +11,6 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { getUnreadNotis, readNoti } from '@/features'
 import { Noti } from '@/types/common'
 import { userAtom } from '@/repositories/user'
-import { useNoti } from '@/hooks/useNoti'
 
 export type AppNavLink = {
   title: string
@@ -31,8 +30,6 @@ export function useAppLayout() {
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
   useClientAuth(() => setIsInitialLoading(false))
-
-  useNoti()
 
   const queryKey = [QUERY_KEYS.NOTI, QueryType.List, localUser?.id]
 

@@ -80,8 +80,8 @@
   "dir": "auto",
   "lang": "en-US",
   "name": "Balancify",
-  "short_name": "Balancify: Web Application",
-  "start_url": "/",
+  "short_name": "Balancify",
+  "start_url": "/app",
   "description": "The all-in-one app for splitting bills and tracking group expenses. Keep everyone on the same page and settle up in seconds.",
   "screenshots": [
     {

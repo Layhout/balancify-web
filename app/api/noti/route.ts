@@ -6,7 +6,6 @@ if (!admin.apps.length) {
   const projectId = process.env.NEXT_PUBLIC_FIREBASE_ADMIN_PROJECT_ID
   const privateKey = process.env.NEXT_PUBLIC_FIREBASE_ADMIN_PRIVATE_KEY
   const clientEmail = process.env.NEXT_PUBLIC_FIREBASE_ADMIN_CLIENT_EMAIL
-  console.log({ projectId, privateKey, clientEmail })
 
   if (!projectId || !privateKey || !clientEmail) {
     throw new Error('Missing Firebase Admin credentials')

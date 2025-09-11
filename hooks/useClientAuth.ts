@@ -140,7 +140,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   }, [isLoaded, userId, localUser?.id])
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !('navigator' in window) || !localUser) return
+    if (!localUser) return
 
     const initNoti = async () => {
       try {
