@@ -85,15 +85,27 @@
   "description": "The all-in-one app for splitting bills and tracking group expenses. Keep everyone on the same page and settle up in seconds.",
   "screenshots": [
     {
-      "src": "/assets/images/mock-mobile.png",
+      "src": "/assets/images/mock-mobile-1.png",
       "type": "image/png",
-      "sizes": "1302x2568",
+      "sizes": "1300x2600",
       "form_factor": "narrow"
     },
     {
-      "src": "/assets/images/mock-desktop.png",
+      "src": "/assets/images/mock-mobile-2.png",
       "type": "image/png",
-      "sizes": "2492x1536",
+      "sizes": "1300x2600",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/images/mock-desktop-1.png",
+      "type": "image/png",
+      "sizes": "2601x1734",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/assets/images/mock-desktop-2.png",
+      "type": "image/png",
+      "sizes": "2601x1734",
       "form_factor": "wide"
     }
   ]

@@ -42,7 +42,7 @@ export function usePWA() {
     return () => controller.abort()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isShownPWA])
 
   const handleOpenChange = (open?: boolean) => {
     if (!isShownPWA) setIsShownPWA(true)
