@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { BlogListItem } from './_components/BlogListItem'
+import { ROUTES } from '@/lib/constants'
 
 export default function Blogs() {
   return (
@@ -10,6 +11,35 @@ export default function Blogs() {
       </header>
       <article>
         <ul>
+          <BlogListItem date="2025-09-12" title="v1.0.0-beta Release! 🚀🎉" version="v1.0.0-beta">
+            <p>
+              I am excited to announce the beta release of Balancify! 🎉 This early version of our web app is now live
+              and ready for you to explore. During the beta phase, we’re focusing on gathering feedback, improving
+              stability, and refining features.
+            </p>
+            <p>✅ What you can do:</p>
+            <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
+              <li>Sign up and start using the app today.</li>
+              <li>Invite your friends to try it out.</li>
+              <li>Add friends who are already using the app.</li>
+              <li>Create groups with your friends.</li>
+              <li>Start tracking your expenses.</li>
+              <li>Review your spending on dashboard.</li>
+            </ul>
+            <p>
+              Report bugs or share your feedback on{' '}
+              <Link href="https://github.com/Layhout/balancify-web/issues" target="_blank" className="underline">
+                GitHub
+              </Link>{' '}
+              issues. Your input will help shape the future of Balancify. Thank you for being part of our journey!
+            </p>
+            <p>
+              👉 Try it now:{' '}
+              <Link href={ROUTES.APP.HOME} className="underline">
+                Balancify
+              </Link>
+            </p>
+          </BlogListItem>
           <BlogListItem date="2025-05-20" title="v0.0.0-alpha-0 POC Release! 🎉" version="v0.0.0-alpha-0">
             <p>
               After a long hiatus, I&apos;m finally back to working on this project! This release focuses solely on the
@@ -35,6 +65,7 @@ export default function Blogs() {
             </p>
           </BlogListItem>
           <BlogListItem date="2024-04-27" title="Journey Started" version="v0.0.0-alpha-0">
+            <p>What we did:</p>
             <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
               <li>Choose tech stacks.</li>
               <li>Planning app workflow.</li>
