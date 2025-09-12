@@ -40,8 +40,8 @@ export default function Home() {
         </div>
         <div className="relative flex w-full max-w-[700px] items-center justify-start">
           <div className="max-size-[300px] absolute left-1/2 top-1/2 size-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/20 blur-3xl" />
-          <img src="/assets/images/mock-desktop.png" className="relative w-[90%]" alt="mock desktop" />
-          <img src="/assets/images/mock-mobile.png" className="absolute bottom-0 right-0 w-[30%]" alt="mock mobile" />
+          <img src="/assets/images/mock-desktop-1.png" className="relative w-[90%]" alt="mock desktop" />
+          <img src="/assets/images/mock-mobile-1.png" className="absolute bottom-0 right-0 w-[30%]" alt="mock mobile" />
         </div>
       </div>
     </main>

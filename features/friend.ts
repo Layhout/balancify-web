@@ -57,7 +57,7 @@ export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: str
     description: `${user.name} sent you a firend request.`,
     link: ROUTES.APP.FRIENDS,
     type: NotiType.FriendRequest,
-    ownerIds: [foundUser.id],
+    owners: [foundUser],
   })
 
   await setMultipleData([

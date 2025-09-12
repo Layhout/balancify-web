@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form'
 
 type PageHeaderProps = {
   title: string
+  description?: string
   hasBackBtn?: boolean
   hasSearch?: boolean
   action?: ReactNode
@@ -28,6 +29,7 @@ type searchFromType = z.infer<typeof searchFormSchema>
 
 export function PageHeader({
   title,
+  description,
   hasBackBtn = false,
   hasSearch = false,
   action,
@@ -57,7 +59,10 @@ export function PageHeader({
               <LuArrowLeft className="h-4 w-4" />
             </Button>
           )}
-          <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
+          <div>
+            <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
         </div>
         {action && <div className={cn('md:hidden', { 'md:block': !hasSearch })}>{action}</div>}
       </div>

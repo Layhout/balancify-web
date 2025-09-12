@@ -17,7 +17,7 @@ export function TooltipX({ trigger, content, align, side }: TooltipXProps) {
     return (
       <Popover>
         <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-        <PopoverContent side={side} align={align}>
+        <PopoverContent side={side} align={align} className="w-fit bg-primary px-3 py-1.5 text-primary-foreground">
           {content}
         </PopoverContent>
       </Popover>

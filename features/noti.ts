@@ -2,22 +2,24 @@ import { FIREBASE_COLLTION_NAME } from '@/lib/constants'
 import { getQueryData, setData, updateMultipleData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { Noti, NotiType } from '@/types/common'
+import { Noti, NotiType, User } from '@/types/common'
 import { limit, serverTimestamp, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
+import { auth } from '@clerk/nextjs'
 
 export async function createNoti({
   title,
   description,
   link = '',
   type,
-  ownerIds,
+  owners,
 }: {
   title: string
   description: string
   link?: string
   type: NotiType
-  ownerIds: string[]
+  owners: User[]
 }) {
   const userId = store.get(userAtom)?.id
 
@@ -29,12 +31,27 @@ export async function createNoti({
     description,
     link,
     type,
-    userReadFlag: ownerIds.reduce((p, c) => ({ ...p, [c]: false }), {}),
-    ownerIds,
+    userReadFlag: owners.reduce((p, c) => ({ ...p, [c.id]: false }), {}),
+    ownerIds: owners.map((o) => o.id),
     createdAt: serverTimestamp(),
   }
 
   await setData(FIREBASE_COLLTION_NAME.NOTIS, noti.id, noti)
+
+  const accessToken = await auth().getToken({ template: 'access_api' })
+
+  await axios.post(
+    '/api/noti',
+    {
+      notiTitle: noti.title,
+      notiBody: noti.description,
+      notiUrl: noti.link,
+      notiTokens: owners.map((o) => o.notiToken).filter(Boolean),
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  )
 }
 
 export async function getUnreadNotis(): Promise<Noti[]> {

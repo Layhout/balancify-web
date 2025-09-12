@@ -1,19 +1,16 @@
-import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
-import { services } from '@/services'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
+import { getDashboardData } from '@/features'
 
 export function useDashboard() {
   const localUser = useAtomValue(userAtom)
 
-  const { isPending, data: dashboardRes } = useQuery({
-    queryKey: [QUERY_KEYS.DASHBOARD, QueryType.List, localUser?.id],
-    queryFn: services.dashboard.getDashboard,
+  const dashboardQuery = useQuery({
+    queryKey: [QUERY_KEYS.DASHBOARD, QueryType.Details, localUser?.id],
+    queryFn: () => getDashboardData(),
   })
 
-  const dashboardData = useMemo(() => dashboardRes?.data, [dashboardRes?.data])
-
-  return { isPending, dashboardData }
+  return { dashboardQuery }
 }

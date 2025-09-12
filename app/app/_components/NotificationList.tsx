@@ -2,8 +2,6 @@ import { Noti } from '@/types/common'
 import { NotificationItem } from './NotificationItem'
 import { Empty } from '@/components/Empty'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Timestamp } from 'firebase/firestore'
-import { djs } from '@/lib/dayjsExt'
 
 export function NotificationList({ notis }: { notis: Noti[] }) {
   return (
@@ -13,12 +11,7 @@ export function NotificationList({ notis }: { notis: Noti[] }) {
         {notis.length ? (
           <ul className="mt-4 flex flex-col px-2">
             {notis.map((n, i) => (
-              <NotificationItem
-                title={n.title}
-                description={n.description}
-                createdAt={djs((n.createdAt as Timestamp).toDate()).fromNow(true)}
-                key={i}
-              />
+              <NotificationItem key={i} {...n} />
             ))}
           </ul>
         ) : (

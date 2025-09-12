@@ -1,10 +1,10 @@
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { SpendingHistory } from '@/services/dashboard.model'
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 import { useMemo } from 'react'
 import { getSpendingPerMonth } from '@/lib/utils'
+import { Dashboard } from '@/types/common'
 
-export function SpendingBarChart({ spendingHistory }: { spendingHistory: SpendingHistory[] }) {
+export function SpendingBarChart({ spendingHistory }: { spendingHistory: Dashboard['spendingHistory'] }) {
   const data = useMemo(() => getSpendingPerMonth(spendingHistory), [spendingHistory])
 
   return (

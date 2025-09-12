@@ -1,6 +1,13 @@
-/** @type {import('next').NextConfig} */
+import pwa from "next-pwa"
 
-// import packageJson from './package.json'
+const withPWA = pwa({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
+});
+
+/** @type {import('next').NextConfig} */
 
 const nextConfig = {
   logging: {
@@ -19,4 +26,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withPWA(nextConfig)

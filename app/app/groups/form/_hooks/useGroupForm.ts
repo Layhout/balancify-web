@@ -16,7 +16,7 @@ const memberFormSchema = z.object({
   profileBgColor: z.string(),
   email: z.string(),
   name: z.string(),
-  oneSignalId: z.string().optional(),
+  notiToken: z.string().optional(),
   referalCode: z.string(),
 })
 
@@ -91,7 +91,7 @@ export function useGroupForm() {
         profileBgColor: member.profileBgColor,
         imageUrl: member.imageUrl,
         email: member.email,
-        oneSignalId: member.oneSignalId || '',
+        notiToken: member.notiToken || '',
         referalCode: member.referalCode,
       })),
     }

@@ -6,7 +6,7 @@ export interface User {
   profileBgColor: string
   email: string
   name: string
-  oneSignalId: string
+  notiToken: string
   referalCode: string
 }
 
@@ -110,4 +110,11 @@ export interface ExpenseMetadata {
   expenseId: string
   nameTrigrams: string[]
   membersFlag: Record<string, true>
+}
+
+export interface Dashboard {
+  expenses: Expense[]
+  getBack: number
+  owed: number
+  spendingHistory: { amount: number; createdAt: string }[]
 }
