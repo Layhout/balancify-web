@@ -5,7 +5,6 @@ import { useTheme } from '@/hooks/useTheme'
 import { ProgressProvider } from '@bprogress/next/app'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from './ui/sonner'
-import { PWAInstallPrompt } from './PWAInstallPrompt'
 
 export function ClientConfigProvider({
   children,
@@ -19,7 +18,6 @@ export function ClientConfigProvider({
     <TooltipProvider delayDuration={0}>
       <ProgressProvider height="4px" color="hsl(var(--primary, black))" options={{ showSpinner: false }} shallowRouting>
         {children}
-        <PWAInstallPrompt />
       </ProgressProvider>
       <Toaster position="top-right" />
     </TooltipProvider>

@@ -19,7 +19,7 @@ export function PWAInstallPrompt({ triggerBtn }: { triggerBtn?: JSX.Element }) {
   const isDesktop = useAtomValue(isDesktopAtom)
   const isDarkMode = useAtomValue(isDarkModeAtom)
 
-  const { openInstallPrompt, handleOpenChange, isMobileBrowser, isIOS, handleInstall, isInstalled } = usePWA()
+  const { openInstallPrompt, handleOpenChange, isMobileBrowser, isIOS, handleInstall, canInstall } = usePWA()
 
   const dialogTitle = 'Use Balancify as an app'
   const content = (
@@ -49,7 +49,7 @@ export function PWAInstallPrompt({ triggerBtn }: { triggerBtn?: JSX.Element }) {
   if (isDesktop)
     return (
       <Dialog open={openInstallPrompt} onOpenChange={handleOpenChange}>
-        {triggerBtn && !isInstalled && <DialogTrigger asChild>{triggerBtn}</DialogTrigger>}
+        {triggerBtn && canInstall && <DialogTrigger asChild>{triggerBtn}</DialogTrigger>}
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
@@ -63,7 +63,7 @@ export function PWAInstallPrompt({ triggerBtn }: { triggerBtn?: JSX.Element }) {
 
   return (
     <Drawer open={openInstallPrompt} onOpenChange={handleOpenChange}>
-      {triggerBtn && !isInstalled && <DrawerTrigger asChild>{triggerBtn}</DrawerTrigger>}
+      {triggerBtn && canInstall && <DrawerTrigger asChild>{triggerBtn}</DrawerTrigger>}
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{dialogTitle}</DrawerTitle>

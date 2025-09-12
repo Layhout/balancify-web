@@ -9,8 +9,8 @@ export function usePWA() {
 
   const [openInstallPrompt, setOpenInstallPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
+  const [pwaEvent, setPwaEvent] = useState<any>(null)
 
-  const pwaPromptRef = useRef<any>(null)
   const isIOSRef = useRef<boolean>(false)
   const isMobileBrowserRef = useRef<boolean>(false)
 
@@ -21,19 +21,23 @@ export function usePWA() {
       'beforeinstallprompt',
       (e) => {
         e.preventDefault()
-        pwaPromptRef.current = e
-        console.log('beforeinstallprompt')
+        setPwaEvent(e)
 
         if (isShownPWA) return
 
-        isIOSRef.current = isIOS()
-        isMobileBrowserRef.current = isMobileBrowser()
         setOpenInstallPrompt(true)
       },
       { signal: controller.signal },
     )
 
+    isIOSRef.current = isIOS()
+    isMobileBrowserRef.current = isMobileBrowser()
+
     setIsInstalled(isInstalledPWA())
+
+    if (isIOSRef.current && !isShownPWA) {
+      setOpenInstallPrompt(true)
+    }
 
     return () => controller.abort()
 
@@ -46,9 +50,9 @@ export function usePWA() {
   }
 
   const handleInstall = () => {
-    if (!pwaPromptRef.current) return
-    pwaPromptRef.current.prompt()
-    pwaPromptRef.current.userChoice.then((choiceResult: { outcome: string }) => {
+    if (!pwaEvent) return
+    pwaEvent.prompt()
+    pwaEvent.userChoice.then((choiceResult: { outcome: string }) => {
       if (choiceResult.outcome === 'accepted') {
         handleOpenChange()
       }
@@ -61,6 +65,6 @@ export function usePWA() {
     isIOS: isIOSRef.current,
     isMobileBrowser: isMobileBrowserRef.current,
     handleInstall,
-    isInstalled,
+    canInstall: !isInstalled || !pwaEvent,
   }
 }
