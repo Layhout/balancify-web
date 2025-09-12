@@ -6,6 +6,7 @@ import { Noti, NotiType, User } from '@/types/common'
 import { limit, serverTimestamp, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
+import { auth } from '@clerk/nextjs'
 
 export async function createNoti({
   title,
@@ -37,12 +38,20 @@ export async function createNoti({
 
   await setData(FIREBASE_COLLTION_NAME.NOTIS, noti.id, noti)
 
-  await axios.post('/api/noti', {
-    notiTitle: noti.title,
-    notiBody: noti.description,
-    notiUrl: noti.link,
-    notiTokens: owners.map((o) => o.notiToken).filter(Boolean),
-  })
+  const accessToken = await auth().getToken({ template: 'access_api' })
+
+  await axios.post(
+    '/api/noti',
+    {
+      notiTitle: noti.title,
+      notiBody: noti.description,
+      notiUrl: noti.link,
+      notiTokens: owners.map((o) => o.notiToken).filter(Boolean),
+    },
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  )
 }
 
 export async function getUnreadNotis(): Promise<Noti[]> {

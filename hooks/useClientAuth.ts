@@ -181,5 +181,5 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     initNoti()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localUser?.notiToken])
+  }, [localUser?.id])
 }
