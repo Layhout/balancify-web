@@ -231,7 +231,7 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
         <p className="text-[0.8rem] font-medium text-destructive">{form.formState.errors.members?.root?.message}</p>
       )}
       <div className="hidden md:flex md:justify-end">
-        <Button type="submit" disabled={isSubmitting} className="gap-2">
+        <Button type="submit" disabled={isSubmitting || !form.formState.isDirty} className="gap-2">
           {isSubmitting && <LuLoaderCircle className="animate-spin" />}
           {isEdit ? 'Update' : 'Create'}
         </Button>

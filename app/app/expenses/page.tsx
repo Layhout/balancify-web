@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { LuPlus } from 'react-icons/lu'
+import { LuLoaderCircle, LuPlus } from 'react-icons/lu'
 import { useExpense } from './_hooks/useExpense'
 import { ExpenseWrapper } from './_components/ExpenseWrapper'
 import { ExpenseCard } from './_components/ExpenseCard'
@@ -32,11 +32,21 @@ export default function Expenses() {
         }
       />
       {expenseQuery.isFetching || expenseData.length ? (
-        <ExpenseWrapper loading={expenseQuery.isFetching && !expenseQuery.isFetchingNextPage}>
-          {expenseData.map((expense, i) => (
-            <ExpenseCard key={i} {...expense} />
-          ))}
-        </ExpenseWrapper>
+        <>
+          <ExpenseWrapper loading={expenseQuery.isFetching && !expenseQuery.isFetchingNextPage}>
+            {expenseData.map((expense, i) => (
+              <ExpenseCard key={i} {...expense} />
+            ))}
+          </ExpenseWrapper>
+          {expenseQuery.hasNextPage && (
+            <div className="mt-4 flex justify-center">
+              <Button onClick={() => expenseQuery.fetchNextPage()} variant="secondary">
+                {expenseQuery.isFetchingNextPage && <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                Load More
+              </Button>
+            </div>
+          )}
+        </>
       ) : (
         <Empty />
       )}

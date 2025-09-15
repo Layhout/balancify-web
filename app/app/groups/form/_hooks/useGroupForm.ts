@@ -79,11 +79,6 @@ export function useGroupForm() {
   })
 
   const onSubmitGroupForm = async (value: GroupFormType) => {
-    if (!groupForm.formState.isDirty) {
-      router.back()
-      return
-    }
-
     const data = {
       name: value.name,
       description: value.description,

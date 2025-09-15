@@ -60,7 +60,6 @@ export interface Group {
   members: User[]
   memberIds: string[]
   totalExpenses: number
-  expenses?: Record<string, any>[]
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'
