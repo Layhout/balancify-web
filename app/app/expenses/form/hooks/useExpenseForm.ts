@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { createExpense, editExpense, getExpenseDetail, getGroupDetail } from '@/features'
 import { toast } from 'sonner'
+import { useAuth } from '@clerk/nextjs'
 
 const memberFormSchema = z.object({
   id: z.string(),
@@ -72,6 +73,7 @@ export function useExpenseForm() {
   const queryClient = useQueryClient()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { getToken } = useAuth()
 
   const expenseDetailsQuery = useQuery({
     queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, searchParams.get('edit')],
@@ -130,7 +132,7 @@ export function useExpenseForm() {
 
   const [amount, splitOption, members] = expenseForm.watch(['amount', 'splitOption', 'members'])
 
-  const onSubmitExpenseForm = (value: ExpenseFormType) => {
+  const onSubmitExpenseForm = async (value: ExpenseFormType) => {
     if (!expenseForm.formState.isDirty) {
       router.back()
       return
@@ -175,7 +177,9 @@ export function useExpenseForm() {
       return
     }
 
-    expenseMutation.mutate(data)
+    const apiToken = await getToken({ template: 'access_api' })
+
+    expenseMutation.mutate({ ...data, apiToken })
   }
 
   useEffect(() => {

@@ -11,7 +11,7 @@ export function Empty({
 }) {
   return (
     <div className={cn('flex flex-col items-center justify-center py-8', className)}>
-      <img src="/assets/svgs/mood-bad.svg" className={cn('h-32 w-32', iconClassName)} alt="empty icon" />
+      <img src="/assets/svgs/mood-bad.svg" className={cn('size-20', iconClassName)} alt="empty icon" />
       <h1 className={cn('mt-8 text-lg', textClassName)}>No Data</h1>
     </div>
   )

@@ -15,7 +15,13 @@ import { findUserByEmail, findUserByReferalCode } from './user'
 import { createNoti } from './noti'
 import { deleteData, getData, getQueryData, getTotalCount, setMultipleData, updateData } from '@/lib/firestore'
 
-export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: string }) {
+export async function addFriendToUserByEmail({
+  friendEmail,
+  apiToken,
+}: {
+  friendEmail: string
+  apiToken?: string | null
+}) {
   const user = store.get(userAtom)
 
   if (!user) return
@@ -58,6 +64,7 @@ export async function addFriendToUserByEmail({ friendEmail }: { friendEmail: str
     link: ROUTES.APP.FRIENDS,
     type: NotiType.FriendRequest,
     owners: [foundUser],
+    accessToken: apiToken,
   })
 
   await setMultipleData([

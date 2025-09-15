@@ -6,7 +6,6 @@ import { Noti, NotiType, User } from '@/types/common'
 import { limit, serverTimestamp, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
-import { auth } from '@clerk/nextjs'
 
 export async function createNoti({
   title,
@@ -14,12 +13,14 @@ export async function createNoti({
   link = '',
   type,
   owners,
+  accessToken,
 }: {
   title: string
   description: string
   link?: string
   type: NotiType
   owners: User[]
+  accessToken?: string | null
 }) {
   const userId = store.get(userAtom)?.id
 
@@ -38,7 +39,7 @@ export async function createNoti({
 
   await setData(FIREBASE_COLLTION_NAME.NOTIS, noti.id, noti)
 
-  const accessToken = await auth().getToken({ template: 'access_api' })
+  if (!accessToken) return
 
   await axios.post(
     '/api/noti',
