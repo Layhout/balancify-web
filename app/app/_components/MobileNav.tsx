@@ -32,9 +32,12 @@ export function MobileNav({ pathname }: MobileNavProps) {
                     size="icon"
                     variant="ghost"
                     asChild
-                    className={cn('translate-y-2 transition-all duration-300 hover:bg-background', {
-                      'translate-y-0': pathname.startsWith(link),
-                    })}
+                    className={cn(
+                      'translate-y-2 transition-all duration-300 hover:bg-transparent hover:text-foreground',
+                      {
+                        'translate-y-0': pathname.startsWith(link),
+                      },
+                    )}
                   >
                     <Link href={link}>
                       <Icon className={cn('hidden h-4 w-4 flex-shrink-0', { block: !pathname.startsWith(link) })} />

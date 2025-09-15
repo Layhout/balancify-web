@@ -46,6 +46,7 @@ interface CreateExpenseParams {
   group?: { id: string; name: string }
   members: ExpenseMember[]
   paidBy: User
+  apiToken?: string | null
 }
 
 export async function createExpense({
@@ -58,6 +59,7 @@ export async function createExpense({
   group,
   members,
   paidBy,
+  apiToken,
 }: CreateExpenseParams) {
   const user = store.get(userAtom)
 
@@ -120,6 +122,7 @@ export async function createExpense({
     link: `${ROUTES.APP.EXPENSES}/${expense.id}`,
     type: NotiType.Expense,
     owners: members,
+    accessToken: apiToken,
   })
 }
 

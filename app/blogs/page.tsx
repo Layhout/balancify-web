@@ -17,7 +17,7 @@ export default function Blogs() {
               and ready for you to explore. During the beta phase, we’re focusing on gathering feedback, improving
               stability, and refining features.
             </p>
-            <p>✅ What you can do:</p>
+            <p className="mt-6">✅ What you can do:</p>
             <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
               <li>Sign up and start using the app today.</li>
               <li>Invite your friends to try it out.</li>
@@ -26,14 +26,14 @@ export default function Blogs() {
               <li>Start tracking your expenses.</li>
               <li>Review your spending on dashboard.</li>
             </ul>
-            <p>
-              Report bugs or share your feedback on{' '}
+            <p className="mt-6">
+              Please report bugs or share your feedback on{' '}
               <Link href="https://github.com/Layhout/balancify-web/issues" target="_blank" className="underline">
-                GitHub
-              </Link>{' '}
-              issues. Your input will help shape the future of Balancify. Thank you for being part of our journey!
+                GitHub issues
+              </Link>
+              . Your input will help shape the future of Balancify. Thank you for being part of our journey!
             </p>
-            <p>
+            <p className="mt-6">
               👉 Try it now:{' '}
               <Link href={ROUTES.APP.HOME} className="underline">
                 Balancify

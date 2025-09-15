@@ -10,6 +10,7 @@ import { userAtom } from '@/repositories/user'
 import { toast } from 'sonner'
 import { randomNumBetween } from '@/lib/utils'
 import { FriendResponse, FriendStatusEnum, PaginatedResponse } from '@/types/common'
+import { useAuth } from '@clerk/nextjs'
 
 const addFriendFormSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),
@@ -20,6 +21,7 @@ export type AddFriendFromType = z.infer<typeof addFriendFormSchema>
 export function useFriend() {
   const localUser = useAtomValue(userAtom)
   const queryClient = useQueryClient()
+  const { getToken } = useAuth()
 
   const [openAddFriendDialog, setOpenAddFriendDialog] = useState(false)
   const [openInvitionDialog, setOpenInvitionDialog] = useState(false)
@@ -111,7 +113,7 @@ export function useFriend() {
     },
   })
 
-  const onSubmitFriendForm = (value: AddFriendFromType) => {
+  const onSubmitFriendForm = async (value: AddFriendFromType) => {
     if (localUser?.email === value.email) {
       addFriendForm.setError(
         'email',
@@ -121,7 +123,9 @@ export function useFriend() {
       return
     }
 
-    addFriendMutation.mutate({ friendEmail: value.email })
+    const apiToken = await getToken({ template: 'access_api' })
+
+    addFriendMutation.mutate({ friendEmail: value.email, apiToken })
     setOpenAddFriendDialog(false)
   }
 
