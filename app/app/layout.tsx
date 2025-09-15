@@ -5,38 +5,27 @@ import { DesktopNav } from './_components/DesktopNav'
 import { MobileNav } from './_components/MobileNav'
 import { NotificationBar } from './_components/NotificationBar'
 import { Splash } from './_components/Splash'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const {
-    isCollapsed,
-    DesktopNavLinks,
-    userLoaded,
-    user,
-    isInitialLoading,
-    pathname,
-    setIsCollapsed,
-    shouldShowMobileNav,
-    MobileNavLinks,
-  } = useAppLayout()
+  const { isCollapsed, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav, unreadNotis, onNotiOpen } =
+    useAppLayout()
 
   return (
     <>
       <div className="flex h-svh max-h-svh gap-6 overflow-hidden">
-        <DesktopNav
-          appNavLinks={DesktopNavLinks}
-          isCollapsed={isCollapsed}
-          pathname={pathname}
-          setIsCollapsed={setIsCollapsed}
-          user={user}
-          userLoaded={userLoaded}
-        />
-        <main className="relative flex-1 overflow-auto">
-          <NotificationBar />
-          {children}
-          {shouldShowMobileNav && <MobileNav appNavLinks={MobileNavLinks} pathname={pathname} />}
+        <DesktopNav isCollapsed={isCollapsed} pathname={pathname} setIsCollapsed={setIsCollapsed} />
+        <main className="relative flex-1">
+          <ScrollArea className="h-dvh">
+            <NotificationBar notis={unreadNotis} hasUnreadNoti={!!unreadNotis.length} onNotiOpen={onNotiOpen} />
+            {children}
+            {shouldShowMobileNav && <MobileNav pathname={pathname} />}
+          </ScrollArea>
         </main>
       </div>
       <Splash show={isInitialLoading} />
+      <PWAInstallPrompt />
     </>
   )
 }

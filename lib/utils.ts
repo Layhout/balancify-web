@@ -1,7 +1,8 @@
-import { SpendingHistory } from '@/services/dashboard.model'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { djs } from './dayjsExt'
+import { CurrencyCodes, Dashboard } from '@/types/common'
+import { ChangeEvent } from 'react'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -23,7 +24,7 @@ export function hexColorToRgbColor(hex: string) {
     : null
 }
 
-export function getSpendingLevel(spendingHistory: SpendingHistory[]) {
+export function getSpendingLevel(spendingHistory: Dashboard['spendingHistory']) {
   const levels: Record<'l1' | 'l2' | 'l3' | 'l4', Record<string, number>> = {
     l1: {},
     l2: {},
@@ -42,20 +43,20 @@ export function getSpendingLevel(spendingHistory: SpendingHistory[]) {
 
   for (const s of spendingHistory) {
     if (s.amount <= (min + range) * 0.25) {
-      levels.l1[s.date] = s.amount
+      levels.l1[s.createdAt] = s.amount
     } else if (s.amount <= (min + range) * 0.5) {
-      levels.l2[s.date] = s.amount
+      levels.l2[s.createdAt] = s.amount
     } else if (s.amount <= (min + range) * 0.75) {
-      levels.l3[s.date] = s.amount
+      levels.l3[s.createdAt] = s.amount
     } else {
-      levels.l4[s.date] = s.amount
+      levels.l4[s.createdAt] = s.amount
     }
   }
 
   return levels
 }
 
-export function getSpendingPerMonth(spendingHistory: SpendingHistory[]) {
+export function getSpendingPerMonth(spendingHistory: Dashboard['spendingHistory']) {
   const data: Record<'month' | 'spent', any>[] = []
 
   if (spendingHistory.length === 0) {
@@ -65,7 +66,7 @@ export function getSpendingPerMonth(spendingHistory: SpendingHistory[]) {
   const group: Record<string, number> = {}
 
   for (const s of spendingHistory) {
-    const month = djs(s.date).format('MMMM')
+    const month = djs(s.createdAt).format('MMMM')
     group[month] = (group[month] || 0) + s.amount
   }
 
@@ -89,4 +90,50 @@ export function isMobileBrowser() {
     return true
 
   return false
+}
+
+export function generateTrigrams(str: string): string[] {
+  str = str.toLowerCase()
+
+  if (str.length < 3) {
+    return [str]
+  }
+
+  const result: string[] = []
+
+  for (let i = 0; i <= str.length - 3; i++) {
+    result.push(str.substring(i, i + 3))
+  }
+
+  return result
+}
+
+export function currencyFormatter(amount: number, currency: CurrencyCodes = 'USD') {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+  }).format(amount)
+}
+
+export function format2DigitDecimal(onChange: (value: number) => void) {
+  return (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
+    onChange(e.target.valueAsNumber)
+  }
+}
+
+export function isInstalledPWA() {
+  return (
+    window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone
+  )
+}
+
+export function isIOS() {
+  return (
+    ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  )
 }

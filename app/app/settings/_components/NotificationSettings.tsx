@@ -8,13 +8,13 @@ export function NotificationSettings() {
         <p className="text-xs text-muted-foreground">Manage how you receive your notifications</p>
       </div>
       <div className="flex flex-[2] flex-col gap-4">
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div>
             <h1 className="mb-1">Email</h1>
             <p className="text-xs text-muted-foreground">Receive notifications via email</p>
           </div>
           <Switch />
-        </div>
+        </div> */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="mb-1">Web Application</h1>

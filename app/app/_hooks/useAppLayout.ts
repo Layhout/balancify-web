@@ -1,16 +1,16 @@
 'use client'
 
-import { ROUTES } from '@/lib/constants'
-import { useUser } from '@clerk/nextjs'
-import { useEffect, useMemo, useState } from 'react'
-import { RiDashboardLine, RiDashboardFill } from 'react-icons/ri'
-import { AiOutlinePieChart, AiFillPieChart } from 'react-icons/ai'
-import { HiOutlineUser, HiUser, HiOutlineUsers, HiUsers } from 'react-icons/hi2'
-import { IoSettingsOutline, IoSettings } from 'react-icons/io5'
-import { useAtom } from 'jotai'
+import { MOBILE_NAV_LINKS, QUERY_KEYS, QueryType } from '@/lib/constants'
+import { useMemo, useState } from 'react'
+import { useAtom, useAtomValue } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
+import { useClientAuth } from '@/hooks/useClientAuth'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { getUnreadNotis, readNoti } from '@/features'
+import { Noti } from '@/types/common'
+import { userAtom } from '@/repositories/user'
 
 export type AppNavLink = {
   title: string
@@ -21,99 +21,42 @@ export type AppNavLink = {
 
 export function useAppLayout() {
   const pathname = usePathname()
-  const { user, isLoaded: userLoaded } = useUser()
+  const localUser = useAtomValue(userAtom)
+
   const [isCollapsed, setIsCollapsed] = useAtom(desktopNavToggleAtom)
 
-  const DesktopNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Friends',
-        link: ROUTES.APP.FRIENDS,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-      {
-        title: 'Settings',
-        link: ROUTES.APP.SETTINGS,
-        Icon: IoSettingsOutline,
-        SelectedIcon: IoSettings,
-      },
-    ],
-    [],
-  )
-
-  const MobileNavLinks: AppNavLink[] = useMemo(
-    () => [
-      {
-        title: 'Dashboard',
-        link: ROUTES.APP.DASHBOARD,
-        Icon: RiDashboardLine,
-        SelectedIcon: RiDashboardFill,
-      },
-      {
-        title: 'Expenses',
-        link: ROUTES.APP.EXPENSES,
-        Icon: AiOutlinePieChart,
-        SelectedIcon: AiFillPieChart,
-      },
-      {
-        title: 'Groups',
-        link: ROUTES.APP.GROUPS,
-        Icon: HiOutlineUsers,
-        SelectedIcon: HiUsers,
-      },
-      {
-        title: 'Profile',
-        link: ROUTES.APP.PROFILE,
-        Icon: HiOutlineUser,
-        SelectedIcon: HiUser,
-      },
-    ],
-    [],
-  )
-
-  const shouldShowMobileNav = useMemo(
-    () => MobileNavLinks.map((m) => m.link).includes(pathname),
-    [MobileNavLinks, pathname],
-  )
+  const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  useEffect(() => {
-    const timerId = setTimeout(() => setIsInitialLoading(false), 300)
+  useClientAuth(() => setIsInitialLoading(false))
 
-    return () => clearTimeout(timerId)
+  const queryKey = [QUERY_KEYS.NOTI, QueryType.List, localUser?.id]
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const unreadNotiQuery = useQuery({
+    queryKey,
+    queryFn: getUnreadNotis,
+  })
+
+  const unreadNotis = useMemo(() => (unreadNotiQuery.data || []) as Noti[], [unreadNotiQuery.data])
+
+  const readNotiMutation = useMutation({
+    mutationFn: readNoti,
+  })
+
+  const onNotiOpen = (v: boolean) => {
+    if (!v || !unreadNotis.length) return
+
+    readNotiMutation.mutate({ notiIds: unreadNotis.map((n) => n.id) })
+  }
 
   return {
     isCollapsed,
     setIsCollapsed,
-    user,
-    userLoaded,
-    DesktopNavLinks,
     isInitialLoading,
     pathname,
     shouldShowMobileNav,
-    MobileNavLinks,
+    unreadNotis,
+    onNotiOpen,
   }
 }

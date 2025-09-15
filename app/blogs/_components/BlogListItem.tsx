@@ -27,7 +27,6 @@ export function BlogListItem({ children, date, title, version }: BlogListItemPro
           <span className="inline text-sm text-muted-foreground md:hidden">{date} • </span>
           {version}
         </p>
-        <p>What we did:</p>
         {children}
       </div>
     </li>

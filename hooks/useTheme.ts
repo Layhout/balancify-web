@@ -3,7 +3,7 @@ import { appThemeAtom, isDarkModeAtom } from '@/repositories/layout'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useLayoutEffect } from 'react'
 
-export default function useTheme() {
+export const useTheme = () => {
   const appTheme = useAtomValue(appThemeAtom)
   const setIsDarkModeAtom = useSetAtom(isDarkModeAtom)
 

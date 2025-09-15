@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Expense } from '@/services/expense.model'
 import { SettleListItemPlaceholder } from './SettleListItemPlaceholder'
 import { SettleListItem } from './SettleListItem'
+import { Empty } from '@/components/Empty'
+import { Expense } from '@/types/common'
 
-export function SettleList({ toBeSettled, loading }: { toBeSettled: Expense[]; loading: boolean }) {
+export function SettleList({ expenses, loading }: { expenses: Expense[]; loading: boolean }) {
   return (
     <Card>
       <CardHeader>
@@ -13,12 +14,14 @@ export function SettleList({ toBeSettled, loading }: { toBeSettled: Expense[]; l
       <CardContent>
         {loading ? (
           <SettleListItemPlaceholder />
-        ) : (
+        ) : expenses.length ? (
           <ul className="flex flex-col gap-4">
-            {toBeSettled.map((expense, i) => (
+            {expenses.map((expense, i) => (
               <SettleListItem key={i} {...expense} />
             ))}
           </ul>
+        ) : (
+          <Empty iconClassName="size-20" textClassName="text-sm" />
         )}
       </CardContent>
     </Card>

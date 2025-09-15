@@ -1,26 +1,21 @@
 import { cn } from '@/lib/utils'
-import { AppNavLink } from '../_hooks/useAppLayout'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
-import { UserButton } from '@clerk/nextjs'
-import { UserResource } from '@clerk/types'
+import { UserButton, useUser } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
 import { motion, Variants } from 'motion/react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { dark } from '@clerk/themes'
 import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
-import { ROUTES } from '@/lib/constants'
-import { LuExternalLink } from 'react-icons/lu'
+import { DESKTOP_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { APP_V } from '@/lib/version'
+import { TbArrowUpRight } from 'react-icons/tb'
 
 type DesktopNavProps = {
   isCollapsed: boolean
-  appNavLinks: AppNavLink[]
   pathname: string
-  userLoaded: boolean
-  user: UserResource | null | undefined
   setIsCollapsed: Dispatch<SetStateAction<boolean>>
 }
 
@@ -33,8 +28,9 @@ const navVariants: Variants = {
   },
 }
 
-export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, user, setIsCollapsed }: DesktopNavProps) {
+export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
+  const { user, isLoaded: userLoaded } = useUser()
 
   return (
     <motion.nav
@@ -43,20 +39,29 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
       initial={false}
       animate={isCollapsed ? 'close' : 'open'}
     >
-      <div>
+      <div className="flex items-baseline justify-center">
+        <img
+          src={`/assets/svgs/balancify-logo${isDarkMode ? '-dark' : ''}.svg`}
+          className={cn('h-[18px] shrink-0 object-contain', { hidden: isCollapsed })}
+          alt="logo"
+        />
         <h1 className={cn('overflow-hidden whitespace-nowrap text-lg font-bold', { hidden: isCollapsed })}>
-          Balancify{' '}
+          alancify{' '}
           <Link
             href={ROUTES.LANDING.BLOGS}
             className="inline-flex cursor-pointer items-center gap-1 text-xs font-normal text-muted-foreground"
           >
-            v{APP_V} <LuExternalLink />
+            v{APP_V} <TbArrowUpRight />
           </Link>
         </h1>
-        <h1 className={cn('hidden text-center text-lg font-bold', { block: isCollapsed })}>B</h1>
+        <img
+          src={`/assets/svgs/balancify-logo${isDarkMode ? '-dark' : ''}.svg`}
+          className={cn('hidden h-6 shrink-0 object-contain', { block: isCollapsed })}
+          alt="logo"
+        />
       </div>
       <div className={cn('flex flex-col gap-2 overflow-hidden', { 'items-center': isCollapsed })}>
-        {appNavLinks.map(({ Icon, link, title }) => (
+        {DESKTOP_NAV_LINKS.map(({ Icon, link, title }) => (
           <Tooltip key={title} open={isCollapsed ? undefined : false}>
             <TooltipTrigger asChild>
               <Link
@@ -82,6 +87,10 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
           <>
             <UserButton
               appearance={{ elements: { avatarBox: 'h-9 w-9 border' }, baseTheme: isDarkMode ? dark : undefined }}
+              afterSignOutUrl={ROUTES.LANDING.HOME}
+              afterSwitchSessionUrl={ROUTES.APP.DASHBOARD}
+              afterMultiSessionSingleSignOutUrl={ROUTES.LANDING.HOME}
+              userProfileProps={{ appearance: { baseTheme: isDarkMode ? dark : undefined } }}
             />
             <div
               className={cn('flex flex-col overflow-hidden', {
@@ -89,7 +98,7 @@ export function DesktopNav({ isCollapsed, appNavLinks, pathname, userLoaded, use
               })}
             >
               <h1 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold">
-                {user?.firstName}
+                {user?.fullName}
               </h1>
               <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground">
                 {user?.primaryEmailAddress?.emailAddress}

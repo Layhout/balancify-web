@@ -1,5 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Timeline } from '@/services/expense.model'
+import { UserAvatar } from '@/components/UserAvatar'
+import { DEFAULT_DATETIME_FORMAT } from '@/lib/constants'
+import { djs } from '@/lib/dayjsExt'
+import { Timeline } from '@/types/common'
 
 export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
   return (
@@ -9,16 +11,16 @@ export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
       </div>
       <div className="flex-1 pb-10">
         <div className="flex items-start gap-2">
-          <Avatar className="mt-0.5 h-5 w-5 border">
-            <AvatarImage src={createdBy.imageUrl} alt={`${createdBy.firstName}${createdBy.lastName}`} />
-            <AvatarFallback className="text-xs">
-              {createdBy.firstName[0]}
-              {createdBy.lastName[0]}
-            </AvatarFallback>
-          </Avatar>
-          <h1>
-            {createdBy.firstName} {createdBy.lastName} • {createdAt}
-          </h1>
+          <UserAvatar
+            className="mt-0.5 h-6 w-6 border"
+            fallbackText={`${createdBy.name[0]} ${createdBy.name[1]}`}
+            imageUrl={createdBy.imageUrl || ''}
+            profileBgColor={createdBy.profileBgColor}
+          />
+          <div>
+            <h1>{createdBy.name}</h1>
+            <p className="text-xs text-muted-foreground">{djs(createdAt).format(DEFAULT_DATETIME_FORMAT)}</p>
+          </div>
         </div>
         <p className="mt-2">{events}</p>
       </div>

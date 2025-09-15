@@ -5,6 +5,8 @@ import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { useAtomValue } from 'jotai'
 import { isDesktopAtom } from '@/repositories/layout'
+import { HiOutlineUsers } from 'react-icons/hi2'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export function MemberListDrawer({ loading, members }: MemberListProps) {
   const isDesktop = useAtomValue(isDesktopAtom)
@@ -14,23 +16,25 @@ export function MemberListDrawer({ loading, members }: MemberListProps) {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="w-full">
-          Members
+        <Button variant="outline" size="icon">
+          <HiOutlineUsers />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Members</DrawerTitle>
         </DrawerHeader>
-        <div className="max-h-[80vh] overflow-auto p-4 pt-0">
+        <ScrollArea className="h-[80vh] p-4 pt-0">
           {loading ? (
             <MemberListItemPlaceholder />
           ) : (
             <ul className="mt-6 flex flex-col gap-4">
-              {members?.map((member, i) => <MemberListItem key={i} {...member} />)}
+              {members?.map((member, i) => (
+                <MemberListItem key={i} {...member} />
+              ))}
             </ul>
           )}
-        </div>
+        </ScrollArea>
       </DrawerContent>
     </Drawer>
   )

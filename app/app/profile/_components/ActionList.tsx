@@ -1,17 +1,39 @@
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/lib/constants'
+import { isDarkModeAtom } from '@/repositories/layout'
+import { useClerk } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
+import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { HiUser } from 'react-icons/hi2'
+import { FaUserFriends } from 'react-icons/fa'
 import { IoSettings } from 'react-icons/io5'
-import { LuChevronRight, LuSquarePen } from 'react-icons/lu'
+import { LuChevronRight, LuLogOut, LuSquarePen } from 'react-icons/lu'
+import { MdInstallMobile } from 'react-icons/md'
 
 export function ActionList() {
+  const { openUserProfile, signOut, redirectToSignIn } = useClerk()
+  const isDarkMode = useAtomValue(isDarkModeAtom)
+
   return (
     <div className="mt-8 flex flex-col gap-4">
+      <Button
+        className="w-full justify-between px-4"
+        variant="secondary"
+        size="lg"
+        onClick={() => openUserProfile({ appearance: { baseTheme: isDarkMode ? dark : undefined } })}
+      >
+        <div className="flex items-center gap-4">
+          <HiUser className="size-4" />
+          <h1>Profile</h1>
+        </div>
+        <LuChevronRight className="size-4" />
+      </Button>
       <Button className="w-full justify-between px-4" variant="secondary" size="lg" asChild>
         <Link href={ROUTES.APP.FRIENDS}>
           <div className="flex items-center gap-4">
-            <HiUser className="size-4" />
+            <FaUserFriends className="size-4" />
             <h1>Friends</h1>
           </div>
           <LuChevronRight className="size-4" />
@@ -34,6 +56,27 @@ export function ActionList() {
           </div>
           <LuChevronRight className="size-4" />
         </Link>
+      </Button>
+      <PWAInstallPrompt
+        triggerBtn={
+          <Button className="w-full items-center justify-start gap-4 px-4" variant="secondary" size="lg">
+            <MdInstallMobile />
+            Install App
+          </Button>
+        }
+      />
+      <Button
+        className="w-full justify-between px-4"
+        variant="destructive"
+        size="lg"
+        onClick={() => {
+          signOut().then(() => redirectToSignIn())
+        }}
+      >
+        <div className="flex items-center gap-4">
+          <LuLogOut className="size-4" />
+          <h1>Sign Out</h1>
+        </div>
       </Button>
     </div>
   )
