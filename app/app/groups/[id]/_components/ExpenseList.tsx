@@ -5,14 +5,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Skeleton } from '@/components/ui/skeleton'
 import { ExpenseListCardPlaceholder } from './ExpenseListCardPlaceholder'
 import { Empty } from '@/components/Empty'
-import { Expense } from '@/types/common'
+import { Expense, PaginatedResponse } from '@/types/common'
+import { UseInfiniteQueryResult } from '@tanstack/react-query'
+import { Button } from '@/components/ui/button'
+import { LuLoaderCircle } from 'react-icons/lu'
+import { InfiniteData } from '@tanstack/react-query'
 
 type ExpenseListProps = {
   loading: boolean
   expenses: Expense[]
+  expenseQuery: UseInfiniteQueryResult<InfiniteData<PaginatedResponse<Expense>>>
 }
 
-export function ExpenseList({ loading, expenses }: ExpenseListProps) {
+export function ExpenseList({ loading, expenses, expenseQuery }: ExpenseListProps) {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between">
@@ -41,9 +46,14 @@ export function ExpenseList({ loading, expenses }: ExpenseListProps) {
           : expenses.map((expense, i) => <ExpenseListCard key={i} {...expense} />)}
       </div>
       {!expenses.length && !loading && <Empty />}
-      {/* <div className="mt-6 flex justify-center">
-        <Button variant="secondary">Load More</Button>
-      </div> */}
+      {expenseQuery.hasNextPage && (
+        <div className="mt-4 flex justify-center">
+          <Button onClick={() => expenseQuery.fetchNextPage()} variant="secondary">
+            {expenseQuery.isFetchingNextPage && <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+            Load More
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

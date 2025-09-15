@@ -292,3 +292,28 @@ export async function editExpense({
     },
   ])
 }
+
+export async function getExpenseForGroup({
+  id,
+  lastDocCreatedAt,
+}: {
+  id: string
+  lastDocCreatedAt: FieldValue | null
+}): Promise<PaginatedResponse<Expense>> {
+  const user = store.get(userAtom)
+
+  if (!user) return { data: [], count: 0 }
+
+  const query: QueryConstraint[] = [where('group.id', '==', id), orderBy('createdAt', 'desc')]
+
+  const count = await getTotalCount(FIREBASE_COLLTION_NAME.EXPENSES, query)
+  if (!count) return { data: [], count: 0 }
+
+  if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt))
+
+  query.push(limit(countPerPage))
+
+  const expenses: Expense[] | null = await getQueryData(FIREBASE_COLLTION_NAME.EXPENSES, query)
+
+  return { data: expenses || [], count }
+}

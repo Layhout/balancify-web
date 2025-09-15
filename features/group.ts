@@ -135,7 +135,6 @@ export async function getGroupDetail(id: string): Promise<Group | null> {
 
   return {
     ...group[0],
-    expenses: [],
   }
 }
 
