@@ -29,6 +29,23 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Layhout Chea', url: 'https://layhout.is-a.dev' }],
   applicationName: 'Balancify',
+  openGraph: {
+    type: 'website',
+    locale: 'en',
+    siteName: 'Balancify',
+    url: 'https://balancify.vercel.app/',
+    title: 'Balancify',
+    description:
+      'The all-in-one app for splitting bills and tracking group expenses. Keep everyone on the same page and settle up in seconds.',
+    images: [
+      {
+        url: 'https://balancify.vercel.app/assets/images/180.png',
+        width: 180,
+        height: 180,
+        alt: 'Balancify',
+      },
+    ],
+  },
   appleWebApp: {
     capable: true,
     title: 'Balancify',
@@ -46,6 +63,9 @@ export const metadata: Metadata = {
       sizes: '180x180',
     },
   ],
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
 }
 
 export const viewport: Viewport = {
@@ -53,7 +73,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   colorScheme: 'light dark',
-  themeColor: '#F59E0B',
+  themeColor: '#000',
 }
 
 export default function RootLayout({

@@ -9,8 +9,16 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isCollapsed, isInitialLoading, pathname, setIsCollapsed, shouldShowMobileNav, unreadNotis, onNotiOpen } =
-    useAppLayout()
+  const {
+    isCollapsed,
+    isInitialLoading,
+    pathname,
+    setIsCollapsed,
+    shouldShowMobileNav,
+    unreadNotis,
+    onNotiOpen,
+    isNotiOpen,
+  } = useAppLayout()
 
   return (
     <>
@@ -18,7 +26,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <DesktopNav isCollapsed={isCollapsed} pathname={pathname} setIsCollapsed={setIsCollapsed} />
         <main className="relative flex-1">
           <ScrollArea className="h-dvh">
-            <NotificationBar notis={unreadNotis} hasUnreadNoti={!!unreadNotis.length} onNotiOpen={onNotiOpen} />
+            <NotificationBar
+              notis={unreadNotis}
+              hasUnreadNoti={!!unreadNotis.length}
+              onNotiOpen={onNotiOpen}
+              isNotiOpen={isNotiOpen}
+            />
             {children}
             {shouldShowMobileNav && <MobileNav pathname={pathname} />}
           </ScrollArea>
