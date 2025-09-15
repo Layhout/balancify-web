@@ -11,7 +11,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
-import { createExpense, editExpense, getExpenseDetail } from '@/features'
+import { createExpense, editExpense, getExpenseDetail, getGroupDetail } from '@/features'
 import { toast } from 'sonner'
 
 const memberFormSchema = z.object({
@@ -77,6 +77,12 @@ export function useExpenseForm() {
     queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, searchParams.get('edit')],
     queryFn: () => getExpenseDetail(searchParams.get('edit') || ''),
     enabled: !!searchParams.get('edit'),
+  })
+
+  const groupDetailQuery = useQuery({
+    queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('group')],
+    queryFn: () => getGroupDetail(searchParams.get('group') || ''),
+    enabled: !searchParams.get('edit') && !!searchParams.get('group'),
   })
 
   const expenseMutation = useMutation({
@@ -233,22 +239,35 @@ export function useExpenseForm() {
   }, [members.length, amount, splitOption])
 
   useEffect(() => {
-    if (expenseDetailsQuery.data) {
-      expenseForm.reset({
-        name: expenseDetailsQuery.data.name,
-        amount: expenseDetailsQuery.data.amount,
-        icon: expenseDetailsQuery.data.icon,
-        iconBgColor: expenseDetailsQuery.data.iconBgColor,
-        memberOption: expenseDetailsQuery.data.memberOption,
-        splitOption: expenseDetailsQuery.data.splitOption,
-        paidBy: expenseDetailsQuery.data.paidBy,
-        selectedGroup: expenseDetailsQuery.data.group || undefined,
-        members: Object.values(expenseDetailsQuery.data.member),
-      })
-    }
+    if (!expenseDetailsQuery.data) return
+
+    expenseForm.reset({
+      name: expenseDetailsQuery.data.name,
+      amount: expenseDetailsQuery.data.amount,
+      icon: expenseDetailsQuery.data.icon,
+      iconBgColor: expenseDetailsQuery.data.iconBgColor,
+      memberOption: expenseDetailsQuery.data.memberOption,
+      splitOption: expenseDetailsQuery.data.splitOption,
+      paidBy: expenseDetailsQuery.data.paidBy,
+      selectedGroup: expenseDetailsQuery.data.group || undefined,
+      members: Object.values(expenseDetailsQuery.data.member),
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenseDetailsQuery.data])
+
+  useEffect(() => {
+    if (!groupDetailQuery.data) return
+
+    expenseForm.setValue('selectedGroup', { id: groupDetailQuery.data.id, name: groupDetailQuery.data.name })
+    expenseForm.setValue('memberOption', MemberOption.Group)
+    expenseForm.setValue(
+      'members',
+      groupDetailQuery.data.members.map((member) => ({ ...member, amount: 0, settledAmount: 0 })),
+    )
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groupDetailQuery.data])
 
   return {
     expenseForm,

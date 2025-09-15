@@ -18,9 +18,11 @@ type ActionButtonsProps = {
 export function ActionButtons({ loading, members, id, onLeaveGroup }: ActionButtonsProps) {
   return (
     <div className="mt-6 flex gap-2 md:gap-4">
-      <Button className="flex-1 gap-2 md:flex-none">
-        <LuPlus className="h-4 w-4" />
-        Add Expense
+      <Button className="flex-1 gap-2 md:flex-none" asChild>
+        <Link href={`${ROUTES.APP.EXPENSES_FORM}?group=${id}`}>
+          <LuPlus className="h-4 w-4" />
+          Add Expense
+        </Link>
       </Button>
       <MemberListDrawer loading={loading} members={members} />
       <Button variant="outline" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2" asChild>

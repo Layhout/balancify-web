@@ -264,8 +264,11 @@ export async function editExpense({
   }
 
   if (previousPayer.id !== paidBy.id) {
-    expense.member![previousPayer.id].settledAmount -= expense.member![previousPayer.id].amount
     expense.member![paidBy.id].settledAmount += expense.member![paidBy.id].amount
+
+    if (expense.member![previousPayer.id]) {
+      expense.member![previousPayer.id].settledAmount -= expense.member![previousPayer.id].amount
+    }
   }
 
   const expenseMetadata: Partial<ExpenseMetadata> = {
