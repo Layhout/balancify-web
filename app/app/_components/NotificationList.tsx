@@ -3,7 +3,7 @@ import { NotificationItem } from './NotificationItem'
 import { Empty } from '@/components/Empty'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-export function NotificationList({ notis }: { notis: Noti[] }) {
+export function NotificationList({ notis, onNotiOpen }: { notis: Noti[]; onNotiOpen: (open: boolean) => void }) {
   return (
     <div>
       <h1 className="p-4 pb-0 text-lg font-bold">Notifications</h1>
@@ -11,7 +11,7 @@ export function NotificationList({ notis }: { notis: Noti[] }) {
         {notis.length ? (
           <ul className="mt-4 flex flex-col px-2">
             {notis.map((n, i) => (
-              <NotificationItem key={i} {...n} />
+              <NotificationItem key={i} {...n} onNotiOpen={onNotiOpen} />
             ))}
           </ul>
         ) : (

@@ -28,6 +28,7 @@ export function useAppLayout() {
   const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
   const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [isNotiOpen, setIsNotiOpen] = useState(false)
 
   useClientAuth(() => setIsInitialLoading(false))
 
@@ -45,6 +46,8 @@ export function useAppLayout() {
   })
 
   const onNotiOpen = (v: boolean) => {
+    setIsNotiOpen(v)
+
     if (!v || !unreadNotis.length) return
 
     readNotiMutation.mutate({ notiIds: unreadNotis.map((n) => n.id) })
@@ -58,5 +61,7 @@ export function useAppLayout() {
     shouldShowMobileNav,
     unreadNotis,
     onNotiOpen,
+    isNotiOpen,
+    setIsNotiOpen,
   }
 }
