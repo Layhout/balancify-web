@@ -30,7 +30,12 @@ export default function CreateExpenses() {
         </Form>
       </div>
       <div className="fixed bottom-0 left-0 right-0 block bg-background p-4 md:hidden">
-        <Button type="submit" form="expenseForm" disabled={isSubmitting} className="w-full gap-2">
+        <Button
+          type="submit"
+          form="expenseForm"
+          disabled={isSubmitting || !expenseForm.formState.isDirty}
+          className="w-full gap-2"
+        >
           {isSubmitting && <LuLoaderCircle className="animate-spin" />}
           {isEdit ? 'Update' : 'Create'}
         </Button>

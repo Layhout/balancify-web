@@ -100,7 +100,7 @@ export default function GroupForm() {
                 )}
               />
               <div className="hidden md:flex md:justify-end">
-                <Button type="submit" disabled={isSubmitting} className="gap-2">
+                <Button type="submit" disabled={isSubmitting || !groupForm.formState.isDirty} className="gap-2">
                   {isSubmitting && <LuLoaderCircle className="animate-spin" />}
                   {isEdit ? 'Update' : 'Create'}
                 </Button>
@@ -110,7 +110,12 @@ export default function GroupForm() {
         </div>
       </div>
       <div className="fixed bottom-0 left-0 right-0 block bg-background p-4 md:hidden">
-        <Button type="submit" form="groupForm" disabled={isSubmitting} className="w-full gap-2">
+        <Button
+          type="submit"
+          form="groupForm"
+          disabled={isSubmitting || !groupForm.formState.isDirty}
+          className="w-full gap-2"
+        >
           {isSubmitting && <LuLoaderCircle className="animate-spin" />}
           {isEdit ? 'Update' : 'Create'}
         </Button>

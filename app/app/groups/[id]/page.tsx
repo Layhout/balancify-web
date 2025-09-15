@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { MemberList } from './_components/MemberList'
 
 export default function GroupDetails() {
-  const { groupDetailsQuery, onLeaveGroup, id } = useGroupDetails()
+  const { groupDetailsQuery, onLeaveGroup, id, expenseData, expenseQuery } = useGroupDetails()
 
   return (
     <div className="container pb-4">
@@ -26,7 +26,7 @@ export default function GroupDetails() {
             id={id}
             onLeaveGroup={onLeaveGroup}
           />
-          <ExpenseList loading={groupDetailsQuery.isFetching} expenses={[]} />
+          <ExpenseList loading={groupDetailsQuery.isFetching} expenses={expenseData} expenseQuery={expenseQuery} />
         </div>
         <div className="hidden flex-1 md:block">
           <MemberList loading={groupDetailsQuery.isFetching} members={groupDetailsQuery.data?.members || []} />
