@@ -11,10 +11,12 @@ export function NotificationBar({
   notis,
   hasUnreadNoti,
   onNotiOpen,
+  isNotiOpen,
 }: {
   notis: Noti[]
   hasUnreadNoti: boolean
   onNotiOpen: (open: boolean) => void
+  isNotiOpen: boolean
 }) {
   return (
     <>
@@ -24,7 +26,7 @@ export function NotificationBar({
           NOTIFICATION_BAR_HEIGHT,
         )}
       >
-        <Popover onOpenChange={onNotiOpen}>
+        <Popover onOpenChange={onNotiOpen} open={isNotiOpen}>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" className="relative">
               <LuBell className="size-4 flex-shrink-0" />
@@ -32,7 +34,7 @@ export function NotificationBar({
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" side="bottom" className="w-96 p-0">
-            <NotificationList notis={notis} />
+            <NotificationList notis={notis} onNotiOpen={onNotiOpen} />
           </PopoverContent>
         </Popover>
       </div>

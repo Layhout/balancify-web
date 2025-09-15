@@ -6,11 +6,18 @@ import Link from 'next/link'
 import { AiOutlineUsergroupAdd } from 'react-icons/ai'
 import { LuCircleDollarSign, LuUserRoundPlus } from 'react-icons/lu'
 
-export function NotificationItem({ title, description, createdAt, type, link }: Noti) {
+export function NotificationItem({
+  title,
+  description,
+  createdAt,
+  type,
+  link,
+  onNotiOpen,
+}: Noti & { onNotiOpen: (open: boolean) => void }) {
   return (
     <li className="rounded-lg p-2 hover:bg-accent hover:text-accent-foreground">
       <Link href={link}>
-        <div className="flex items-start gap-4 rounded-md">
+        <div className="flex items-start gap-4 rounded-md" onClick={() => onNotiOpen(false)}>
           <Avatar>
             <AvatarFallback>
               {type === NotiType.FriendRequest && <LuUserRoundPlus />}
