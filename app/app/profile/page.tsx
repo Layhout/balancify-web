@@ -7,13 +7,13 @@ import { APP_V } from '@/lib/version'
 
 export default function Profile() {
   return (
-    <div className="container flex h-[85vh] flex-col justify-between pb-4">
+    <div className="container flex flex-col justify-between pb-4">
       <div>
         <PageHeader title="Profile" />
         <ProfileAvatar />
         <ActionList />
       </div>
-      <h1 className="text-center text-xs text-muted-foreground">v{APP_V}</h1>
+      <h1 className="mt-6 text-center text-xs text-muted-foreground">v{APP_V}</h1>
     </div>
   )
 }

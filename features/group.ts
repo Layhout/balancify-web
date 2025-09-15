@@ -24,10 +24,12 @@ export async function createGroup({
   name,
   description,
   members,
+  apiToken,
 }: {
   name: string
   description?: string
   members: User[]
+  apiToken?: string | null
 }) {
   const user = store.get(userAtom)
 
@@ -71,6 +73,7 @@ export async function createGroup({
     link: `${ROUTES.APP.GROUPS}/${group.id}`,
     type: NotiType.Group,
     owners: members,
+    accessToken: apiToken,
   })
 }
 
