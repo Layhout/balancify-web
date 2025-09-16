@@ -117,7 +117,20 @@ export function currencyFormatter(amount: number, currency: CurrencyCodes = 'USD
 
 export function format2DigitDecimal(onChange: (value: number) => void) {
   return (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
+    console.log({
+      n: e.target.valueAsNumber,
+      s: e.target.value,
+      m: e.target.value.toString().split('.')[1],
+      b: e.target.value.toString().split('.')[1]?.length > 2,
+    })
+
+    if (e.target.value.toString().split('.')[1]?.length > 2) {
+      console.log('here')
+
+      return
+    }
+    console.log('there')
+
     onChange(e.target.valueAsNumber)
   }
 }

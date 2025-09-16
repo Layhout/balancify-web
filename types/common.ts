@@ -59,7 +59,6 @@ export interface Group {
   createdBy: string
   members: User[]
   memberIds: string[]
-  totalExpenses: number
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'

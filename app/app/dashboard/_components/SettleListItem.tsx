@@ -4,6 +4,7 @@ import { ExpenseAvatar } from '@/components/ExpenseAvatar'
 import { Expense } from '@/types/common'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
+import { currencyFormatter } from '@/lib/utils'
 
 export function SettleListItem({ id, name, icon, iconBgColor, amount, paidBy }: Expense) {
   const localUser = useAtomValue(userAtom)
@@ -15,7 +16,7 @@ export function SettleListItem({ id, name, icon, iconBgColor, amount, paidBy }: 
         <div className="flex-1 overflow-hidden">
           <h1 className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{name}</h1>
           <p className="overflow-hidden text-ellipsis  whitespace-nowrap text-sm">
-            ${amount} • by {paidBy.id === localUser?.id ? 'You' : paidBy.name}
+            {currencyFormatter(amount)} • by {paidBy.id === localUser?.id ? 'You' : paidBy.name}
           </p>
         </div>
       </Link>
