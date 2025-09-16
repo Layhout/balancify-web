@@ -1,8 +1,8 @@
-import { initializeApp, FirebaseOptions } from 'firebase/app'
+import { initializeApp, FirebaseOptions, getApps, getApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
-import { getMessaging } from 'firebase/messaging'
+import { getMessaging, getToken, isSupported } from 'firebase/messaging'
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,20 +14,18 @@ const firebaseConfig: FirebaseOptions = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 }
 
-export const app = initializeApp(firebaseConfig)
+export const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 export const rdb = getDatabase(app)
 export const fdb = getFirestore(app)
 export const auth = getAuth(app)
 
-let messaging: ReturnType<typeof getMessaging>
+async function getMessagingApp(): Promise<ReturnType<typeof getMessaging> | null> {
+  const supported = await isSupported()
 
-if (typeof window !== 'undefined' && 'navigator' in window) {
-  messaging = getMessaging(app)
+  return supported ? getMessaging(app) : null
 }
 
-export { messaging }
-
-export function firebaseMessagingUrl() {
+function firebaseMessagingUrl() {
   let url = '/firebase-messaging-sw.js' // or any other file name you want
 
   // Append the params
@@ -35,4 +33,28 @@ export function firebaseMessagingUrl() {
     url += `${index === 0 ? '?' : '&'}${key}=${value}`
   })
   return url
+}
+
+export async function getFcmToken(): Promise<string | null> {
+  try {
+    const messagingApp = await getMessagingApp()
+
+    if (!messagingApp) return null
+
+    const registration = await navigator.serviceWorker.register(firebaseMessagingUrl())
+
+    if (!registration) {
+      return null
+    }
+
+    const token = await getToken(messagingApp, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+      serviceWorkerRegistration: registration,
+    })
+
+    return token
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }

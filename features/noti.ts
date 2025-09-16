@@ -39,7 +39,9 @@ export async function createNoti({
 
   await setData(FIREBASE_COLLTION_NAME.NOTIS, noti.id, noti)
 
-  if (!accessToken) return
+  const notiTokens = owners.map((o) => o.notiToken).filter(Boolean)
+
+  if (!accessToken || !notiTokens.length) return
 
   await axios.post(
     '/api/noti',

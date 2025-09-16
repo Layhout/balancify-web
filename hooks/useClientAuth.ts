@@ -1,12 +1,11 @@
 import { addFriendByReferalCode, createUser, findUserById, updateUser } from '@/features'
 import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
-import { auth, firebaseMessagingUrl } from '@/lib/firebase'
+import { auth, getFcmToken } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
-import { getMessaging, getToken as getMessagingToken } from 'firebase/messaging'
 import { useAtom } from 'jotai'
 import { isEmpty } from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
@@ -150,18 +149,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
           return
         }
 
-        const registration = await navigator.serviceWorker.register(firebaseMessagingUrl())
-
-        if (!registration) {
-          return
-        }
-
-        const messaging = getMessaging()
-
-        const token = await getMessagingToken(messaging, {
-          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-          serviceWorkerRegistration: registration,
-        })
+        const token = await getFcmToken()
 
         if (!token) {
           return
