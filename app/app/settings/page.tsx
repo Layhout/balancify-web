@@ -8,13 +8,16 @@ import { isDesktopAtom } from '@/repositories/layout'
 import { useAtomValue } from 'jotai'
 
 export default function Settings() {
-  const { appTheme, setAppTheme } = useSettings()
+  const { appTheme, setAppTheme, isAllowNotification, handleSetNotificationPermission } = useSettings()
   const isDesktop = useAtomValue(isDesktopAtom)
 
   return (
     <div className="container pb-4">
       <PageHeader title="Settings" hasBackBtn={!isDesktop} />
-      <NotificationSettings />
+      <NotificationSettings
+        isAllowNotification={isAllowNotification}
+        handleSetNotificationPermission={handleSetNotificationPermission}
+      />
       <ThemeSettings appTheme={appTheme} setAppTheme={setAppTheme} />
     </div>
   )

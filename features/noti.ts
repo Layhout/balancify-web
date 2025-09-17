@@ -1,9 +1,9 @@
-import { FIREBASE_COLLTION_NAME } from '@/lib/constants'
-import { getQueryData, setData, updateMultipleData } from '@/lib/firestore'
+import { countPerPage, FIREBASE_COLLTION_NAME } from '@/lib/constants'
+import { getQueryData, getTotalCount, setData, updateMultipleData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { Noti, NotiType, User } from '@/types/common'
-import { limit, serverTimestamp, where } from 'firebase/firestore'
+import { Noti, NotiType, PaginatedResponse, User } from '@/types/common'
+import { limit, orderBy, QueryConstraint, serverTimestamp, startAfter, where } from 'firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
 
@@ -82,4 +82,27 @@ export async function readNoti({ notiIds }: { notiIds: string[] }) {
       data: <Partial<Noti>>{ userReadFlag: { [userId]: true } },
     })),
   )
+}
+
+export async function getNotis({
+  lastDocCreatedAt = null,
+}: {
+  lastDocCreatedAt: Noti['createdAt'] | null
+}): Promise<PaginatedResponse<Noti>> {
+  const userId = store.get(userAtom)?.id
+
+  if (!userId) return { data: [], count: 0 }
+
+  const query: QueryConstraint[] = [where('ownerIds', 'array-contains', userId), orderBy('createdAt', 'desc')]
+
+  const count = await getTotalCount(FIREBASE_COLLTION_NAME.NOTIS, query)
+  if (!count) return { data: [], count: 0 }
+
+  if (lastDocCreatedAt) query.push(startAfter(lastDocCreatedAt))
+
+  query.push(limit(countPerPage))
+
+  const notis: Noti[] | null = await getQueryData(FIREBASE_COLLTION_NAME.NOTIS, query)
+
+  return { data: notis || [], count }
 }

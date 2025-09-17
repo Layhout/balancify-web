@@ -13,11 +13,11 @@ export function NotificationItem({
   type,
   link,
   onNotiOpen,
-}: Noti & { onNotiOpen: (open: boolean) => void }) {
+}: Noti & { onNotiOpen?: (open: boolean) => void }) {
   return (
     <li className="rounded-lg p-2 hover:bg-accent hover:text-accent-foreground">
       <Link href={link}>
-        <div className="flex items-start gap-4 rounded-md" onClick={() => onNotiOpen(false)}>
+        <div className="flex items-start gap-4 rounded-md" onClick={() => onNotiOpen?.(false)}>
           <Avatar>
             <AvatarFallback>
               {type === NotiType.FriendRequest && <LuUserRoundPlus />}
