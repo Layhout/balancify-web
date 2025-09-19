@@ -14,7 +14,7 @@ if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId,
-      privateKey,
+      privateKey: privateKey.replace(/\\n/g, '\n'),
       clientEmail,
     }),
   })
