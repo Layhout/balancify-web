@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TbArrowDownLeft, TbArrowUpRight } from 'react-icons/tb'
 import { Skeleton } from '@/components/ui/skeleton'
+import { currencyFormatter } from '@/lib/utils'
 
 export function Summary({ getBack, owed, loading }: { getBack: number; owed: number; loading: boolean }) {
   return (
@@ -11,7 +12,11 @@ export function Summary({ getBack, owed, loading }: { getBack: number; owed: num
           <TbArrowDownLeft />
         </CardHeader>
         <CardContent>
-          {loading ? <Skeleton className="mt-1.5 h-6 w-20" /> : <div className="text-2xl font-bold">${getBack}</div>}
+          {loading ? (
+            <Skeleton className="mt-1.5 h-6 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{currencyFormatter(getBack)}</div>
+          )}
         </CardContent>
       </Card>
       <Card className="flex-1">
@@ -20,7 +25,11 @@ export function Summary({ getBack, owed, loading }: { getBack: number; owed: num
           <TbArrowUpRight />
         </CardHeader>
         <CardContent>
-          {loading ? <Skeleton className="mt-1.5 h-6 w-20" /> : <div className="text-2xl font-bold">${owed}</div>}
+          {loading ? (
+            <Skeleton className="mt-1.5 h-6 w-20" />
+          ) : (
+            <div className="text-2xl font-bold">{currencyFormatter(owed)}</div>
+          )}
         </CardContent>
       </Card>
     </div>
