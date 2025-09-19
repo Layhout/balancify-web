@@ -128,7 +128,9 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
                     type="number"
                     onFocus={(e) => !fieldState.isTouched && e.target.select()}
                     {...field}
-                    onChange={format2DigitDecimal(field.onChange)}
+                    onChange={(e) => {
+                      field.onChange(format2DigitDecimal(e) ?? field.value)
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
