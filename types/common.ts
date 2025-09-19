@@ -8,6 +8,7 @@ export interface User {
   name: string
   notiToken: string
   referalCode: string
+  subNoti?: boolean
 }
 
 export enum FriendStatusEnum {

@@ -143,23 +143,17 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
 
     const initNoti = async () => {
       try {
-        const permission = await Notification.requestPermission()
-
-        if (permission !== 'granted') {
-          return
-        }
-
         const token = await getFcmToken()
 
         if (!token) {
           return
         }
 
-        if (localUser?.notiToken === token) {
+        if (localUser?.notiToken === token || localUser?.subNoti === false) {
           return
         }
 
-        await updateDBUser({ notiToken: token })
+        await updateDBUser({ notiToken: token, subNoti: true })
       } catch (error) {
         console.error('Error Requesting Notification Permission:', error)
         return

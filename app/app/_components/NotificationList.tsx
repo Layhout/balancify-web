@@ -23,7 +23,9 @@ export function NotificationList({ notis, onNotiOpen }: { notis: Noti[]; onNotiO
       </ScrollArea>
       <div className="text-center">
         <Button asChild variant="link" className="p-4">
-          <Link href={ROUTES.APP.NOTIFICATIONS}>View All</Link>
+          <Link href={ROUTES.APP.NOTIFICATIONS} onClick={() => onNotiOpen?.(false)}>
+            View All
+          </Link>
         </Button>
       </div>
     </div>

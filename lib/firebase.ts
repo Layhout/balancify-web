@@ -37,6 +37,12 @@ function firebaseMessagingUrl() {
 
 export async function getFcmToken(): Promise<string | null> {
   try {
+    const permission = await Notification.requestPermission()
+
+    if (permission !== 'granted') {
+      return null
+    }
+
     const messagingApp = await getMessagingApp()
 
     if (!messagingApp) return null
