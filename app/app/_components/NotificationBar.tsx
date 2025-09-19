@@ -22,7 +22,7 @@ export function NotificationBar({
     <>
       <div
         className={cn(
-          'fixed left-0 right-0 top-0 z-40 flex items-start justify-end px-2 pt-2',
+          'fixed left-0 right-0 top-0 z-40 flex items-start justify-end bg-background px-2 pt-2',
           NOTIFICATION_BAR_HEIGHT,
         )}
       >

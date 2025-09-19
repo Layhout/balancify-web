@@ -115,11 +115,12 @@ export function currencyFormatter(amount: number, currency: CurrencyCodes = 'USD
   }).format(amount)
 }
 
-export function format2DigitDecimal(onChange: (value: number) => void) {
-  return (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.valueAsNumber.toString().split('.')[1]?.length > 2) return
-    onChange(e.target.valueAsNumber)
-  }
+export function format2DigitDecimal(e: ChangeEvent<HTMLInputElement>): number | null {
+  const validated = e.target.value.match(/^(\d{0,6}\.{0,1}\d{0,2}$)/)
+
+  if (!validated) return null
+
+  return e.target.valueAsNumber
 }
 
 export function isInstalledPWA() {

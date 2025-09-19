@@ -45,7 +45,6 @@ export async function createGroup({
     createdBy: user.id,
     members,
     memberIds: members.map((m) => m.id),
-    totalExpenses: 0,
   }
 
   const groupMetadata: GroupMetadata = {

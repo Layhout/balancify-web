@@ -9,6 +9,7 @@ import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
 import { Timestamp } from 'firebase/firestore'
 import { djs } from '@/lib/dayjsExt'
+import { currencyFormatter } from '@/lib/utils'
 
 export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, member, paidBy }: Expense) {
   const localUser = useAtomValue(userAtom)
@@ -27,7 +28,7 @@ export function ExpenseCard({ id, name, createdAt, icon, iconBgColor, amount, me
             Paid by {paidBy.id === localUser?.id ? 'You' : paidBy.name}
           </CardDescription>
         </div>
-        <h1 className="text-lg font-bold text-foreground">${amount}</h1>
+        <h1 className="text-lg font-bold text-foreground">{currencyFormatter(amount)}</h1>
       </CardHeader>
       <CardContent className="flex flex-1 items-center justify-between p-4">
         <AvatarStack

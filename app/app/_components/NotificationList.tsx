@@ -2,6 +2,9 @@ import { Noti } from '@/types/common'
 import { NotificationItem } from './NotificationItem'
 import { Empty } from '@/components/Empty'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { ROUTES } from '@/lib/constants'
 
 export function NotificationList({ notis, onNotiOpen }: { notis: Noti[]; onNotiOpen: (open: boolean) => void }) {
   return (
@@ -15,9 +18,16 @@ export function NotificationList({ notis, onNotiOpen }: { notis: Noti[]; onNotiO
             ))}
           </ul>
         ) : (
-          <Empty iconClassName="size-20" textClassName="text-sm" className="mt-12" />
+          <Empty iconClassName="size-20" textClassName="text-sm" className="mt-12" text="No unread notifications" />
         )}
       </ScrollArea>
+      <div className="text-center">
+        <Button asChild variant="link" className="p-4">
+          <Link href={ROUTES.APP.NOTIFICATIONS} onClick={() => onNotiOpen?.(false)}>
+            View All
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }

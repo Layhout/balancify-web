@@ -7,6 +7,7 @@ import { userAtom } from '@/repositories/user'
 import { Timestamp } from 'firebase/firestore'
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants'
 import { djs } from '@/lib/dayjsExt'
+import { currencyFormatter } from '@/lib/utils'
 
 type ExpenseInfoCardProps = {
   loading: boolean
@@ -37,12 +38,12 @@ export function ExpenseInfoCard({ loading, details }: ExpenseInfoCardProps) {
           <div className="mt-8 flex flex-col items-center gap-8 md:mt-10 md:flex-row md:items-start md:gap-0">
             <div className="flex-1">
               <h1 className="hidden text-sm text-muted-foreground md:block">Total</h1>
-              <h1 className="text-3xl font-bold md:text-xl">${details.amount}</h1>
+              <h1 className="text-3xl font-bold md:text-xl">{currencyFormatter(details.amount)}</h1>
             </div>
             <div className="flex flex-[2] items-center justify-evenly self-stretch text-center md:justify-start md:text-left">
               <div className="flex-1">
                 <h1 className="text-xs text-muted-foreground md:text-sm">You Owed</h1>
-                <h1 className="text-xl font-bold">${details.member[localUser?.id || '']?.amount}</h1>
+                <h1 className="text-xl font-bold">{currencyFormatter(details.member[localUser?.id || '']?.amount)}</h1>
               </div>
               <div className="flex-1">
                 <h1 className="text-xs text-muted-foreground md:text-sm">Settled</h1>

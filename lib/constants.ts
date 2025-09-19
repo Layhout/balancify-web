@@ -23,6 +23,7 @@ export const ROUTES = {
     SETTINGS: '/app/settings',
     PROFILE: '/app/profile',
     INVITE: '/app/invite',
+    NOTIFICATIONS: '/app/notifications',
   },
   PORTAL: {
     HOME: '/portal',

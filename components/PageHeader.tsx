@@ -51,8 +51,8 @@ export function PageHeader({
   }
 
   return (
-    <div className="mb-6">
-      <div className="mt-4 flex items-center justify-between md:mt-0">
+    <div className="sticky top-12 z-50 mb-6 bg-background pb-2 pt-4 md:pt-0">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {hasBackBtn && (
             <Button variant="ghost" size="icon" className="md:hidden" onClick={router.back}>

@@ -11,6 +11,19 @@ export default function Blogs() {
       </header>
       <article>
         <ul>
+          <BlogListItem date="2025-09-19" title="v1.1.0-beta Release! 🚀🎉" version="v1.1.0-beta">
+            <p>New</p>
+            <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
+              <li>Notification center to view all notifications</li>
+              <li>Notification settings to enable/disable notifications</li>
+            </ul>
+            <p className="mt-6">Fixes</p>
+            <ul className="text-md flex list-disc flex-col gap-2 pl-4 pt-2">
+              <li>Fixed input number in expense form</li>
+              <li>Fixed notification permission</li>
+              <li>Getting notification token on app load</li>
+            </ul>
+          </BlogListItem>
           <BlogListItem date="2025-09-12" title="v1.0.0-beta Release! 🚀🎉" version="v1.0.0-beta">
             <p>
               I am excited to announce the beta release of Balancify! 🎉 This early version of our web app is now live

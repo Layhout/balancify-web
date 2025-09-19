@@ -57,7 +57,9 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                   type="number"
                   onFocus={(e) => !fieldState.isTouched && e.target.select()}
                   {...field}
-                  onChange={format2DigitDecimal(field.onChange)}
+                  onChange={(e) => {
+                    field.onChange(format2DigitDecimal(e) ?? field.value)
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -194,10 +196,10 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                         startIcon={BsCurrencyDollar}
                         type="number"
                         {...field}
-                        onChange={format2DigitDecimal((v) => {
-                          field.onChange(v)
+                        onChange={(e) => {
+                          field.onChange(format2DigitDecimal(e) ?? field.value)
                           form.setValue('splitOption', SplitOption.Custom)
-                        })}
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
