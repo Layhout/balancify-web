@@ -1,4 +1,5 @@
-import { addFriendByReferalCode, createUser, findUserById, updateUser } from '@/features'
+import { addFriendByReferalCode } from '@/features/friend'
+import { createUser, findUserById, updateUser } from '@/features/user'
 import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth, getFcmToken } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
