@@ -217,7 +217,7 @@ export const memberOptions = [
 
 export const splitOptions = [
   {
-    label: 'Split Equally',
+    label: 'Equally',
     value: SplitOption.SplitEqually,
   },
   {

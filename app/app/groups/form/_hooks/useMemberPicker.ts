@@ -1,9 +1,9 @@
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { getFriends } from '@/features'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
+import { getFriends } from '@/features/friend'
 
 export function useMemberPicker() {
   const localUser = useAtomValue(userAtom)

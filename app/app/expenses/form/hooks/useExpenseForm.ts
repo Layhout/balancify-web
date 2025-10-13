@@ -11,9 +11,10 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
-import { createExpense, editExpense, getExpenseDetail, getGroupDetail } from '@/features'
+import { createExpense, editExpense, getExpenseDetail } from '@/features/expense'
 import { toast } from 'sonner'
 import { useAuth } from '@clerk/nextjs'
+import { getGroupDetail } from '@/features/group'
 
 const memberFormSchema = z.object({
   id: z.string(),

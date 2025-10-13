@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { getDashboardData } from '@/features'
+import { getDashboardData } from '@/features/dashboard'
 
 export function useDashboard() {
   const localUser = useAtomValue(userAtom)

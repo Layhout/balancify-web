@@ -3,9 +3,9 @@ import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { userAtom } from '@/repositories/user'
 import { useMutation } from '@tanstack/react-query'
-import { updateUser } from '@/features'
 import { User } from '@/types/common'
 import { getFcmToken } from '@/lib/firebase'
+import { updateUser } from '@/features/user'
 
 export function useSettings() {
   const [appTheme, setAppTheme] = useAtom(appThemeAtom)
