@@ -8,9 +8,9 @@ import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
 import { useClientAuth } from '@/hooks/useClientAuth'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { getUnreadNotis, readNoti } from '@/features'
 import { Noti } from '@/types/common'
 import { userAtom } from '@/repositories/user'
+import { getUnreadNotis, readNoti } from '@/features/noti'
 
 export type AppNavLink = {
   title: string

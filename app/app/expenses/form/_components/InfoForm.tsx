@@ -67,68 +67,74 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
           )}
         />
       </div>
-      <div className="flex items-center gap-4">
-        <FormField
-          control={form.control}
-          name="memberOption"
-          render={({ field }) => (
-            <FormItem>
-              <Select
-                value={field.value}
-                onValueChange={(v) => {
-                  if (!v) return
-                  form.setValue('selectedGroup', undefined)
-                  form.setValue(
-                    'members',
-                    v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
-                  )
-                  field.onChange(v)
-                }}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {memberOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="splitOption"
-          render={({ field }) => (
-            <FormItem>
-              <Select
-                value={field.value}
-                onValueChange={(v) => {
-                  if (!v) return
-                  field.onChange(v)
-                }}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {splitOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
+      <div className="flex flex-col gap-4 lg:flex-row">
+        <div className="flex items-center gap-4">
+          <p>This expense is shared with</p>
+          <FormField
+            control={form.control}
+            name="memberOption"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => {
+                    if (!v) return
+                    form.setValue('selectedGroup', undefined)
+                    form.setValue(
+                      'members',
+                      v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
+                    )
+                    field.onChange(v)
+                  }}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {memberOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <p>and we split it</p>
+          <FormField
+            control={form.control}
+            name="splitOption"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  value={field.value}
+                  onValueChange={(v) => {
+                    if (!v) return
+                    field.onChange(v)
+                  }}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {splitOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {((memberOption === MemberOption.Group && !selectedGroup?.id) ||

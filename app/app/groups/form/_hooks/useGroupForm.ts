@@ -6,10 +6,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { createGroup, editGroup, getGroupDetail } from '@/features'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '@clerk/nextjs'
+import { createGroup, editGroup, getGroupDetail } from '@/features/group'
 
 const memberFormSchema = z.object({
   id: z.string(),

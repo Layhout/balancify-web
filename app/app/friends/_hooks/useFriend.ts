@@ -3,7 +3,6 @@ import { InfiniteData, keepPreviousData, useInfiniteQuery, useMutation, useQuery
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { acceptFriendRequest, addFriendToUserByEmail, getFriends, rejectFriendRequest, unFriend } from '@/features'
 import { useState } from 'react'
 import { useAtomValue } from 'jotai'
 import { userAtom } from '@/repositories/user'
@@ -11,6 +10,13 @@ import { toast } from 'sonner'
 import { randomNumBetween } from '@/lib/utils'
 import { FriendResponse, FriendStatusEnum, PaginatedResponse } from '@/types/common'
 import { useAuth } from '@clerk/nextjs'
+import {
+  acceptFriendRequest,
+  addFriendToUserByEmail,
+  getFriends,
+  rejectFriendRequest,
+  unFriend,
+} from '@/features/friend'
 
 const addFriendFormSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }),

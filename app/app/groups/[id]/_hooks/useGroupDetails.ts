@@ -3,12 +3,12 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { getGroupDetail } from '@/features/group'
+import { deleteGroup, getGroupDetail, leaveGroup } from '@/features/group'
 import { useMutation } from '@tanstack/react-query'
-import { leaveGroup, deleteGroup, getExpenseForGroup } from '@/features'
 import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 import { Expense, PaginatedResponse } from '@/types/common'
+import { getExpenseForGroup } from '@/features/expense'
 
 export function useGroupDetails() {
   const localUser = useAtomValue(userAtom)

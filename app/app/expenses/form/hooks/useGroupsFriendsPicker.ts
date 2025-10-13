@@ -1,11 +1,12 @@
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { getFriends, getGroups } from '@/features'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { FriendResponse, Group, PaginatedResponse } from '@/types/common'
 import { useQueryClient } from '@tanstack/react-query'
+import { getGroups } from '@/features/group'
+import { getFriends } from '@/features/friend'
 
 export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
   const localUser = useAtomValue(userAtom)
