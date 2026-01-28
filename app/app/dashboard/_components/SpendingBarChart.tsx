@@ -31,7 +31,7 @@ export function SpendingBarChart({ spendingHistory }: { spendingHistory: Dashboa
             />
           }
         />
-        <Bar dataKey="spent" fill="var(--color-spent)" radius={8} />
+        <Bar dataKey="spent" fill="var(--color-spent)" radius={8} maxBarSize={120} />
       </BarChart>
     </ChartContainer>
   )

@@ -11,10 +11,7 @@ export async function getDashboardData(): Promise<Dashboard | null> {
 
   if (!userId) return null
 
-  const query: QueryConstraint[] = [
-    where('memberIds', 'array-contains', userId),
-    where('createdAt', '>=', djs().subtract(3, 'months').toDate()),
-  ]
+  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId)]
 
   const expenses: Expense[] | null = await getQueryData(FIREBASE_COLLTION_NAME.EXPENSES, query)
 
