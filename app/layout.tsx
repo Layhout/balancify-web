@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { ClerkProvider } from '@clerk/nextjs'
 
 import { poppins } from '@/lib/font'
 
@@ -82,19 +81,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
-      <JotaiProviders>
-        <html lang="en">
-          <body className={cn('font-sans antialiased', poppins.variable)}>
-            <ClientConfigProvider>
-              <main className="relative min-h-svh bg-background">{children}</main>
-            </ClientConfigProvider>
-            <Analytics />
-            <SpeedInsights />
-            <GoogleAnalytics gaId="G-LHBME1XNPE" />
-          </body>
-        </html>
-      </JotaiProviders>
-    </ClerkProvider>
+    <JotaiProviders>
+      <html lang="en">
+        <body className={cn('font-sans antialiased', poppins.variable)}>
+          <ClientConfigProvider>
+            <main className="relative min-h-svh bg-background">{children}</main>
+          </ClientConfigProvider>
+          <Analytics />
+          <SpeedInsights />
+          <GoogleAnalytics gaId="G-LHBME1XNPE" />
+        </body>
+      </html>
+    </JotaiProviders>
   )
 }

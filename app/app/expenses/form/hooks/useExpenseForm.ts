@@ -13,7 +13,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { QUERY_KEYS, QueryType } from '@/lib/constants'
 import { createExpense, editExpense, getExpenseDetail } from '@/features/expense'
 import { toast } from 'sonner'
-import { useAuth } from '@clerk/nextjs'
 import { getGroupDetail } from '@/features/group'
 
 const memberFormSchema = z.object({
@@ -74,7 +73,6 @@ export function useExpenseForm() {
   const queryClient = useQueryClient()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { getToken } = useAuth()
 
   const expenseDetailsQuery = useQuery({
     queryKey: [QUERY_KEYS.EXPENSES, QueryType.Details, localUser?.id, searchParams.get('edit')],
@@ -173,9 +171,7 @@ export function useExpenseForm() {
       return
     }
 
-    const apiToken = await getToken({ template: 'access_api' })
-
-    expenseMutation.mutate({ ...data, apiToken })
+    expenseMutation.mutate(data)
   }
 
   useEffect(() => {

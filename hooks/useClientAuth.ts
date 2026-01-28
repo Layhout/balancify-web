@@ -4,15 +4,13 @@ import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth, getFcmToken } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
-import { useAuth, useUser } from '@clerk/nextjs'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { onAuthStateChanged, signInWithCustomToken } from 'firebase/auth'
 import { useAtom } from 'jotai'
-import { isEmpty } from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import shortid from 'shortid'
 import { toast } from 'sonner'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 export const useClientAuth = (onFinishLoading?: () => void) => {
   const router = useRouter()
@@ -20,8 +18,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
 
   const [localUser, setLocalUser] = useAtom(userAtom)
 
-  const { user: clerkUser, isLoaded } = useUser()
-  const { getToken, userId } = useAuth()
+  const [user, loading] = useAuthState(auth)
 
   const [idQuery, setIdQuery] = useState('')
 
@@ -56,18 +53,12 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     setLocalUser((p) => ({ ...p, ...partialUser }) as User)
   }
 
-  const loadDBUser = async (id: string) => {
-    if (localUser) return
-
-    setIdQuery(id)
-  }
-
   const initUser = async () => {
     const newUserData: User = {
-      email: clerkUser?.primaryEmailAddress?.emailAddress || '',
-      name: clerkUser?.fullName || '',
-      id: userId || '',
-      imageUrl: clerkUser?.imageUrl,
+      email: user?.email || '',
+      name: user?.displayName || '',
+      id: user?.uid || '',
+      imageUrl: user?.photoURL || '',
       profileBgColor: BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)],
       referalCode: shortid.generate(),
       notiToken: '',
@@ -94,30 +85,20 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   }, [idQuery])
 
   useEffect(() => {
-    if (!isLoaded || !userId) return
+    if (loading) return
 
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user || user.uid !== userId) {
-        const token = await getToken({ template: 'integration_firebase' })
+    if (!user) {
+      router.replace(ROUTES.LANDING.HOME)
+      onFinishLoading?.()
+      return
+    }
 
-        await signInWithCustomToken(auth, token || '')
-      }
+    if (localUser?.id !== user.uid) {
+      setIdQuery(user.uid)
+      return
+    }
 
-      if (!localUser) {
-        loadDBUser(userId)
-        return
-      }
-
-      const newUserData: Partial<User> = {}
-
-      if (localUser.imageUrl !== clerkUser?.imageUrl) {
-        newUserData.imageUrl = clerkUser?.imageUrl
-      }
-
-      if (!isEmpty(newUserData)) {
-        await updateDBUser(newUserData)
-      }
-
+    ;(async () => {
       if (pathname.includes(ROUTES.APP.INVITE)) {
         const referalCode = pathname.split('/')[3]
 
@@ -128,16 +109,11 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
           router.replace(ROUTES.APP.DASHBOARD)
         }
       }
-
       onFinishLoading?.()
-    })
-
-    return () => {
-      unSubscribe()
-    }
+    })()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, userId, localUser?.id])
+  }, [loading, user, localUser?.id])
 
   useEffect(() => {
     if (!localUser) return
@@ -165,4 +141,12 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser?.id])
+
+  useEffect(() => {
+    if (loading || user) return
+
+    if (pathname !== ROUTES.LANDING.HOME && !user) {
+      router.replace(ROUTES.LANDING.HOME)
+    }
+  }, [loading, pathname, router, user])
 }
