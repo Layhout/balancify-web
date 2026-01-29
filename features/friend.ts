@@ -13,7 +13,7 @@ import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import { findUserByEmail, findUserByReferalCode } from './user'
 import { createNoti } from './noti'
-import { deleteData, getData, getQueryData, getTotalCount, setMultipleData, updateData } from '@/lib/firestore'
+import { deleteData, getData, getQueryData, getTotalCount, setMultipleData, updateMultipleData } from '@/lib/firestore'
 
 export async function addFriendToUserByEmail({
   friendEmail,
@@ -133,9 +133,18 @@ export async function acceptFriendRequest({ friendUserId }: { friendUserId: stri
 
   if (!userId) return
 
-  await updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
-    status: FriendStatusEnum.Accepted,
-  })
+  await updateMultipleData([
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`,
+      id: friendUserId,
+      data: <Partial<Friend>>{ status: FriendStatusEnum.Accepted },
+    },
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friendUserId}/data`,
+      id: userId,
+      data: <Partial<Friend>>{ status: FriendStatusEnum.Accepted },
+    },
+  ])
 }
 
 export async function rejectFriendRequest({ friendUserId }: { friendUserId: string }) {
@@ -143,9 +152,18 @@ export async function rejectFriendRequest({ friendUserId }: { friendUserId: stri
 
   if (!userId) return
 
-  await updateData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`, friendUserId, <Partial<Friend>>{
-    status: FriendStatusEnum.Rejected,
-  })
+  await updateMultipleData([
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`,
+      id: friendUserId,
+      data: <Partial<Friend>>{ status: FriendStatusEnum.Rejected },
+    },
+    {
+      collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friendUserId}/data`,
+      id: userId,
+      data: <Partial<Friend>>{ status: FriendStatusEnum.Rejected },
+    },
+  ])
 }
 
 export async function getFriends({

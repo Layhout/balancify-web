@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { usePathname, useRouter } from 'next/navigation'
@@ -66,13 +66,15 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     await setDBUser(newUserData)
   }
 
-  const handleInviteIfNeeded = async () => {
+  const getReferalCodeFromUrl = () => {
     if (!pathname.includes(ROUTES.APP.INVITE)) return
 
     const referalCode = pathname.split('/')[3]
 
-    if (!referalCode) return
+    return referalCode
+  }
 
+  const handleInviteIfNeeded = async (referalCode: string) => {
     try {
       await inviteMutation.mutateAsync({ referalCode })
     } catch {}
@@ -117,8 +119,12 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idQuery])
 
+  const referalCodeRef = useRef<string | undefined>(undefined)
+
   useEffect(() => {
     if (loading) return
+
+    referalCodeRef.current ??= getReferalCodeFromUrl()
 
     if (!user) {
       router.replace(ROUTES.LANDING.HOME)
@@ -132,7 +138,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     }
 
     ;(async () => {
-      await handleInviteIfNeeded()
+      if (referalCodeRef.current) await handleInviteIfNeeded(referalCodeRef.current)
       onFinishLoading?.()
     })()
 
