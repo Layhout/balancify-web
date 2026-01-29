@@ -8,7 +8,6 @@ import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import { useAuth } from '@clerk/nextjs'
 import { createGroup, editGroup, getGroupDetail } from '@/features/group'
 
 const memberFormSchema = z.object({
@@ -39,7 +38,6 @@ export function useGroupForm() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const searchParams = useSearchParams()
-  const { getToken } = useAuth()
 
   const groupDetailsQuery = useQuery({
     queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('edit')],
@@ -106,9 +104,7 @@ export function useGroupForm() {
       return
     }
 
-    const apiToken = await getToken({ template: 'access_api' })
-
-    groupMutation.mutate({ ...data, apiToken })
+    groupMutation.mutate(data)
   }
 
   useEffect(() => {

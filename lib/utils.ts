@@ -138,3 +138,14 @@ export function isIOS() {
     (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
   )
 }
+
+export function getInitials(name: string) {
+  return (
+    name
+      .match(/(^\S\S?|\b\S)?/g)
+      ?.join('')
+      ?.match(/(^\S|\S$)?/g)
+      ?.join('')
+      ?.toUpperCase() || ''
+  )
+}

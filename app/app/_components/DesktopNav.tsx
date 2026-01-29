@@ -1,17 +1,19 @@
-import { cn } from '@/lib/utils'
+import { cn, getInitials } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
-import { UserButton, useUser } from '@clerk/nextjs'
 import { Dispatch, SetStateAction } from 'react'
 import { motion, Variants } from 'motion/react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { dark } from '@clerk/themes'
 import { useAtomValue } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
 import { DESKTOP_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { APP_V } from '@/lib/version'
 import { TbArrowUpRight } from 'react-icons/tb'
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth'
+import { auth } from '@/lib/firebase'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 type DesktopNavProps = {
   isCollapsed: boolean
@@ -30,7 +32,8 @@ const navVariants: Variants = {
 
 export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNavProps) {
   const isDarkMode = useAtomValue(isDarkModeAtom)
-  const { user, isLoaded: userLoaded } = useUser()
+  const [user, loading] = useAuthState(auth)
+  const [signOut] = useSignOut(auth)
 
   return (
     <motion.nav
@@ -82,29 +85,33 @@ export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNav
           </Tooltip>
         ))}
       </div>
-      <div className="flex h-9 items-center gap-2">
-        {userLoaded ? (
-          <>
-            <UserButton
-              appearance={{ elements: { avatarBox: 'h-9 w-9 border' }, baseTheme: isDarkMode ? dark : undefined }}
-              afterSignOutUrl={ROUTES.LANDING.HOME}
-              afterSwitchSessionUrl={ROUTES.APP.DASHBOARD}
-              afterMultiSessionSingleSignOutUrl={ROUTES.LANDING.HOME}
-              userProfileProps={{ appearance: { baseTheme: isDarkMode ? dark : undefined } }}
-            />
-            <div
-              className={cn('flex flex-col overflow-hidden', {
-                hidden: isCollapsed,
-              })}
-            >
-              <h1 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-sm font-bold">
-                {user?.fullName}
-              </h1>
-              <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground">
-                {user?.primaryEmailAddress?.emailAddress}
-              </p>
-            </div>
-          </>
+      <div className="flex gap-2">
+        {!loading && user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="overflow-hidden">
+              <div className="flex gap-2">
+                <Avatar>
+                  <AvatarImage src={user.photoURL || ''} />
+                  <AvatarFallback>{getInitials(user.displayName || '')}</AvatarFallback>
+                </Avatar>
+                <div
+                  className={cn('flex flex-1 flex-col overflow-hidden', {
+                    hidden: isCollapsed,
+                  })}
+                >
+                  <h1 className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left text-sm font-bold">
+                    {user?.displayName}
+                  </h1>
+                  <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-left text-xs text-muted-foreground">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" align="center">
+              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <>
             <Skeleton className="h-10 w-10 rounded-full" />
