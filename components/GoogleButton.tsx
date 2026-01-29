@@ -4,7 +4,9 @@ import { auth } from '@/lib/firebase'
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 
 export function GoogleButton() {
-  const [signInWithGoogle] = useSignInWithGoogle(auth)
+  const [signInWithGoogle, user] = useSignInWithGoogle(auth)
+
+  if (!!user) return null
 
   return (
     <button

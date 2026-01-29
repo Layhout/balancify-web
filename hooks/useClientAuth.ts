@@ -1,25 +1,24 @@
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import shortid from 'shortid'
+import { toast } from 'sonner'
+
 import { addFriendByReferalCode } from '@/features/friend'
 import { createUser, findUserById, updateUser } from '@/features/user'
 import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth, getFcmToken } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
-import { User } from '@/types/common'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useAtom } from 'jotai'
-import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import shortid from 'shortid'
-import { toast } from 'sonner'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import type { User } from '@/types/common'
 
 export const useClientAuth = (onFinishLoading?: () => void) => {
   const router = useRouter()
   const pathname = usePathname()
 
   const [localUser, setLocalUser] = useAtom(userAtom)
-
   const [user, loading] = useAuthState(auth)
-
   const [idQuery, setIdQuery] = useState('')
 
   const createUserMutation = useMutation({
@@ -43,14 +42,14 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     enabled: false,
   })
 
-  const setDBUser = async (user: User) => {
-    await createUserMutation.mutateAsync(user)
-    setLocalUser(user)
+  const setDBUser = async (newUser: User) => {
+    await createUserMutation.mutateAsync(newUser)
+    setLocalUser(newUser)
   }
 
   const updateDBUser = async (partialUser: Partial<User>) => {
     await updateUserMutation.mutateAsync({ user: partialUser })
-    setLocalUser((p) => ({ ...p, ...partialUser }) as User)
+    setLocalUser((prev) => ({ ...prev, ...partialUser }) as User)
   }
 
   const initUser = async () => {
@@ -67,10 +66,44 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     await setDBUser(newUserData)
   }
 
+  const handleInviteIfNeeded = async () => {
+    if (!pathname.includes(ROUTES.APP.INVITE)) return
+
+    const referalCode = pathname.split('/')[3]
+
+    if (!referalCode) return
+
+    try {
+      await inviteMutation.mutateAsync({ referalCode })
+    } catch {}
+
+    router.replace(ROUTES.APP.DASHBOARD)
+  }
+
+  const initializeNotificationIfNeeded = async () => {
+    if (!localUser) return
+
+    try {
+      const token = await getFcmToken()
+
+      if (!token) {
+        return
+      }
+
+      if (localUser.notiToken === token || localUser.subNoti === false) {
+        return
+      }
+
+      await updateDBUser({ notiToken: token, subNoti: true })
+    } catch (error) {
+      console.error('Error Requesting Notification Permission:', error)
+    }
+  }
+
   useEffect(() => {
     if (!idQuery) return
 
-    async function load() {
+    async function loadUser() {
       const result = await findUserQuery.refetch()
       if (!result.data) {
         initUser()
@@ -79,7 +112,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
       }
     }
 
-    load()
+    loadUser()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idQuery])
@@ -99,16 +132,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     }
 
     ;(async () => {
-      if (pathname.includes(ROUTES.APP.INVITE)) {
-        const referalCode = pathname.split('/')[3]
-
-        if (referalCode) {
-          try {
-            await inviteMutation.mutateAsync({ referalCode: referalCode })
-          } catch {}
-          router.replace(ROUTES.APP.DASHBOARD)
-        }
-      }
+      await handleInviteIfNeeded()
       onFinishLoading?.()
     })()
 
@@ -118,26 +142,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   useEffect(() => {
     if (!localUser) return
 
-    const initNoti = async () => {
-      try {
-        const token = await getFcmToken()
-
-        if (!token) {
-          return
-        }
-
-        if (localUser?.notiToken === token || localUser?.subNoti === false) {
-          return
-        }
-
-        await updateDBUser({ notiToken: token, subNoti: true })
-      } catch (error) {
-        console.error('Error Requesting Notification Permission:', error)
-        return
-      }
-    }
-
-    initNoti()
+    initializeNotificationIfNeeded()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localUser?.id])
