@@ -1,16 +1,27 @@
-import { auth } from '@clerk/nextjs/server'
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { NOTIFICATION_BAR_HEIGHT, ROUTES } from '@/lib/constants'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { GoogleButton } from '@/components/GoogleButton'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useEffect } from 'react'
+import { auth } from '@/lib/firebase'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  const { userId } = auth()
+  const router = useRouter()
+  const [user, loading] = useAuthState(auth)
 
-  if (userId) {
-    redirect(ROUTES.APP.DASHBOARD)
-  }
+  useEffect(() => {
+    if (loading) return
+
+    if (user) {
+      router.replace(ROUTES.APP.DASHBOARD)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading])
 
   return (
     <main className="container flex h-screen flex-col justify-between">
@@ -29,13 +40,14 @@ export default function Home() {
             A clean, no-fuss way to manage shared expenses with anyone, anywhere. Because fairness shouldn’t be
             complicated.
           </p>
-          <div className="flex items-center justify-center gap-4 md:justify-start">
-            <Button size="lg" className="mt-10" asChild>
+          <div className="mt-10 flex items-center justify-center gap-4 md:justify-start">
+            {/* <Button size="lg" className="mt-10" asChild>
               <Link href={ROUTES.LANDING.SIGN_UP}>Try for free</Link>
             </Button>
             <Button size="lg" className="mt-10" asChild>
               <Link href={ROUTES.LANDING.SIGN_IN}>Sign In</Link>
-            </Button>
+            </Button> */}
+            <GoogleButton />
           </div>
         </div>
         <div className="relative flex w-full max-w-[700px] items-center justify-start">

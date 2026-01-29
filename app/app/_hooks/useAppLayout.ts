@@ -6,7 +6,6 @@ import { useAtom, useAtomValue } from 'jotai'
 import { desktopNavToggleAtom } from '@/repositories/layout'
 import { IconType } from 'react-icons/lib'
 import { usePathname } from 'next/navigation'
-import { useClientAuth } from '@/hooks/useClientAuth'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Noti } from '@/types/common'
 import { userAtom } from '@/repositories/user'
@@ -27,10 +26,7 @@ export function useAppLayout() {
 
   const shouldShowMobileNav = useMemo(() => MOBILE_NAV_LINKS.map((m) => m.link).includes(pathname), [pathname])
 
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [isNotiOpen, setIsNotiOpen] = useState(false)
-
-  useClientAuth(() => setIsInitialLoading(false))
 
   const queryKey = [QUERY_KEYS.NOTI, QueryType.List, localUser?.id]
 
@@ -56,7 +52,6 @@ export function useAppLayout() {
   return {
     isCollapsed,
     setIsCollapsed,
-    isInitialLoading,
     pathname,
     shouldShowMobileNav,
     unreadNotis,

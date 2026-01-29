@@ -4,21 +4,12 @@ import { useAppLayout } from './_hooks/useAppLayout'
 import { DesktopNav } from './_components/DesktopNav'
 import { MobileNav } from './_components/MobileNav'
 import { NotificationBar } from './_components/NotificationBar'
-import { Splash } from './_components/Splash'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const {
-    isCollapsed,
-    isInitialLoading,
-    pathname,
-    setIsCollapsed,
-    shouldShowMobileNav,
-    unreadNotis,
-    onNotiOpen,
-    isNotiOpen,
-  } = useAppLayout()
+  const { isCollapsed, pathname, setIsCollapsed, shouldShowMobileNav, unreadNotis, onNotiOpen, isNotiOpen } =
+    useAppLayout()
 
   return (
     <>
@@ -37,7 +28,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </ScrollArea>
         </main>
       </div>
-      <Splash show={isInitialLoading} />
       <PWAInstallPrompt />
     </>
   )
