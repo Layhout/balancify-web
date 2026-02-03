@@ -67,21 +67,21 @@ export function useFriend() {
   const acceptFriendMutation = useMutation({
     mutationFn: acceptFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Accepted)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.ACCEPTED)
     },
   })
 
   const rejectFriendMutation = useMutation({
     mutationFn: rejectFriendRequest,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Rejected)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.REJECTED)
     },
   })
 
   const unFriendMutation = useMutation({
     mutationFn: unFriend,
     onSuccess: (_, variable) => {
-      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.Unfriend)
+      updateLocalFriendList(variable.friendUserId, FriendStatusEnum.UNFRIEND)
     },
   })
 

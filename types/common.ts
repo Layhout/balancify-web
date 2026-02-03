@@ -12,11 +12,11 @@ export interface User {
 }
 
 export enum FriendStatusEnum {
-  Accepted = 'accepted',
-  Pending = 'pending',
-  Rejected = 'rejected',
-  Unfriend = 'unfriend',
-  Requesting = 'requesting',
+  ACCEPTED = 'ACCEPTED',
+  PENDING = 'PENDING',
+  REJECTED = 'REJECTED',
+  UNFRIEND = 'UNFRIEND',
+  REQUESTING = 'REQUESTING',
 }
 
 export interface Friend {

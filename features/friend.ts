@@ -34,7 +34,7 @@ export async function addFriendToUserByEmail({
 
   const foundFriend: Friend | null = await getData(`${FIREBASE_COLLTION_NAME.FRIENDS}/${user.id}/data`, foundUser.id)
 
-  if (foundFriend) {
+  if (foundFriend?.status === FriendStatusEnum.ACCEPTED) {
     throw new Error(FRIEND_ALREADY_EXISTS_MSG[randomNumBetween(0, FRIEND_ALREADY_EXISTS_MSG.length - 1)], {
       cause: 409,
     })
@@ -45,7 +45,7 @@ export async function addFriendToUserByEmail({
   const friend: Friend = {
     userId: foundUser.id,
     name: foundUser.name,
-    status: FriendStatusEnum.Pending,
+    status: FriendStatusEnum.PENDING,
     createdAt: curServerTimestamp,
     nameTrigrams: generateTrigrams(foundUser.name),
   }
@@ -53,7 +53,7 @@ export async function addFriendToUserByEmail({
   const youAsfriend: Friend = {
     userId: user.id,
     name: user.name,
-    status: FriendStatusEnum.Requesting,
+    status: FriendStatusEnum.REQUESTING,
     createdAt: curServerTimestamp,
     nameTrigrams: generateTrigrams(user.name),
   }
@@ -101,7 +101,7 @@ export async function addFriendByReferalCode({ referalCode }: { referalCode: str
   const friend: Friend = {
     userId: foundFriend.id,
     name: foundFriend.name,
-    status: FriendStatusEnum.Accepted,
+    status: FriendStatusEnum.ACCEPTED,
     createdAt: curServerTimestamp,
     nameTrigrams: generateTrigrams(foundFriend.name),
   }
@@ -109,7 +109,7 @@ export async function addFriendByReferalCode({ referalCode }: { referalCode: str
   const youAsfriend: Friend = {
     userId: user.id,
     name: user.name,
-    status: FriendStatusEnum.Accepted,
+    status: FriendStatusEnum.ACCEPTED,
     createdAt: curServerTimestamp,
     nameTrigrams: generateTrigrams(user.name),
   }
@@ -137,12 +137,12 @@ export async function acceptFriendRequest({ friendUserId }: { friendUserId: stri
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`,
       id: friendUserId,
-      data: <Partial<Friend>>{ status: FriendStatusEnum.Accepted },
+      data: <Partial<Friend>>{ status: FriendStatusEnum.ACCEPTED },
     },
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friendUserId}/data`,
       id: userId,
-      data: <Partial<Friend>>{ status: FriendStatusEnum.Accepted },
+      data: <Partial<Friend>>{ status: FriendStatusEnum.ACCEPTED },
     },
   ])
 }
@@ -156,12 +156,12 @@ export async function rejectFriendRequest({ friendUserId }: { friendUserId: stri
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`,
       id: friendUserId,
-      data: <Partial<Friend>>{ status: FriendStatusEnum.Rejected },
+      data: <Partial<Friend>>{ status: FriendStatusEnum.REJECTED },
     },
     {
       collectionName: `${FIREBASE_COLLTION_NAME.FRIENDS}/${friendUserId}/data`,
       id: userId,
-      data: <Partial<Friend>>{ status: FriendStatusEnum.Rejected },
+      data: <Partial<Friend>>{ status: FriendStatusEnum.REJECTED },
     },
   ])
 }
@@ -179,7 +179,7 @@ export async function getFriends({
 
   const collectionPath = `${FIREBASE_COLLTION_NAME.FRIENDS}/${userId}/data`
 
-  const query: QueryConstraint[] = [where('status', '!=', FriendStatusEnum.Rejected), orderBy('createdAt', 'desc')]
+  const query: QueryConstraint[] = [where('status', '!=', FriendStatusEnum.REJECTED), orderBy('createdAt', 'desc')]
 
   if (search) query.unshift(where('nameTrigrams', 'array-contains-any', generateTrigrams(search)))
 
