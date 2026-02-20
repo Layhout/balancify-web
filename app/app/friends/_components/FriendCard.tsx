@@ -31,7 +31,7 @@ export function FriendCard({
           <p className="overflow-hidden text-ellipsis whitespace-nowrap font-bold">{name}</p>
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm">{email}</p>
         </div>
-        {status === FriendStatusEnum.Accepted && (
+        {status === FriendStatusEnum.ACCEPTED && (
           <ConfirmationDialog
             title="Are you sure you want to unfriend?"
             description="This action cannot be undone."
@@ -44,7 +44,7 @@ export function FriendCard({
             onConfirm={() => onUnfriend?.(userId)}
           />
         )}
-        {status === FriendStatusEnum.Requesting && (
+        {status === FriendStatusEnum.REQUESTING && (
           <div className="flex items-center">
             <Button variant="ghost" size="icon" className="text-destructive" onClick={() => onRejectRequest?.(userId)}>
               <LuX />
@@ -54,12 +54,12 @@ export function FriendCard({
             </Button>
           </div>
         )}
-        {status === FriendStatusEnum.Pending && (
+        {status === FriendStatusEnum.PENDING && (
           <Badge variant="outline" className="border-yellow-500/50 text-yellow-500">
             Pending
           </Badge>
         )}
-        {(status === FriendStatusEnum.Unfriend || status === FriendStatusEnum.Rejected) && (
+        {(status === FriendStatusEnum.UNFRIEND || status === FriendStatusEnum.REJECTED) && (
           <Badge variant="destructive">{status}</Badge>
         )}
       </CardContent>
