@@ -91,7 +91,7 @@ export async function createExpense({
     splitOption,
     group: group || null,
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
-    membersFlag,
+    memberIds: members.map((m) => m.id),
     createdBy: user,
     paidBy,
     timelines,
@@ -155,7 +155,7 @@ export async function getExpenses({
   const query: QueryConstraint[] = [orderBy('createdAt', 'desc')]
 
   if (expenseMetadata) query.push(where(documentId(), 'in', expenseMetadata?.map((e) => e.expenseId) || []))
-  else query.push(where(`membersFlag.${userId}`, '==', true))
+  else query.push(where('memberIds', 'array-contains', userId))
 
   const count = await getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }
@@ -247,8 +247,6 @@ export async function editExpense({
 
   if (!user) return
 
-  const membersFlag = members.reduce((p, c) => ({ ...p, [c.id]: true }), {})
-
   const expense: Partial<Expense> = {
     name,
     createdAt: serverTimestamp(),
@@ -259,7 +257,7 @@ export async function editExpense({
     splitOption,
     group: group || null,
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
-    membersFlag,
+    memberIds: members.map((m) => m.id),
     paidBy,
     timelines: [
       {
@@ -281,7 +279,7 @@ export async function editExpense({
 
   const expenseMetadata: Partial<ExpenseMetadata> = {
     nameTrigrams: generateTrigrams(expense.name!),
-    membersFlag,
+    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
   }
 
   await updateMultipleData([

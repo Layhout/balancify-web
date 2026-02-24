@@ -59,7 +59,7 @@ export interface Group {
   createdAt: FieldValue
   createdBy: string
   members: User[]
-  membersFlag: Record<string, true>
+  memberIds: string[]
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'
@@ -99,7 +99,7 @@ export interface Expense {
   splitOption: SplitOption
   group: { id: string; name: string } | null
   member: Record<string, ExpenseMember>
-  membersFlag: Record<string, true>
+  memberIds: string[]
   createdBy: User
   paidBy: User
   timelines: Timeline[]

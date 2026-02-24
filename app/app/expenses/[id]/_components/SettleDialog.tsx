@@ -100,14 +100,14 @@ export function SettleDialog({ payer, amount, disabled, loading, onSettleExpense
     <div>
       <div className="mb-6 flex items-center justify-center gap-6">
         <UserAvatar
-          fallbackText={(localUser?.name[0] || '') + (localUser?.name[1] || '')}
+          fallbackText={localUser?.name || ''}
           imageUrl={localUser?.imageUrl || ''}
           profileBgColor={localUser?.profileBgColor}
           className="size-20"
         />
         <LuMoveRight className="size-10" />
         <UserAvatar
-          fallbackText={(payer?.name[0] || '') + (payer?.name[1] || '')}
+          fallbackText={payer?.name || ''}
           imageUrl={payer?.imageUrl || ''}
           profileBgColor={payer?.profileBgColor}
           className="size-20"
