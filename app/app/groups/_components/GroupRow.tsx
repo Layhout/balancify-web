@@ -9,7 +9,6 @@ import { LuChevronRight } from 'react-icons/lu'
 
 export function GroupRow({ name, members, createdAt, id }: Group) {
   const createdAtString = djs((createdAt as Timestamp).toDate()).format(DEFAULT_DATE_FORMAT)
-  console.log(members)
 
   return (
     <li>
