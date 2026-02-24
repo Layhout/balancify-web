@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn, getInitials } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 type UserAvatarProps = {
@@ -26,7 +26,7 @@ export function UserAvatar({
         )}
         style={{ '--profile-bg-color': profileBgColor } as React.CSSProperties}
       >
-        <span className="relative z-10">{fallbackText ? `${fallbackText[0] + fallbackText[1]}` : ''}</span>
+        <span className="relative z-10">{getInitials(fallbackText)}</span>
       </AvatarFallback>
     </Avatar>
   )

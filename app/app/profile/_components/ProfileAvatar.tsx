@@ -1,7 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { UserAvatar } from '@/components/UserAvatar'
 import { auth } from '@/lib/firebase'
-import { getInitials } from '@/lib/utils'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 type ProfileAvatarProps = {}
@@ -13,7 +12,7 @@ export function ProfileAvatar({}: ProfileAvatarProps) {
     <div className="flex flex-col items-center">
       <UserAvatar
         imageUrl={user?.photoURL || ''}
-        fallbackText={getInitials(user?.displayName || '')}
+        fallbackText={user?.displayName || ''}
         className="size-28"
         fallbackTextclassName="text-2xl"
       />

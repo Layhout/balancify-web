@@ -15,9 +15,10 @@ import {
   writeBatch,
 } from 'firebase/firestore'
 import { fdb } from './firebase'
-import { IS_DEV_ENV } from './constants'
-;``
-const buildCollectionPath = (collectionName: string) => `${IS_DEV_ENV ? 'test/dev/' : ''}${collectionName}`
+// import { IS_DEV_ENV } from './constants'
+
+const buildCollectionPath = (collectionName: string) =>
+  collectionName /* `${IS_DEV_ENV ? 'test/dev/' : ''}${collectionName}` */
 
 export const setData = async (
   collectionName: string,

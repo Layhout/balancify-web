@@ -13,7 +13,7 @@ export function TimelineItem({ createdBy, createdAt, events }: Timeline) {
         <div className="flex items-start gap-2">
           <UserAvatar
             className="mt-0.5 h-6 w-6 border"
-            fallbackText={`${createdBy.name[0]} ${createdBy.name[1]}`}
+            fallbackText={createdBy.name}
             imageUrl={createdBy.imageUrl || ''}
             profileBgColor={createdBy.profileBgColor}
           />

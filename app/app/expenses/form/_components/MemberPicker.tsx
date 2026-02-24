@@ -69,8 +69,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
           )}
           <CommandGroup>
             {mode === 'friend'
-              ? (foundQuery.data?.data || [])?.map((friend) => {
-                  friend = friend as FriendResponse
+              ? ((foundQuery.data?.data || []) as FriendResponse[])?.map((friend) => {
                   return (
                     <CommandItem
                       className="gap-4 font-bold"
@@ -107,8 +106,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
                     </CommandItem>
                   )
                 })
-              : (foundQuery.data?.data || [])?.map((group) => {
-                  group = group as Group
+              : ((foundQuery.data?.data || []) as Group[])?.map((group) => {
                   return (
                     <CommandItem
                       className="gap-4 font-bold"
