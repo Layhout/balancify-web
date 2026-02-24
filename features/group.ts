@@ -37,6 +37,8 @@ export async function createGroup({
 
   members = [...members, user]
 
+  const membersFlag = members.reduce((p, c) => ({ ...p, [c.id]: true }), {})
+
   const group: Group = {
     id: uuidv4(),
     name,
@@ -44,13 +46,13 @@ export async function createGroup({
     createdAt: serverTimestamp(),
     createdBy: user.id,
     members,
-    memberIds: members.map((m) => m.id),
+    membersFlag,
   }
 
   const groupMetadata: GroupMetadata = {
     groupId: group.id,
     nameTrigrams: generateTrigrams(group.name),
-    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
+    membersFlag,
   }
 
   await setMultipleData([
@@ -100,9 +102,10 @@ export async function getGroups({
 
   const collectionPath = FIREBASE_COLLTION_NAME.GROUPS
 
-  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId), orderBy('createdAt', 'desc')]
+  const query: QueryConstraint[] = [orderBy('createdAt', 'desc')]
 
   if (groupMetadata) query.push(where(documentId(), 'in', groupMetadata?.map((g) => g.groupId) || []))
+  else query.push(where(`membersFlag.${userId}`, '==', true))
 
   const count = await getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }

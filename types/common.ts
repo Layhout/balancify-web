@@ -59,7 +59,7 @@ export interface Group {
   createdAt: FieldValue
   createdBy: string
   members: User[]
-  memberIds: string[]
+  membersFlag: Record<string, true>
 }
 
 export type CurrencyCodes = 'USD' | 'KHR'
