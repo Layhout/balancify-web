@@ -1,6 +1,6 @@
 {
   "name": "balancify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "npx genversion -f --template versioning-template.ejs lib/version.ts && next dev --turbo",
