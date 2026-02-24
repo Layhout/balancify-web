@@ -23,10 +23,7 @@ const memberFormSchema = z.object({
 const groupFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  members: z
-    .array(memberFormSchema)
-    .min(1, 'You need to add at least one member.')
-    .max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
+  members: z.array(memberFormSchema).max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
 })
 
 export type MemberFormType = z.infer<typeof memberFormSchema>

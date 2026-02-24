@@ -206,12 +206,12 @@ export const countPerPage = 10
 
 export const memberOptions = [
   {
-    label: 'Group',
-    value: MemberOption.Group,
-  },
-  {
     label: 'Friend',
     value: MemberOption.Friend,
+  },
+  {
+    label: 'Group',
+    value: MemberOption.Group,
   },
 ]
 
