@@ -44,7 +44,7 @@ const expenseFormSchema = z
       .optional(),
     members: z
       .array(memberFormSchema)
-      .min(2, 'You need to add at least two members.')
+      .min(1, 'You need to add at least one member.')
       .max(10, 'Oops! You’ve reached the limit — only 10 members allowed.'),
   })
   .superRefine((data, ctx) => {
@@ -115,7 +115,7 @@ export function useExpenseForm() {
       amount: 0,
       icon: '',
       iconBgColor: '',
-      memberOption: MemberOption.Group,
+      memberOption: MemberOption.Friend,
       splitOption: SplitOption.SplitEqually,
       selectedGroup: undefined,
       paidBy: undefined,

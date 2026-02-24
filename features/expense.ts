@@ -78,6 +78,8 @@ export async function createExpense({
     },
   ]
 
+  const membersFlag = members.reduce((p, c) => ({ ...p, [c.id]: true }), {})
+
   const expense: Expense = {
     id: uuidv4(),
     name,
@@ -89,7 +91,7 @@ export async function createExpense({
     splitOption,
     group: group || null,
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
-    memberIds: members.map((m) => m.id),
+    membersFlag,
     createdBy: user,
     paidBy,
     timelines,
@@ -100,7 +102,7 @@ export async function createExpense({
   const expenseMetadata: ExpenseMetadata = {
     expenseId: expense.id,
     nameTrigrams: generateTrigrams(expense.name),
-    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
+    membersFlag,
   }
 
   await setMultipleData([
@@ -150,9 +152,10 @@ export async function getExpenses({
 
   const collectionPath = FIREBASE_COLLTION_NAME.EXPENSES
 
-  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId), orderBy('createdAt', 'desc')]
+  const query: QueryConstraint[] = [orderBy('createdAt', 'desc')]
 
   if (expenseMetadata) query.push(where(documentId(), 'in', expenseMetadata?.map((e) => e.expenseId) || []))
+  else query.push(where(`membersFlag.${userId}`, '==', true))
 
   const count = await getTotalCount(collectionPath, query)
   if (!count) return { data: [], count: 0 }
@@ -244,6 +247,8 @@ export async function editExpense({
 
   if (!user) return
 
+  const membersFlag = members.reduce((p, c) => ({ ...p, [c.id]: true }), {})
+
   const expense: Partial<Expense> = {
     name,
     createdAt: serverTimestamp(),
@@ -254,7 +259,7 @@ export async function editExpense({
     splitOption,
     group: group || null,
     member: members.reduce((p, c) => ({ ...p, [c.id]: c }), {}),
-    memberIds: members.map((m) => m.id),
+    membersFlag,
     paidBy,
     timelines: [
       {
@@ -276,7 +281,7 @@ export async function editExpense({
 
   const expenseMetadata: Partial<ExpenseMetadata> = {
     nameTrigrams: generateTrigrams(expense.name!),
-    membersFlag: members.reduce((p, c) => ({ ...p, [c.id]: true }), {}),
+    membersFlag,
   }
 
   await updateMultipleData([

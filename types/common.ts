@@ -99,7 +99,7 @@ export interface Expense {
   splitOption: SplitOption
   group: { id: string; name: string } | null
   member: Record<string, ExpenseMember>
-  memberIds: string[]
+  membersFlag: Record<string, true>
   createdBy: User
   paidBy: User
   timelines: Timeline[]
