@@ -25,7 +25,7 @@ export function GroupRow({ name, members, createdAt, id }: Group) {
               <AvatarStack
                 items={members.map((m) => ({
                   imageSrc: m.imageUrl,
-                  initial: m.name[0] + m.name[1],
+                  initial: m.name,
                   bgColor: m.profileBgColor,
                 }))}
               />
