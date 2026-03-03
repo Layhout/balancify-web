@@ -62,7 +62,7 @@ export function useGroupDetails() {
   }
 
   const onLeaveGroup = () => {
-    if (groupDetailsQuery.data?.members.length === 2) {
+    if (groupDetailsQuery.data?.members.length === 1) {
       deleteGroupMutation.mutate({ id })
       return
     }
