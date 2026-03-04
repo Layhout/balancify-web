@@ -67,7 +67,7 @@ export function useGroupDetails() {
       return
     }
 
-    leaveGroupMutation.mutate({ id })
+    leaveGroupMutation.mutate({ id, members: groupDetailsQuery.data?.members || [] })
   }
 
   const groupOwner = groupDetailsQuery.data?.members.find((member) => member.id === groupDetailsQuery.data?.createdBy)
