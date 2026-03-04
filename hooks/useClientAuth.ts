@@ -6,7 +6,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import shortid from 'shortid'
 import { toast } from 'sonner'
 
-import { addFriendByReferalCode } from '@/features/friend'
+import { addFriendByreferralCode } from '@/features/friend'
 import { createUser, findUserById, updateUser } from '@/features/user'
 import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth, getFcmToken } from '@/lib/firebase'
@@ -30,7 +30,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   })
 
   const inviteMutation = useMutation({
-    mutationFn: addFriendByReferalCode,
+    mutationFn: addFriendByreferralCode,
     onError: (error) => {
       toast(error.message)
     },
@@ -59,24 +59,24 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
       id: user?.uid || '',
       imageUrl: user?.photoURL || '',
       profileBgColor: BG_COLORS[Math.round(Math.random() * BG_COLORS.length - 1)],
-      referalCode: shortid.generate(),
+      referralCode: shortid.generate(),
       notiToken: '',
     }
 
     await setDBUser(newUserData)
   }
 
-  const getReferalCodeFromUrl = () => {
+  const getreferralCodeFromUrl = () => {
     if (!pathname.includes(ROUTES.APP.INVITE)) return
 
-    const referalCode = pathname.split('/')[3]
+    const referralCode = pathname.split('/')[3]
 
-    return referalCode
+    return referralCode
   }
 
-  const handleInviteIfNeeded = async (referalCode: string) => {
+  const handleInviteIfNeeded = async (referralCode: string) => {
     try {
-      await inviteMutation.mutateAsync({ referalCode })
+      await inviteMutation.mutateAsync({ referralCode })
     } catch {}
 
     router.replace(ROUTES.APP.DASHBOARD)
@@ -119,12 +119,12 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idQuery])
 
-  const referalCodeRef = useRef<string | undefined>(undefined)
+  const referralCodeRef = useRef<string | undefined>(undefined)
 
   useEffect(() => {
     if (loading) return
 
-    referalCodeRef.current ??= getReferalCodeFromUrl()
+    referralCodeRef.current ??= getreferralCodeFromUrl()
 
     if (!user) {
       router.replace(ROUTES.LANDING.HOME)
@@ -138,7 +138,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     }
 
     ;(async () => {
-      if (referalCodeRef.current) await handleInviteIfNeeded(referalCodeRef.current)
+      if (referralCodeRef.current) await handleInviteIfNeeded(referralCodeRef.current)
       onFinishLoading?.()
     })()
 

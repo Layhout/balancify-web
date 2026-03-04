@@ -88,7 +88,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
                             profileBgColor: friend.profileBgColor,
                             email: friend.email,
                             notiToken: friend.notiToken || '',
-                            referalCode: friend.referalCode,
+                            referralCode: friend.referralCode,
                           },
                         ])
                       }}

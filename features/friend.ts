@@ -11,7 +11,7 @@ import { documentId, limit, orderBy, QueryConstraint, serverTimestamp, startAfte
 import { generateTrigrams, randomNumBetween } from '@/lib/utils'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
-import { findUserByEmail, findUserByReferalCode } from './user'
+import { findUserByEmail, findUserByreferralCode } from './user'
 import { createNoti } from './noti'
 import { deleteData, getData, getQueryData, getTotalCount, setMultipleData, updateMultipleData } from '@/lib/firestore'
 
@@ -81,12 +81,12 @@ export async function addFriendToUserByEmail({
   ])
 }
 
-export async function addFriendByReferalCode({ referalCode }: { referalCode: string }) {
+export async function addFriendByreferralCode({ referralCode }: { referralCode: string }) {
   const user = store.get(userAtom)
 
   if (!user) return
 
-  const foundFriend: User | null = await findUserByReferalCode(referalCode)
+  const foundFriend: User | null = await findUserByreferralCode(referralCode)
 
   if (!foundFriend) {
     throw new Error(USER_404_MSG[randomNumBetween(0, USER_404_MSG.length - 1)])

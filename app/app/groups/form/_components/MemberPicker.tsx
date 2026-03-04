@@ -83,7 +83,7 @@ export function MemberPicker({
                     profileBgColor: friend.profileBgColor,
                     email: friend.email,
                     notiToken: friend.notiToken || '',
-                    referalCode: friend.referalCode,
+                    referralCode: friend.referralCode,
                   })
                 }}
               >
