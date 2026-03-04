@@ -72,8 +72,6 @@ export function useGroupForm() {
       members: [],
     },
   })
-  console.log(groupForm.formState.errors)
-  console.log(groupForm.getValues())
 
   const onSubmitGroupForm = async (value: GroupFormType) => {
     const data = {
