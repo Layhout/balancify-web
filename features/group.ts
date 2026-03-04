@@ -2,7 +2,6 @@ import { GroupMetadata, NotiType, PaginatedResponse, User } from '@/types/common
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import {
-  arrayRemove,
   deleteField,
   documentId,
   limit,
@@ -177,18 +176,20 @@ export async function editGroup({
   ])
 }
 
-export async function leaveGroup({ id }: { id: string }) {
+export async function leaveGroup({ id, members }: { id: string; members: User[] }) {
   const user = store.get(userAtom)
 
   if (!user) return
+
+  const newMembers = members.filter((m) => m.id !== user.id)
 
   await updateMultipleData([
     {
       collectionName: FIREBASE_COLLTION_NAME.GROUPS,
       id,
       data: {
-        members: arrayRemove(user),
-        memberIds: arrayRemove(user.id),
+        members: newMembers,
+        memberIds: newMembers.map((m) => m.id),
       },
     },
     {
