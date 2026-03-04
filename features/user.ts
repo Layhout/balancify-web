@@ -3,10 +3,10 @@ import { getData, getQueryData, setData, updateData } from '@/lib/firestore'
 import { store } from '@/repositories'
 import { userAtom } from '@/repositories/user'
 import { User } from '@/types/common'
-import { limit, where, serverTimestamp } from 'firebase/firestore'
+import { limit, where } from 'firebase/firestore'
 
 export async function createUser(user: User) {
-  return await setData(FIREBASE_COLLTION_NAME.USERS, user.id, { ...user, createdAt: serverTimestamp() })
+  return await setData(FIREBASE_COLLTION_NAME.USERS, user.id, user)
 }
 
 export async function updateUser({ user }: { user: Partial<User> }) {
