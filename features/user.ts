@@ -29,9 +29,9 @@ export async function findUserById(id: string): Promise<User | null> {
   return foundUser || null
 }
 
-export async function findUserByReferalCode(code: string): Promise<User | null> {
+export async function findUserByreferralCode(code: string): Promise<User | null> {
   const [foundUser]: User[] = await getQueryData(FIREBASE_COLLTION_NAME.USERS, [
-    where('referalCode', '==', code),
+    where('referralCode', '==', code),
     limit(1),
   ])
 

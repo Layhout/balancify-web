@@ -7,7 +7,7 @@ export interface User {
   email: string
   name: string
   notiToken: string
-  referalCode: string
+  referralCode?: string
   subNoti?: boolean
 }
 

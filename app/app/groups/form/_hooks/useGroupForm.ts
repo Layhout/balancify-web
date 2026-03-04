@@ -17,7 +17,7 @@ const memberFormSchema = z.object({
   email: z.string(),
   name: z.string(),
   notiToken: z.string().optional(),
-  referalCode: z.string(),
+  referralCode: z.string().optional(),
 })
 
 const groupFormSchema = z.object({
@@ -84,7 +84,7 @@ export function useGroupForm() {
         imageUrl: member.imageUrl,
         email: member.email,
         notiToken: member.notiToken || '',
-        referalCode: member.referalCode,
+        referralCode: member.referralCode,
       })),
     }
 

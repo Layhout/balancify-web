@@ -22,7 +22,7 @@ const memberFormSchema = z.object({
   email: z.string(),
   name: z.string(),
   notiToken: z.string(),
-  referalCode: z.string(),
+  referralCode: z.string(),
   amount: z.coerce.number(),
   settledAmount: z.number(),
 })
@@ -150,7 +150,7 @@ export function useExpenseForm() {
           email: m.email,
           name: m.name,
           notiToken: m.notiToken || '',
-          referalCode: m.referalCode,
+          referralCode: m.referralCode,
           settledAmount: m.settledAmount || 0,
         }
       }),
