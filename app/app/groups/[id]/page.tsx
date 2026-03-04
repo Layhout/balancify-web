@@ -8,7 +8,16 @@ import { PageHeader } from '@/components/PageHeader'
 import { MemberList } from './_components/MemberList'
 
 export default function GroupDetails() {
-  const { groupDetailsQuery, onLeaveGroup, id, expenseData, expenseQuery } = useGroupDetails()
+  const {
+    groupDetailsQuery,
+    onLeaveGroup,
+    id,
+    expenseData,
+    expenseQuery,
+    isCreatedByLocalUser,
+    groupOwner,
+    onEditGroup,
+  } = useGroupDetails()
 
   return (
     <div className="container pb-4">
@@ -25,11 +34,17 @@ export default function GroupDetails() {
             members={groupDetailsQuery.data?.members || []}
             id={id}
             onLeaveGroup={onLeaveGroup}
+            isCreatedByLocalUser={isCreatedByLocalUser}
+            onEditGroup={onEditGroup}
           />
           <ExpenseList loading={groupDetailsQuery.isFetching} expenses={expenseData} expenseQuery={expenseQuery} />
         </div>
         <div className="hidden flex-1 md:block">
-          <MemberList loading={groupDetailsQuery.isFetching} members={groupDetailsQuery.data?.members || []} />
+          <MemberList
+            loading={groupDetailsQuery.isFetching}
+            members={groupDetailsQuery.data?.members || []}
+            groupOwner={groupOwner}
+          />
         </div>
       </div>
     </div>

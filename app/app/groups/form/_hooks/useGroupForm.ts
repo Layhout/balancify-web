@@ -36,10 +36,12 @@ export function useGroupForm() {
   const queryClient = useQueryClient()
   const searchParams = useSearchParams()
 
+  const groupId = searchParams.get('edit')
+
   const groupDetailsQuery = useQuery({
-    queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, searchParams.get('edit')],
-    queryFn: () => getGroupDetail(searchParams.get('edit') || ''),
-    enabled: !!searchParams.get('edit'),
+    queryKey: [QUERY_KEYS.GROUPS, QueryType.Details, localUser?.id, groupId],
+    queryFn: () => getGroupDetail(groupId || '', !!groupId),
+    enabled: !!groupId,
   })
 
   const groupMutation = useMutation({
@@ -88,7 +90,7 @@ export function useGroupForm() {
       })),
     }
 
-    if (searchParams.get('edit')) {
+    if (groupId) {
       if (!groupDetailsQuery.data) {
         toast('Cannot find group to edit.')
         return

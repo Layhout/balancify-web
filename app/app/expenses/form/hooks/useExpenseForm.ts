@@ -22,7 +22,7 @@ const memberFormSchema = z.object({
   email: z.string(),
   name: z.string(),
   notiToken: z.string(),
-  referralCode: z.string(),
+  referralCode: z.string().optional(),
   amount: z.coerce.number(),
   settledAmount: z.number(),
 })
