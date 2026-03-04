@@ -6,9 +6,10 @@ import { MemberListItemPlaceholder } from './MemberListItemPlaceholder'
 export type MemberListProps = {
   loading: boolean
   members: User[]
+  groupOwner?: User
 }
 
-export function MemberList({ loading, members }: MemberListProps) {
+export function MemberList({ loading, members, groupOwner }: MemberListProps) {
   return (
     <Card>
       <CardHeader>
@@ -20,7 +21,11 @@ export function MemberList({ loading, members }: MemberListProps) {
         ) : (
           <ul className="flex flex-col gap-4">
             {members.map((member, i) => (
-              <MemberListItem key={i} {...member} />
+              <MemberListItem
+                key={i}
+                {...member}
+                name={member.id === groupOwner?.id ? `${member.name} (Owner)` : member.name}
+              />
             ))}
           </ul>
         )}

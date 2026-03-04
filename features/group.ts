@@ -117,7 +117,7 @@ export async function getGroups({
   return { data: groups || [], count }
 }
 
-export async function getGroupDetail(id: string): Promise<Group | null> {
+export async function getGroupDetail(id: string, isEditing?: boolean): Promise<Group | null> {
   if (!id) return null
 
   const userId = store.get(userAtom)?.id
@@ -133,9 +133,11 @@ export async function getGroupDetail(id: string): Promise<Group | null> {
 
   if (!group?.length) return null
 
-  return {
-    ...group[0],
-  }
+  const groupData = group[0]
+
+  if (isEditing && groupData.createdBy !== userId) return null
+
+  return groupData
 }
 
 export async function editGroup({

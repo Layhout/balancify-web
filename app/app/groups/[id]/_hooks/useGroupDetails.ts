@@ -70,5 +70,18 @@ export function useGroupDetails() {
     leaveGroupMutation.mutate({ id })
   }
 
-  return { groupDetailsQuery, onEditGroup, onLeaveGroup, id, expenseData, expenseQuery }
+  const groupOwner = groupDetailsQuery.data?.members.find((member) => member.id === groupDetailsQuery.data?.createdBy)
+
+  const isCreatedByLocalUser = groupOwner?.id === localUser?.id
+
+  return {
+    groupDetailsQuery,
+    onEditGroup,
+    onLeaveGroup,
+    id,
+    expenseData,
+    expenseQuery,
+    isCreatedByLocalUser,
+    groupOwner,
+  }
 }
