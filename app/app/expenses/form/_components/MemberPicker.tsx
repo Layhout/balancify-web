@@ -14,9 +14,10 @@ import { CommandLoading } from 'cmdk'
 import { LuCheck, LuLoaderCircle } from 'react-icons/lu'
 import { UserAvatar } from '@/components/UserAvatar'
 import { cn } from '@/lib/utils'
+import { MemberOption } from '@/types/common'
 
 type MemberPickerProps = {
-  mode: 'group' | 'friend'
+  mode: MemberOption
   selectedIds: string[]
   onAddMember: (member: User[]) => void
   onSelectGroup: (group?: { id: string; name: string }) => void
@@ -43,7 +44,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
     <Card className="cursor-pointer overflow-hidden border-2 border-dashed">
       <CardContent className="flex h-full w-full items-center justify-center p-4">
         <div className="grid size-11 place-items-center rounded-full border-2 border-dashed">
-          {mode === 'group' ? <AiOutlineUsergroupAdd /> : <AiOutlineUserAdd />}
+          {mode === MemberOption.GROUP ? <AiOutlineUsergroupAdd /> : <AiOutlineUserAdd />}
         </div>
       </CardContent>
     </Card>
@@ -68,7 +69,7 @@ export function MemberPicker({ mode, selectedIds, onAddMember, onSelectGroup }: 
             </CommandLoading>
           )}
           <CommandGroup>
-            {mode === 'friend'
+            {mode === MemberOption.FRIEND
               ? ((foundQuery.data?.data || []) as FriendResponse[])?.map((friend) => {
                   return (
                     <CommandItem

@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { userAtom } from '@/repositories/user'
 import { useAtomValue } from 'jotai'
-import { FriendResponse, Group, PaginatedResponse } from '@/types/common'
+import { FriendResponse, Group, MemberOption, PaginatedResponse } from '@/types/common'
 import { useQueryClient } from '@tanstack/react-query'
 import { getGroups } from '@/features/group'
 import { getFriends } from '@/features/friend'
 
-export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
+export function useGroupsFriendsPicker({ mode }: { mode: MemberOption }) {
   const localUser = useAtomValue(userAtom)
   const queryClient = useQueryClient()
 
@@ -19,7 +19,7 @@ export function useGroupsFriendsPicker({ mode }: { mode: 'group' | 'friend' }) {
   const foundQuery = useQuery({
     queryKey,
     queryFn: (): Promise<PaginatedResponse<Group | FriendResponse>> => {
-      if (mode === 'group') {
+      if (mode === MemberOption.GROUP) {
         return getGroups({ lastDocCreatedAt: null, search: searchValue })
       }
 
