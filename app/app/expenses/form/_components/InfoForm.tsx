@@ -82,7 +82,7 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                     form.setValue('selectedGroup', undefined)
                     form.setValue(
                       'members',
-                      v === MemberOption.Friend && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
+                      v === MemberOption.FRIEND && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
                     )
                     field.onChange(v)
                   }}
@@ -137,17 +137,17 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {((memberOption === MemberOption.Group && !selectedGroup?.id) ||
-          (memberOption === MemberOption.Friend && memberForm.fields.length < 10)) && (
+        {((memberOption === MemberOption.GROUP && !selectedGroup?.id) ||
+          (memberOption === MemberOption.FRIEND && memberForm.fields.length < 10)) && (
           <MemberPicker
             mode={memberOption}
             selectedIds={
-              memberOption === MemberOption.Group
+              memberOption === MemberOption.GROUP
                 ? [selectedGroup?.id || '']
                 : memberForm.fields.map((field) => field.id)
             }
             onAddMember={(v) => {
-              if (memberOption === MemberOption.Group) {
+              if (memberOption === MemberOption.GROUP) {
                 memberForm.append([
                   { ...localUser!, amount: 0, settledAmount: 0 },
                   ...v
@@ -204,7 +204,7 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                         {...field}
                         onChange={(e) => {
                           field.onChange(format2DigitDecimal(e) ?? field.value)
-                          form.setValue('splitOption', SplitOption.Custom)
+                          form.setValue('splitOption', SplitOption.CUSTOM)
                         }}
                       />
                     </FormControl>
@@ -223,7 +223,7 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                     <LuPointer />
                     Assign payer
                   </DropdownMenuItem>
-                  {memberOption === 'friend' && (
+                  {memberOption === MemberOption.FRIEND && (
                     <DropdownMenuItem onSelect={() => memberForm.remove(i)} disabled={localUser?.id === field.id}>
                       <LuX />
                       Remove

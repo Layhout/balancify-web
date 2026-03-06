@@ -139,7 +139,9 @@ export function isIOS() {
   )
 }
 
-export function getInitials(name: string) {
+export function getInitials(name?: string) {
+  if (!name) return ''
+
   return (
     name
       .match(/(^\S\S?|\b\S)?/g)

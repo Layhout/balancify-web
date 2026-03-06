@@ -105,6 +105,9 @@ export async function createExpense({
     membersFlag,
   }
 
+  console.log('expense', expense)
+  console.log('expenseMetadata', expenseMetadata)
+
   await setMultipleData([
     {
       collectionName: FIREBASE_COLLTION_NAME.EXPENSES,

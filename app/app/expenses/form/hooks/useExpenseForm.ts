@@ -115,11 +115,11 @@ export function useExpenseForm() {
       amount: 0,
       icon: '',
       iconBgColor: '',
-      memberOption: MemberOption.Friend,
-      splitOption: SplitOption.SplitEqually,
+      memberOption: MemberOption.FRIEND,
+      splitOption: SplitOption.SPLIT_EQUALLY,
       selectedGroup: undefined,
       paidBy: undefined,
-      members: [],
+      members: [{ ...localUser, amount: 0, settledAmount: 0 }],
     },
   })
 
@@ -193,11 +193,11 @@ export function useExpenseForm() {
   }, [localUser])
 
   useEffect(() => {
-    if (!members.length || splitOption === SplitOption.Custom) return
+    if (!members.length || splitOption === SplitOption.CUSTOM) return
 
     const memberAmounts = members.map(() => {
       switch (splitOption) {
-        case SplitOption.SplitEqually:
+        case SplitOption.SPLIT_EQUALLY:
           const amountPerMember = Number((amount / members.length).toFixed(2))
           return amountPerMember
 
@@ -256,7 +256,7 @@ export function useExpenseForm() {
     if (!groupDetailQuery.data) return
 
     expenseForm.setValue('selectedGroup', { id: groupDetailQuery.data.id, name: groupDetailQuery.data.name })
-    expenseForm.setValue('memberOption', MemberOption.Group)
+    expenseForm.setValue('memberOption', MemberOption.GROUP)
     expenseForm.setValue(
       'members',
       groupDetailQuery.data.members.map((member) => ({ ...member, amount: 0, settledAmount: 0 })),

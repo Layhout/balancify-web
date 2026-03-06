@@ -207,21 +207,21 @@ export const countPerPage = 10
 export const memberOptions = [
   {
     label: 'Friend',
-    value: MemberOption.Friend,
+    value: MemberOption.FRIEND,
   },
   {
     label: 'Group',
-    value: MemberOption.Group,
+    value: MemberOption.GROUP,
   },
 ]
 
 export const splitOptions = [
   {
     label: 'Equally',
-    value: SplitOption.SplitEqually,
+    value: SplitOption.SPLIT_EQUALLY,
   },
   {
     label: 'Custom',
-    value: SplitOption.Custom,
+    value: SplitOption.CUSTOM,
   },
 ]

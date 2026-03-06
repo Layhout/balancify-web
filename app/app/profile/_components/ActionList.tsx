@@ -2,6 +2,9 @@ import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/lib/constants'
 import { auth } from '@/lib/firebase'
+import { userAtom } from '@/repositories/user'
+import { useSetAtom } from 'jotai'
+import { RESET } from 'jotai/utils'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSignOut } from 'react-firebase-hooks/auth'
@@ -13,6 +16,7 @@ import { MdInstallMobile } from 'react-icons/md'
 export function ActionList() {
   const router = useRouter()
   const [signOut] = useSignOut(auth)
+  const setLocalUser = useSetAtom(userAtom)
 
   return (
     <div className="mt-8 flex flex-col gap-4">
@@ -60,6 +64,7 @@ export function ActionList() {
 
           if (res) {
             router.replace(ROUTES.LANDING.HOME)
+            setLocalUser(RESET)
           }
         }}
       >

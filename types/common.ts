@@ -71,13 +71,13 @@ export interface GroupMetadata {
 }
 
 export enum MemberOption {
-  Group = 'group',
-  Friend = 'friend',
+  GROUP = 'GROUP',
+  FRIEND = 'FRIEND',
 }
 
 export enum SplitOption {
-  SplitEqually = 'split_equally',
-  Custom = 'custom',
+  SPLIT_EQUALLY = 'SPLIT_EQUALLY',
+  CUSTOM = 'CUSTOM',
 }
 
 export type ExpenseMember = User & { amount: number; settledAmount: number }
