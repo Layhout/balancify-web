@@ -119,7 +119,7 @@ export function useExpenseForm() {
       splitOption: SplitOption.SPLIT_EQUALLY,
       selectedGroup: undefined,
       paidBy: undefined,
-      members: [],
+      members: [{ ...localUser, amount: 0, settledAmount: 0 }],
     },
   })
 

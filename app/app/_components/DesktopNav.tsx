@@ -5,7 +5,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Dispatch, SetStateAction } from 'react'
 import { motion, Variants } from 'motion/react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { isDarkModeAtom } from '@/repositories/layout'
 import { DESKTOP_NAV_LINKS, ROUTES } from '@/lib/constants'
 import { APP_V } from '@/lib/version'
@@ -14,6 +14,8 @@ import { useAuthState, useSignOut } from 'react-firebase-hooks/auth'
 import { auth } from '@/lib/firebase'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { userAtom } from '@/repositories/user'
+import { RESET } from 'jotai/utils'
 
 type DesktopNavProps = {
   isCollapsed: boolean
@@ -34,6 +36,7 @@ export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNav
   const isDarkMode = useAtomValue(isDarkModeAtom)
   const [user, loading] = useAuthState(auth)
   const [signOut] = useSignOut(auth)
+  const setLocalUser = useSetAtom(userAtom)
 
   return (
     <motion.nav
@@ -109,7 +112,14 @@ export function DesktopNav({ isCollapsed, pathname, setIsCollapsed }: DesktopNav
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" align="center">
-              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  const res = await signOut()
+                  if (res) setLocalUser(RESET)
+                }}
+              >
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
