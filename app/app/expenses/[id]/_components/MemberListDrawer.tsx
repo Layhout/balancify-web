@@ -8,7 +8,7 @@ import { isDesktopAtom } from '@/repositories/layout'
 import { HiOutlineUsers } from 'react-icons/hi2'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-export function MemberListDrawer({ loading, members }: MemberListProps) {
+export function MemberListDrawer({ loading, members, payer }: MemberListProps) {
   const isDesktop = useAtomValue(isDesktopAtom)
 
   if (isDesktop) return null
@@ -30,7 +30,7 @@ export function MemberListDrawer({ loading, members }: MemberListProps) {
           ) : (
             <ul className="mt-6 flex flex-col gap-4">
               {members?.map((member, i) => (
-                <MemberListItem key={i} {...member} />
+                <MemberListItem key={i} {...member} payer={payer} />
               ))}
             </ul>
           )}

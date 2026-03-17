@@ -38,7 +38,11 @@ export function ActionButtons({
         loading={isSettling}
         onSettleExpense={onSettleExpense}
       />
-      <MemberListDrawer loading={loading} members={Object.values(details?.member || {}) || []} />
+      <MemberListDrawer
+        loading={loading}
+        members={Object.values(details?.member || {}) || []}
+        payer={details?.paidBy}
+      />
       {isOwner && (
         <>
           <Button variant="outline" className="h-9 w-9 gap-2 p-0 md:w-auto md:px-4 md:py-2" asChild>
