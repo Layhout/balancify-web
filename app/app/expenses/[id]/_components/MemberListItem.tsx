@@ -15,6 +15,7 @@ export function MemberListItem({
   payer,
 }: ExpenseMember & { payer?: User }) {
   const localUser = useAtomValue(userAtom)
+  console.log(id, payer)
 
   return (
     <li className="flex items-center gap-4">
