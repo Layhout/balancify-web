@@ -84,6 +84,7 @@ export function InfoForm({ form, memberForm, isSubmitting, isEdit }: InfoFormPro
                       'members',
                       v === MemberOption.FRIEND && localUser ? [{ ...localUser, amount: 0, settledAmount: 0 }] : [],
                     )
+                    form.setValue('paidBy', localUser)
                     field.onChange(v)
                   }}
                 >
