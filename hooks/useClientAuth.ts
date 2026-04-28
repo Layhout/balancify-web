@@ -127,7 +127,6 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
     referralCodeRef.current ??= getreferralCodeFromUrl()
 
     if (!user) {
-      router.replace(ROUTES.LANDING.HOME)
       onFinishLoading?.()
       return
     }
@@ -154,7 +153,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   }, [localUser?.id])
 
   useEffect(() => {
-    if (loading || user) return
+    if (loading || user || pathname === ROUTES.LANDING.BLOGS) return
 
     if (pathname !== ROUTES.LANDING.HOME && !user) {
       router.replace(ROUTES.LANDING.HOME)
