@@ -30,9 +30,9 @@ export interface Friend {
 export type FriendResponse = User & Friend
 
 export enum NotiType {
-  FriendRequest = 'friend-request',
-  Group = 'group',
-  Expense = 'expense',
+  FRIEND_REQUEST = 'FRIEND_REQUEST',
+  GROUP = 'GROUP',
+  EXPENSE = 'EXPENSE',
 }
 
 export interface Noti {

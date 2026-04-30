@@ -122,7 +122,7 @@ export async function createExpense({
     title: 'New Expense',
     description: `${user.name} added a new expense.`,
     link: `${ROUTES.APP.EXPENSES}/${expense.id}`,
-    type: NotiType.Expense,
+    type: NotiType.EXPENSE,
     owners: members,
     accessToken: apiToken,
   })

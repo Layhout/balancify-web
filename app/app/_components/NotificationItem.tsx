@@ -20,9 +20,9 @@ export function NotificationItem({
         <div className="flex items-start gap-4 rounded-md" onClick={() => onNotiOpen?.(false)}>
           <Avatar>
             <AvatarFallback>
-              {type === NotiType.FriendRequest && <LuUserRoundPlus />}
-              {type === NotiType.Group && <AiOutlineUsergroupAdd />}
-              {type === NotiType.Expense && <LuCircleDollarSign />}
+              {type === NotiType.FRIEND_REQUEST && <LuUserRoundPlus />}
+              {type === NotiType.GROUP && <AiOutlineUsergroupAdd />}
+              {type === NotiType.EXPENSE && <LuCircleDollarSign />}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-1 flex-col">
