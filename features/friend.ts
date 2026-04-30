@@ -62,7 +62,7 @@ export async function addFriendToUserByEmail({
     title: 'New Friend Request',
     description: `${user.name} sent you a firend request.`,
     link: ROUTES.APP.FRIENDS,
-    type: NotiType.FriendRequest,
+    type: NotiType.FRIEND_REQUEST,
     owners: [foundUser],
     accessToken: apiToken,
   })

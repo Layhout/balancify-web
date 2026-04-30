@@ -69,7 +69,7 @@ export async function createGroup({
     title: 'New Group',
     description: `${user.name} added you to a group.`,
     link: `${ROUTES.APP.GROUPS}/${group.id}`,
-    type: NotiType.Group,
+    type: NotiType.GROUP,
     owners: members,
     accessToken: apiToken,
   })
