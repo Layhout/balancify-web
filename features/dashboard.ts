@@ -1,6 +1,6 @@
 import { getQueryData } from '@/lib/firestore'
 import { FIREBASE_COLLTION_NAME, STANDARD_DATE_FORMAT } from '@/lib/constants'
-import { where, QueryConstraint, Timestamp } from 'firebase/firestore'
+import { where, QueryConstraint, Timestamp, orderBy } from 'firebase/firestore'
 import { userAtom } from '@/repositories/user'
 import { Dashboard, Expense } from '@/types/common'
 import { store } from '@/repositories'
@@ -11,7 +11,7 @@ export async function getDashboardData(): Promise<Dashboard | null> {
 
   if (!userId) return null
 
-  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId)]
+  const query: QueryConstraint[] = [where('memberIds', 'array-contains', userId), orderBy('createdAt', 'desc')]
 
   const expenses: Expense[] | null = await getQueryData(FIREBASE_COLLTION_NAME.EXPENSES, query)
 

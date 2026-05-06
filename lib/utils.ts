@@ -74,7 +74,7 @@ export function getSpendingPerMonth(spendingHistory: Dashboard['spendingHistory'
     data.push({ month, spent: group[month] })
   }
 
-  return data
+  return data.slice().reverse()
 }
 
 export function isMobileBrowser() {
