@@ -10,6 +10,7 @@ export const ROUTES = {
     SIGN_IN: '/sign-in',
     SIGN_UP: '/sign-up',
     BLOGS: '/blogs',
+    PRIVACY_POLICY: '/privacy-policy',
   },
   APP: {
     HOME: '/app',
@@ -29,6 +30,8 @@ export const ROUTES = {
     HOME: '/portal',
   },
 }
+
+export const PUBLIC_ROUTES = [ROUTES.LANDING.BLOGS, ROUTES.LANDING.PRIVACY_POLICY]
 
 export const DESKTOP_NAV_LINKS = [
   {
