@@ -8,7 +8,7 @@ import { toast } from 'sonner'
 
 import { addFriendByreferralCode } from '@/features/friend'
 import { createUser, findUserById, updateUser } from '@/features/user'
-import { BG_COLORS, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
+import { BG_COLORS, PUBLIC_ROUTES, QUERY_KEYS, QueryType, ROUTES } from '@/lib/constants'
 import { auth, getFcmToken } from '@/lib/firebase'
 import { userAtom } from '@/repositories/user'
 import type { User } from '@/types/common'
@@ -153,7 +153,7 @@ export const useClientAuth = (onFinishLoading?: () => void) => {
   }, [localUser?.id])
 
   useEffect(() => {
-    if (loading || user || pathname === ROUTES.LANDING.BLOGS) return
+    if (loading || user || PUBLIC_ROUTES.includes(pathname)) return
 
     if (pathname !== ROUTES.LANDING.HOME && !user) {
       router.replace(ROUTES.LANDING.HOME)
